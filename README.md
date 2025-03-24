@@ -6,6 +6,25 @@
 
 ### Les variables:
 
+#### BATI
+NATURE
+USAGE1
+USAGE2
+LEGER
+DATE_APP
+ACQU_PLANI
+NB_LOGTS
+NB_ETAGES
+MAT_MURS
+MAT_TOITS
+HAUTEUR
+Z_SOL
+Z_TOIT
+ETAT
+
+#### ADRESSES
+LONGITUDE
+LATITUDE
 
 
 ### Origines et format des données:
