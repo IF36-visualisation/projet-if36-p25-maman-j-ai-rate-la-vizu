@@ -6,7 +6,13 @@ Ce README est à remplacer par votre proposition de dataset.
 
 ## Données
 
-### D'où elles viennent:
+
+
+### Les variables:
+
+
+
+### Origines des données:
 
 La base de données bâtiments est disponible ici: https://www.data.gouv.fr/fr/datasets/batiments-de-troyes-champagne-metropole/
 
@@ -17,5 +23,16 @@ Les liens, quant à eux sont disponibles sur ce lien: https://geoservices.ign.fr
 Contexte
 
 
+### Sous groupes des données:
+
+
 
 ## Plan d'analyse
+
+Les premières questions
+
+Les informations que l'on peut obtenir
+
+Quel variables comparer
+
+Qu'est ce qui pourrait poser problèmes
