@@ -1,18 +1,14 @@
-# Fichier à remplacer
-
-Ce README est à remplacer par votre proposition de dataset.
-
 # Introduction
 
 ## Données
 
-
+107946 observations avec peu de valeurs manquantes.
 
 ### Les variables:
 
 
 
-### Origines des données:
+### Origines et format des données:
 
 La base de données bâtiments est disponible ici: https://www.data.gouv.fr/fr/datasets/batiments-de-troyes-champagne-metropole/
 
@@ -29,10 +25,18 @@ Contexte
 
 ## Plan d'analyse
 
-Les premières questions
+Les premières questions:
+Comment Troyes s'est étendu?
+Liaison matériaux et date de construction?
+Corrélation date, matériaux et hauteur?
+Une laision entre la géopgraphie et l'usage du batiment?
+Il y a-t-il une liaison entre hauteur et usage du batiment?
 
-Les informations que l'on peut obtenir
 
-Quel variables comparer
+Les informations que l'on peut obtenir:
+Une carte représentative
 
-Qu'est ce qui pourrait poser problèmes
+Quel variables comparer:
+
+Qu'est ce qui pourrait poser problèmes:
+Potentiel de bruit important.
