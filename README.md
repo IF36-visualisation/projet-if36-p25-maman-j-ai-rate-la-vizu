@@ -3,14 +3,16 @@
 ## Données
 
 107946 observations avec peu de valeurs manquantes.
+16 variables avec 2 sous-groupes de 2 variables chacun.
 
 ### Les variables:
 
 #### BATI
 
 -   NATURE : nominal, architecture du bâtiment
--   USAGE1 : nominal, utilisation du bâtiment (agricole, résidentiel, religieux...)
--   USAGE2 : nominal (optionnel), utilisation du bâtiment
+-   USAGE :
+    -   USAGE1 : nominal, utilisation du bâtiment (agricole, résidentiel, religieux...)
+    -   USAGE2 : nominal (optionnel), utilisation du bâtiment
 -   LEGER : booléen, structure légère ?
 -   DATE_APP : date d'apparition/construction (pas toujours présent)
 -   ACQU_PLANI : de quelle base provient l'information
@@ -25,8 +27,9 @@
 
 #### ADRESSES
 
--   LONGITUDE : coordonnée GPS
--   LATITUDE : coordonnée GPS
+-   LOCALISATION:
+    -   LONGITUDE : coordonnée GPS
+    -   LATITUDE : coordonnée GPS
 
 #### Pourquoi avoir choisi ces variables
 
