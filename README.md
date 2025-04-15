@@ -10,24 +10,24 @@
 #### BATI
 
 -   NATURE : nominal, architecture du bâtiment
--   USAGE :
+-   USAGE (certains batiments ayant un usage double, 2 variables donnes cette information) :
     -   USAGE1 : nominal, utilisation du bâtiment (agricole, résidentiel, religieux...)
     -   USAGE2 : nominal (optionnel), utilisation du bâtiment
 -   LEGER : booléen, structure légère ?
 -   DATE_APP : date d'apparition/construction (pas toujours présent)
--   ACQU_PLANI : de quelle base provient l'information
--   NB_LOGTS : entier, nombre de logements
--   NB_ETAGES : entier, nombre d'étages
--   MAT_MURS : entier, code des matériaux des murs (à croiser avec le csv materiaux_murs.csv)
--   MAT_TOITS : entier, code des matériaux de la toiture (à croiser avec le csv materiaux_toits.csv)
--   HAUTEUR : décimal, hauteur
--   Z_SOL : décimal, altitude du sol
--   Z_TOIT : décimal, altitude du toit
+-   ACQU_PLANI : nominal, de quelle base provient l'information
+-   NB_LOGTS : discrète, nombre de logements
+-   NB_ETAGES : discrète, nombre d'étages
+-   MAT_MURS : discrète, code des matériaux des murs (à croiser avec le csv materiaux_murs.csv)
+-   MAT_TOITS : discrète, code des matériaux de la toiture (à croiser avec le csv materiaux_toits.csv)
+-   HAUTEUR : continue, hauteur
+-   Z_SOL : continue, altitude du sol
+-   Z_TOIT : continue, altitude du toit
 -   ETAT : nominal, état du bâtiment (en projet, en construction, en service, en ruine)
 
 #### ADRESSES
 
--   LOCALISATION:
+-   LOCALISATION (la localisation est séparé en 2 données: la longitude et la latitude):
     -   LONGITUDE : coordonnée GPS
     -   LATITUDE : coordonnée GPS
 
