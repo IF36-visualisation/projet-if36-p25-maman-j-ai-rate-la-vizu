@@ -1,4 +1,4 @@
-# Introduction
+# Étude des bâtiments de Troyes
 
 ## Données
 
