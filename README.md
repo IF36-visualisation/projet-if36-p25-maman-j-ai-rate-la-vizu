@@ -2,12 +2,12 @@
 
 ## Données
 
-Le jeu de données "Bâtiments de Troyes Champagne Métropole" recense l'ensemble des bâtiments situées dans l'agglomération Troyes Champagne Métropole pour des usages variés tels que l'ubarnisme, l'aménagement du territoire, les analyses foncières et les services publics . Il a été publié en août 2024 sur la plateforme data.gouv.fr. 
-Ce jeu de données provient d'une unification des bases BDTOPO et BD PARCELLAIRE de l'IGN et recense 107946 observations avec peu de valeurs manquantes.
+Le jeu de données « Bâtiments de Troyes Champagne Métropole » recense l’ensemble des bâtiments situés dans l’agglomération Troyes Champagne Métropole, à des fins variées telles que l’urbanisme, l’aménagement du territoire, les analyses foncières ou encore la gestion des services publics. Il a été publié en août 2024 sur la plateforme data.gouv.fr.
 
+Ce jeu de données provient de l’unification des bases BDTOPO® et BD PARCELLAIRE® de l’IGN. Il comprend 107 946 observations, avec très peu de valeurs manquantes, ce qui en fait une base fiable et complète pour l’analyse spatiale.
 
-Nous avons choisi ce dataset car nous trouvons intéressant d'étudier la repartition géographique des bâtiments dans la ville de Troyes. 
-Afin d'enrichir notre étude, nous avons décidé d'associer au jeu de données de bases, un jeu de données aui recense les adresses des bâtiments de Troyes.
+Nous avons choisi ce jeu de données car il nous semble pertinent d’étudier la répartition géographique des bâtiments dans la ville de Troyes.
+Afin d’enrichir notre analyse, nous avons décidé d’y associer un second jeu de données : la Base Adresse Nationale (BAN),  qui recense les adresses géolocalisées des bâtiments sur l’ensemble du territoire français (on utilisera uniquement les adresses du département nous concernant). 
 
 ### Origines et format des données
 
@@ -20,13 +20,11 @@ Les liens, quant à eux sont disponibles sur ce lien: <https://geoservices.ign.f
 Les données sont stockées au format csv.
 
 ### Les variables:
+Dans notre étude, nous allons considérer 16 variables.
 
 #### BATI
 
-Dans notre étude, nous allons considérer 16 variables.
-16 variables avec 2 sous-groupes de 2 variables chacun.
-
-Certains bâtiments ayant un usage double, 2 variables donnent cette information.
+Nous avons sélectionné 14 variables dans le 1er jeu de données.
 
 | Nom        | Type                | Description                                                                  |
 | ---------- | ------------------- | ---------------------------------------------------------------------------- |
@@ -47,7 +45,8 @@ Certains bâtiments ayant un usage double, 2 variables donnent cette information
 
 #### ADRESSES
 
-La localisation est séparée en 2 données : la longitude et la latitude.
+
+Pour la localisation, nous utiliserons 2 variables : la longitude et la latitude.
 
 | Nom       | Type     | Description    |
 | --------- | -------- | -------------- |
