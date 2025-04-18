@@ -31,7 +31,7 @@ Nous avons sélectionné 14 variables dans le 1er jeu de données.
 | NATURE     | nominal             | architecture du bâtiment                                                     |
 | USAGE1     | nominal             | utilisation du bâtiment (agricole, résidentiel, religieux...)                |
 | USAGE2     | nominal (optionnel) | utilisation du bâtiment                                                      |
-| LEGER      | discrète            | structure légère ?                                                           |
+| LEGER      | discrète            | structure légère ou pas                                                         |
 | DATE_APP   | discrète            | date d'apparition/construction (pas toujours présent)                        |
 | ACQU_PLANI | nominal             | de quelle base provient l'information                                        |
 | NB_LOGTS   | discrète            | nombre de logements dans le bâtiment                                         |
@@ -60,22 +60,71 @@ Nous avons aussi enlevé les variables que nous n'avons pas trouvé pertinentes.
 
 
 
-### Sous groupes des données
 
 ## Plan d'analyse
 
-Les premières questions :
+1- Comment  la ville de Troyes s'est étendue géographiquement au fil des années?
 
-- Comment Troyes s'est étendu au fil des années ?
-- Y a-t-il un lien entre les matériaux et les dates de construction ?
-- Corrélation date, matériaux et hauteur ?
-- Une liaison entre la géographie et l'usage du bâtiment ?
-- Y a-t-il une liaison entre hauteur et usage du bâtiment ?
+   Il s'agit ici de visualiser l'évolution spatiale  de la ville de Troyes au fil du temps.
+   Pour cela, on utilisera la variable date_app et les variables de coordonnées géographiques: latitude et longitude.
+   
+   Comme types de visualisations à envisager , on a:
+    - Une carte avec les bâtiments colorés selon leur date(période) de construction
 
-Les informations que l'on peut obtenir :
+   Les problèmes potentiels:
+    -  l'absence de date de construction pour certains bâtiments
+  
+2- Y a-t-il un lien entre les matériaux de construction et les dates de construction ?
+  
+   Il s'agit ici de déterminer s'il existe une relation entre les variables date_app, mat_murs et mat_toits. L'objectif est de vérifier si les matériaux de construction des bâtiments varient en fonction des époques.
+   
+  Pour cela, nous envisageons deux types de visualisations :
+  - Un line Chart pour suivre l'évolution du nombre de bâtiments par matériau au fil du temps.
+        -> L'axe des abscisses représenterait les années
+        -> L'axe des ordonnées représenterait le nombre de bâtiments
+        -> Chaque ligne représenterait un matériau.
+    
+  - Un violon plot pour étudier la distribution des dates selon chaque matériau.
+        -> L'axe des abscisses représenterait les années
+        -> L'axe des ordonnées représenterait les matériaux de construction.
 
-- Une carte représentative de l'âge des bâtiments
+  Les problèmes potentiels sont:
+  - un grand nombre de catégories de matériaux (risque de graphe illisible).
+    
+    
+3- Y a-t-il une corrélation entre les matériaux de constructon et la hauteur du bâtiment?
 
-Quelles variables comparer :
+   L'objectif ici est de comprendre si l'évolution des matériaux a un impact sur la hauteur des bâtiments. On aimerait comparer la distribution des hauteurs en fonction des matériaux et vérifier si certains matériaux sont associés à des hauteurs spécifiques.
 
-Qu'est ce qui pourrait poser problèmes : Potentiel de bruit important.
+   Pour cela, on envisage d'utiliser:
+    - Un violon plot ou box plot
+        -> L'axe des abscisses représentant le type de matériau
+        -> L'axe des ordonnées représentant la hauteur des bâtiments
+   
+      
+4-  Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments?
+   
+   L'objectif ici est de déterminer si certains types d'usage des bâtiments sont spécifiquement localisés dans certaines zones de la ville de Troyes. Peut-on identifier des zones résidentielles, des zones industrielles, des zones commerciales?
+   On utilisera les variables de coordonnées géographiques (longitude et latitude) et les variables usage1 et usage2.
+   
+   Pour cela, nous envisageons:
+     -  Une carte avec les bâtiments colorés selon leur usage
+     
+   Les problèmes potentiels:
+     - il sera peut-être nécessaire de regrouper les usages
+    
+
+5- Y a-t-il une liaison entre la hauteur des bâtiments et leur usage ?
+ 
+   Il s'agit de déterminer s'il existe une relation entre la hauteur d'un bâtiment et son usage.
+   Les variables utilisées sont: la variable hauteur et la variable usage1
+   
+   Pour cela, nous envisageons d'utiliser:
+    - Un diagramme à barres empilées pour étudier la répartition des usages
+        -> L'axe des abscisses représenterait les tranches de hauteur
+        -> L'axe des ordonnées représenterait le nombre de bâtiments
+        -> Chaque barre avec une répartition des usages
+ 
+   
+
+
