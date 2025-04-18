@@ -2,12 +2,29 @@
 
 ## Données
 
-107946 observations avec peu de valeurs manquantes.
-16 variables avec 2 sous-groupes de 2 variables chacun.
+Le jeu de données "Bâtiments de Troyes Champagne Métropole" recense l'ensemble des bâtiments situées dans l'agglomération Troyes Champagne Métropole pour des usages variés tels que l'ubarnisme, l'aménagement du territoire, les analyses foncières et les services publics . Il a été publié en août 2024 sur la plateforme data.gouv.fr. 
+Ce jeu de données provient d'une unification des bases BDTOPO et BD PARCELLAIRE de l'IGN et recense 107946 observations avec peu de valeurs manquantes.
+
+
+Nous avons choisi ce dataset car nous trouvons intéressant d'étudier la repartition géographique des bâtiments dans la ville de Troyes. 
+Afin d'enrichir notre étude, nous avons décidé d'associer au jeu de données de bases, un jeu de données aui recense les adresses des bâtiments de Troyes.
+
+### Origines et format des données
+
+La base de données bâtiments est disponible ici: <https://www.data.gouv.fr/fr/datasets/batiments-de-troyes-champagne-metropole/>
+
+Et la base de données des adresses, un csv par département, est ici (adresses-10.csv): <https://adresse.data.gouv.fr/data/ban/adresses/latest/csv>
+
+Les liens, quant à eux sont disponibles sur ce lien: <https://geoservices.ign.fr/ban-plus>
+
+Les données sont stockées au format csv.
 
 ### Les variables:
 
 #### BATI
+
+Dans notre étude, nous allons considérer 16 variables.
+16 variables avec 2 sous-groupes de 2 variables chacun.
 
 Certains bâtiments ayant un usage double, 2 variables donnent cette information.
 
@@ -42,15 +59,7 @@ La localisation est séparée en 2 données : la longitude et la latitude.
 Nous avons enlevé les variables qui nous semblaient inutiles ainsi que celles comportant peu de valeurs.
 Nous avons aussi enlevé les variables que nous n'avons pas trouvé pertinentes.
 
-### Origines et format des données
 
-La base de données bâtiments est disponible ici: <https://www.data.gouv.fr/fr/datasets/batiments-de-troyes-champagne-metropole/>
-
-Et la base de données des adresses, un csv par département, est ici (adresses-10.csv): <https://adresse.data.gouv.fr/data/ban/adresses/latest/csv>
-
-Les liens, quant à eux sont disponibles sur ce lien: <https://geoservices.ign.fr/ban-plus>
-
-Les données sont stockées au format csv.
 
 ### Sous groupes des données
 
