@@ -80,13 +80,13 @@ Nous avons aussi enlevé les variables que nous n'avons pas trouvé pertinentes.
    
   Pour cela, nous envisageons deux types de visualisations :
   - Un line Chart pour suivre l'évolution du nombre de bâtiments par matériau au fil du temps.
-        -> L'axe des abscisses représenterait les années
-        -> L'axe des ordonnées représenterait le nombre de bâtiments
-        -> Chaque ligne représenterait un matériau.
+        - L'axe des abscisses représenterait les années
+        - L'axe des ordonnées représenterait le nombre de bâtiments
+        - Chaque ligne représenterait un matériau.
     
   - Un violon plot pour étudier la distribution des dates selon chaque matériau.
-        -> L'axe des abscisses représenterait les années
-        -> L'axe des ordonnées représenterait les matériaux de construction.
+        - L'axe des abscisses représenterait les années
+        - L'axe des ordonnées représenterait les matériaux de construction.
 
   Les problèmes potentiels sont:
   - un grand nombre de catégories de matériaux (risque de graphe illisible).
@@ -98,8 +98,8 @@ Nous avons aussi enlevé les variables que nous n'avons pas trouvé pertinentes.
 
    Pour cela, on envisage d'utiliser:
     - Un violon plot ou box plot
-        -> L'axe des abscisses représentant le type de matériau
-        -> L'axe des ordonnées représentant la hauteur des bâtiments
+        - L'axe des abscisses représentant le type de matériau
+        - L'axe des ordonnées représentant la hauteur des bâtiments
    
       
 4-  Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments?
@@ -121,9 +121,9 @@ Nous avons aussi enlevé les variables que nous n'avons pas trouvé pertinentes.
    
    Pour cela, nous envisageons d'utiliser:
     - Un diagramme à barres empilées pour étudier la répartition des usages
-        -> L'axe des abscisses représenterait les tranches de hauteur
-        -> L'axe des ordonnées représenterait le nombre de bâtiments
-        -> Chaque barre avec une répartition des usages
+        - L'axe des abscisses représenterait les tranches de hauteur
+        - L'axe des ordonnées représenterait le nombre de bâtiments
+        - Chaque barre avec une répartition des usages
  
    
 
