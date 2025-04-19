@@ -15,8 +15,7 @@ qui recense les adresses géolocalisées des bâtiments sur l’ensemble du terr
 
 ### Origines et format des données
 
-La base de données bâtiments est disponible ici :
-<https://www.data.gouv.fr/fr/datasets/batiments-de-troyes-champagne-metropole/>.
+La base de données bâtiments est disponible [ici](https://www.data.gouv.fr/fr/datasets/batiments-de-troyes-champagne-metropole/).
 Ce jeu de données a été commandé par "Troyes Champagne Métropole" et a été mise à jour dernièrement en août 2024 dans le but de regrouper les entités géographiques de la métropole troyenne.
 Les données proviennent elles-mêmes de deux sources différentes qui ont été fusionnées : BDTOPO® et BD PARCELLAIRE®, les deux étant produits par IGN.
 
@@ -24,15 +23,14 @@ Les données proviennent elles-mêmes de deux sources différentes qui ont été
   Elle est réalisée à partir de l'assemblage du plan cadastral dématérialisé. Cependant, elle n'est plus entretenue depuis 2019.
 - La BDTOPO® est maintenu depuis 2019, elle couvre de manière cohérente l’ensemble des entités géographiques et administratives du territoire national.
 
-Et la base de données des adresses, un csv par département, est ici (adresses-10.csv) :
-<https://adresse.data.gouv.fr/data/ban/adresses/latest/csv>.
+Et la base de données des adresses, un csv par département, est [ici](https://adresse.data.gouv.fr/data/ban/adresses/latest/csv)
+(adresses-10.csv que nous avons renommé [adresses_aube.csv](data/adresses_aube.csv)).
 Les données proviennent de la BAN.
 Ces données sont initialement destiné aux services d'urgence pour qu'ils puissent se diriger.
 Elle est aussi destiné au raccord aux réseaux d’énergies ou de communication ou encore pour des analyses cartographiques précises.
 Sa constitution est copilotée par l’ANCT, la DINUM et l’IGN.
 
-Les liens, quant à eux sont disponibles sur ce lien :
-<https://geoservices.ign.fr/ban-plus>.
+Les liens, quant à eux sont disponibles sur ce [lien](https://geoservices.ign.fr/ban-plus).
 Produits aussi par IGN, c'est une base de données qui permet de lier la BAN à son environnement géographique.
 
 ### Les variables
@@ -43,22 +41,22 @@ Dans notre étude, nous allons considérer 16 variables.
 
 Nous avons sélectionné 14 variables dans le 1er jeu de données.
 
-| Nom        | Type                | Description                                                                  |
-| ---------- | ------------------- | ---------------------------------------------------------------------------- |
-| NATURE     | nominal             | architecture du bâtiment                                                     |
-| USAGE1     | nominal             | utilisation du bâtiment (agricole, résidentiel, religieux...)                |
-| USAGE2     | nominal (optionnel) | utilisation du bâtiment                                                      |
-| LEGER      | discrète            | structure légère ou pas                                                      |
-| DATE_APP   | discrète            | date d'apparition/construction (pas toujours présent)                        |
-| ACQU_PLANI | nominal             | de quelle base provient l'information                                        |
-| NB_LOGTS   | discrète            | nombre de logements dans le bâtiment                                         |
-| NB_ETAGES  | discrète            | nombre d'étages du bâtiment                                                  |
-| MAT_MURS   | discrète            | code des matériaux des murs (à croiser avec le csv materiaux_murs.csv)       |
-| MAT_TOITS  | discrète            | code des matériaux de la toiture (à croiser avec le csv materiaux_toits.csv) |
-| HAUTEUR    | continue            | hauteur du bâtiment                                                          |
-| Z_SOL      | continue            | altitude du sol                                                              |
-| Z_TOIT     | continue            | altitude du toit                                                             |
-| ETAT       | nominal             | état du bâtiment (en projet, en construction, en service, en ruine)          |
+| Nom        | Type                | Description                                                                                              |
+| ---------- | ------------------- | -------------------------------------------------------------------------------------------------------- |
+| NATURE     | nominal             | architecture du bâtiment                                                                                 |
+| USAGE1     | nominal             | utilisation du bâtiment (agricole, résidentiel, religieux...)                                            |
+| USAGE2     | nominal (optionnel) | utilisation du bâtiment                                                                                  |
+| LEGER      | discrète            | structure légère ou pas                                                                                  |
+| DATE_APP   | discrète            | date d'apparition/construction (pas toujours présent)                                                    |
+| ACQU_PLANI | nominal             | de quelle base provient l'information                                                                    |
+| NB_LOGTS   | discrète            | nombre de logements dans le bâtiment                                                                     |
+| NB_ETAGES  | discrète            | nombre d'étages du bâtiment                                                                              |
+| MAT_MURS   | discrète            | code des matériaux des murs (à croiser avec le csv [materiaux_murs.csv](data/materiaux_murs.csv))        |
+| MAT_TOITS  | discrète            | code des matériaux de la toiture (à croiser avec le csv [materiaux_toits.csv](data/materiaux_toits.csv)) |
+| HAUTEUR    | continue            | hauteur du bâtiment                                                                                      |
+| Z_SOL      | continue            | altitude du sol                                                                                          |
+| Z_TOIT     | continue            | altitude du toit                                                                                         |
+| ETAT       | nominal             | état du bâtiment (en projet, en construction, en service, en ruine)                                      |
 
 #### ADRESSES
 
