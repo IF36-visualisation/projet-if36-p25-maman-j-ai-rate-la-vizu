@@ -12,12 +12,18 @@ Afin d’enrichir notre analyse, nous avons décidé d’y associer un second je
 ### Origines et format des données
 
 La base de données bâtiments est disponible ici: <https://www.data.gouv.fr/fr/datasets/batiments-de-troyes-champagne-metropole/>
+Ce jeu de données a été commandé par "Troyes Champagne Métropôle" et a été mise à jour dernièrement en août 2024 dans le but de regrouper les entités géopgarphiques de la métropôle troyenne.
+Les données proviennent elles-même de deux sources différentes qui ont été fusionnées: BDTOPO et BD PARCELLAIRE, les deux étant produits par IGN.
+
+- La BD PARCELLAIRE fournit l'information cadastrale numérique, géoréférencée et continue sur l'ensemble du territoire français. Elle est réalisée à partir de l'assemblage du plan cadastral dématérialisé. Cependant elle n'est plus entretenue depuis 2019.
+- La BDTOPO est maintenu depuis 2019, elle couvre de manière cohérente l’ensemble des entités géographiques et administratives du territoire national.
 
 Et la base de données des adresses, un csv par département, est ici (adresses-10.csv): <https://adresse.data.gouv.fr/data/ban/adresses/latest/csv>
+Les données proviennent de la BAN ou Banque Nationale d'Adresses. Ces données sont initiallement destiné aux services d'urgence pour qu'ils puissent se diriger. Elle est aussi destiné au raccord aux réseaux d’énergies ou de communication ou encore pour des analyses cartographiques précises.
+Sa constitution est co-pilotée par l’ANCT, la DINUM et l’IGN.
 
 Les liens, quant à eux sont disponibles sur ce lien: <https://geoservices.ign.fr/ban-plus>
-
-Les données sont stockées au format csv.
+Produits aussi par IGN, c'est une base de données qui permet de lier la Base Adresse Nationale à son environnement géographique.
 
 ### Les variables
 
