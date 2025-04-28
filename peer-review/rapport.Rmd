@@ -1,36 +1,25 @@
-
 # Introduction
 
 ## Étude des bâtiments de Troyes
 
 ## Données
 
-Le jeu de données « Bâtiments de Troyes Champagne Métropole » recense l’ensemble des bâtiments situés dans l’agglomération Troyes Champagne Métropole, à des fins variées telles que l’urbanisme, l’aménagement du territoire, les analyses foncières ou encore la gestion des services publics.
-Il a été publié en août 2024 sur la plateforme data.gouv.fr.
+Le jeu de données « Bâtiments de Troyes Champagne Métropole » recense l’ensemble des bâtiments situés dans l’agglomération Troyes Champagne Métropole, à des fins variées telles que l’urbanisme, l’aménagement du territoire, les analyses foncières ou encore la gestion des services publics. Il a été publié en août 2024 sur la plateforme data.gouv.fr.
 
-Ce jeu de données provient de l’unification des bases BDTOPO® et BD PARCELLAIRE® de l’IGN.
-Il comprend 107 946 observations, avec très peu de valeurs manquantes, ce qui en fait une base fiable et complète pour l’analyse spatiale.
+Ce jeu de données provient de l’unification des bases BDTOPO® et BD PARCELLAIRE® de l’IGN. Il comprend 107 946 observations, avec très peu de valeurs manquantes, ce qui en fait une base fiable et complète pour l’analyse spatiale.
 
-Nous avons choisi ce jeu de données, car il nous semble pertinent d’étudier la répartition géographique des bâtiments dans la ville de Troyes.
-Afin d’enrichir notre analyse, nous avons décidé d’y associer un second jeu de données : la Base Adresse Nationale (BAN), qui recense les adresses géolocalisées des bâtiments sur l’ensemble du territoire français (nous utiliserons uniquement les adresses du département nous concernant).
+Nous avons choisi ce jeu de données, car il nous semble pertinent d’étudier la répartition géographique des bâtiments dans la ville de Troyes. Afin d’enrichir notre analyse, nous avons décidé d’y associer un second jeu de données : la Base Adresse Nationale (BAN), qui recense les adresses géolocalisées des bâtiments sur l’ensemble du territoire français (nous utiliserons uniquement les adresses du département nous concernant).
 
 ### Origines et format des données
 
-La base de données bâtiments est disponible [ici](https://www.data.gouv.fr/fr/datasets/batiments-de-troyes-champagne-metropole/).
-Ce jeu de données a été commandé par "Troyes Champagne Métropole" et a été mise à jour dernièrement en août 2024 dans le but de regrouper les entités géographiques de la métropole troyenne.
-Les données proviennent elles-mêmes de deux sources différentes qui ont été fusionnées : BDTOPO® et BD PARCELLAIRE®, les deux étant produits par IGN.
+La base de données bâtiments est disponible [ici](https://www.data.gouv.fr/fr/datasets/batiments-de-troyes-champagne-metropole/). Ce jeu de données a été commandé par "Troyes Champagne Métropole" et a été mise à jour dernièrement en août 2024 dans le but de regrouper les entités géographiques de la métropole troyenne. Les données proviennent elles-mêmes de deux sources différentes qui ont été fusionnées : BDTOPO® et BD PARCELLAIRE®, les deux étant produits par IGN.
 
 -   La BD PARCELLAIRE® fournit l'information cadastrale numérique, géo-référencée et continue sur l'ensemble du territoire français. Elle est réalisée à partir de l'assemblage du plan cadastral dématérialisé. Cependant, elle n'est plus entretenue depuis 2019.
 -   La BDTOPO® est maintenu depuis 2019, elle couvre de manière cohérente l’ensemble des entités géographiques et administratives du territoire national.
 
-Et la base de données des adresses, un csv par département, est [ici](https://adresse.data.gouv.fr/data/ban/adresses/latest/csv) (adresses-10.csv que nous avons renommé [adresses_aube.csv](data/adresses_aube.csv)).
-Les données proviennent de la BAN.
-Ces données sont initialement destiné aux services d'urgence pour qu'ils puissent se diriger.
-Elle est aussi destiné au raccord aux réseaux d’énergies ou de communication ou encore pour des analyses cartographiques précises.
-Sa constitution est copilotée par l’ANCT, la DINUM et l’IGN.
+Et la base de données des adresses, un csv par département, est [ici](https://adresse.data.gouv.fr/data/ban/adresses/latest/csv) (adresses-10.csv que nous avons renommé [adresses_aube.csv](data/adresses_aube.csv)). Les données proviennent de la BAN. Ces données sont initialement destiné aux services d'urgence pour qu'ils puissent se diriger. Elle est aussi destiné au raccord aux réseaux d’énergies ou de communication ou encore pour des analyses cartographiques précises. Sa constitution est copilotée par l’ANCT, la DINUM et l’IGN.
 
-Les liens, quant à eux sont disponibles sur ce [lien](https://geoservices.ign.fr/ban-plus).
-Produits aussi par IGN, c'est une base de données qui permet de lier la BAN à son environnement géographique.
+Les liens, quant à eux sont disponibles sur ce [lien](https://geoservices.ign.fr/ban-plus). Produits aussi par IGN, c'est une base de données qui permet de lier la BAN à son environnement géographique.
 
 ### Les variables
 
@@ -41,7 +30,7 @@ Dans notre étude, nous allons considérer 16 variables.
 Nous avons sélectionné 14 variables dans le 1er jeu de données.
 
 | Nom | Type | Description |
-|------------|------------|------------------------------------------------|
+|---------------|---------------|-------------------------------------------|
 | NATURE | nominal | architecture du bâtiment |
 | USAGE1 | nominal | utilisation du bâtiment (agricole, résidentiel, religieux...) |
 | USAGE2 | nominal (optionnel) | utilisation du bâtiment |
@@ -68,15 +57,13 @@ Pour la localisation, nous utiliserons 2 variables : la longitude et la latitude
 
 #### Pourquoi avoir choisi ces variables
 
-Nous avons enlevé les variables qui nous semblaient inutiles ainsi que celles comportant peu de valeurs.
-Nous avons aussi enlevé les variables que nous n'avons pas trouvées pertinentes.
+Nous avons enlevé les variables qui nous semblaient inutiles ainsi que celles comportant peu de valeurs. Nous avons aussi enlevé les variables que nous n'avons pas trouvées pertinentes.
 
 ## Plan d'analyse
 
 ### 1. Comment la ville de Troyes s'est étendue géographiquement au fil des années ?
 
-Il s'agit ici de visualiser l'évolution spatiale de la ville de Troyes au fil du temps.
-Pour cela, nous utiliserons la variable `date_app` et les variables de coordonnées géographiques : `latitude` et `longitude`.
+Il s'agit ici de visualiser l'évolution spatiale de la ville de Troyes au fil du temps. Pour cela, nous utiliserons la variable `date_app` et les variables de coordonnées géographiques : `latitude` et `longitude`.
 
 Comme types de visualisations à envisager, nous avons :
 
@@ -88,8 +75,7 @@ Les problèmes potentiels :
 
 ### 2. Y a-t-il un lien entre les matériaux de construction et les dates de construction ?
 
-Il s'agit ici de déterminer s'il existe une relation entre les variables `date_app`, `mat_murs` et `mat_toits`.
-L'objectif est de vérifier si les matériaux de construction des bâtiments varient en fonction des époques.
+Il s'agit ici de déterminer s'il existe une relation entre les variables `date_app`, `mat_murs` et `mat_toits`. L'objectif est de vérifier si les matériaux de construction des bâtiments varient en fonction des époques.
 
 Pour cela, nous envisageons deux types de visualisations :
 
@@ -110,9 +96,7 @@ Pour cela, nous envisageons deux types de visualisations :
 
 ### 3. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
 
-L'objectif ici est de comprendre si l'évolution des matériaux a un impact sur la hauteur des bâtiments.
-Nous aimerions comparer la distribution des hauteurs en fonction des matériaux et vérifier si certains matériaux sont associés à des hauteurs spécifiques.
-Nous utiliserions de nouveau les variables `mat_murs` et `mat_toits` que nous mettrions en relation avec la variable `hauteur`.
+L'objectif ici est de comprendre si l'évolution des matériaux a un impact sur la hauteur des bâtiments. Nous aimerions comparer la distribution des hauteurs en fonction des matériaux et vérifier si certains matériaux sont associés à des hauteurs spécifiques. Nous utiliserions de nouveau les variables `mat_murs` et `mat_toits` que nous mettrions en relation avec la variable `hauteur`.
 
 Pour cela, nous envisageons d'utiliser :
 
@@ -122,9 +106,7 @@ Pour cela, nous envisageons d'utiliser :
 
 ### 4. Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
 
-L'objectif ici est de déterminer si certains types d'usage des bâtiments sont spécifiquement localisés dans certaines zones de la ville de Troyes.
-Pouvons-nous identifier des zones résidentielles, des zones industrielles et des zones commerciales ?
-Nous utiliserons les variables de coordonnées géographiques (`longitude` et `latitude`) et les variables `usage1` et `usage2`.
+L'objectif ici est de déterminer si certains types d'usage des bâtiments sont spécifiquement localisés dans certaines zones de la ville de Troyes. Pouvons-nous identifier des zones résidentielles, des zones industrielles et des zones commerciales ? Nous utiliserons les variables de coordonnées géographiques (`longitude` et `latitude`) et les variables `usage1` et `usage2`.
 
 Pour cela, nous envisageons :
 
@@ -136,8 +118,7 @@ Les problèmes potentiels :
 
 ### 5. Y a-t-il une liaison entre la hauteur des bâtiments et leur usage ?
 
-Il s'agit de déterminer s'il existe une relation entre la hauteur d'un bâtiment et son usage.
-Les variables utilisées sont : la variable `hauteur` et la variable `usage1`.
+Il s'agit de déterminer s'il existe une relation entre la hauteur d'un bâtiment et son usage. Les variables utilisées sont : la variable `hauteur` et la variable `usage1`.
 
 Pour cela, nous envisageons d'utiliser :
 
@@ -145,16 +126,84 @@ Pour cela, nous envisageons d'utiliser :
     -   L'axe des abscisses représenterait les tranches de hauteur
     -   L'axe des ordonnées représenterait le nombre de bâtiments
     -   Chaque barre avec une répartition des usages
-    
+
 ## Analyse du dataset
 
 ### 1- Lien entre la hauteur des batiments et leur usage.
 
+#### 
+
+Il s'agit de déterminer s'il existe une relation entre la hauteur d'un bâtiment et son usage. Les variables utilisées sont : la variable `hauteur` et la variable `usage1`.
+
+Résultats attendus:
+
+Nous pensons que:
+- Les bâtiments résidentiels seraient majoritairement de petite ou moyenne hauteur
+
+- Les bâtiments à usage commercial ou industriel pourraient être de hauteur élévée.
+
+#### Visualisation
+
+```{r graphique 1, Lien entre la hauteur des batiments et leur usage. }
+
+#packages
+library(dplyr)
+library(readr)
+library(ggplot2)
+
+#données
+batiments <- read_csv("C:\\Users\\djouw\\Desktop\\School\\P25\\IF36\\projet\\batiments_troyes.csv")
+adresses <- read_csv("C:/Users/djouw/Desktop/School/P25/IF36/projet/adresses-10.csv")
+materiaux_murs <- read_csv("C:/Users/djouw/Desktop/School/P25/IF36/projet/materiaux_murs.csv")
+materiaux_toits <- read_csv("C:/Users/djouw/Desktop/School/P25/IF36/projet/materiaux_toits.csv")
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+#nettoyage
+
+#relier les datasets
+batiments <- batiments %>% left_join(materiaux_murs, by = c("MAT_MURS" = "code"))
+batiments <- batiments %>% rename(nom_materiau_murs = valeur)
+
+batiments <- batiments %>% left_join(materiaux_toits, by = c("MAT_TOITS" = "code"))
+batiments <- batiments %>% rename(nom_materiau_toits = valeur)
+batiments <- batiments %>% select(-MAT_MURS, -MAT_TOITS)
+
+batiments <- batiments %>% select(-DATE_CREAT, -DATE_MAJ, -DATE_CONF, -SOURCE, -ID_SOURCE,-PREC_PLANI, -ACQU_ALTI, -PREC_ALTI, - ORIGIN_BAT, -APP_FF )
+
+# visualisation
+
+##créer les tranches de hauteur
+batiments$hauteur_tranche <- cut(batiments$HAUTEUR,  breaks = c(0, 10, 20, 30, 40, 50, 100), labels = c("0-10m", "10-20m", "20-30m", "30-40m", "40-50m", "50+m"), right = FALSE)
+
+#
+# Calculer la répartition des usages par tranche de hauteur
+repartition_usage <- batiments %>%
+  group_by(hauteur_tranche, USAGE1) %>%
+  summarise(nombre_batiments = n(), .groups = "drop")
+
+#
+repartition_usage <- repartition_usage %>%
+  filter(!is.na(hauteur_tranche))
+
+
+#diagramme
+ggplot(repartition_usage, aes(x = hauteur_tranche, y = nombre_batiments, fill = USAGE1)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Répartition des usages des bâtiments selon leur hauteur",
+       x = "Tranches de Hauteur (m)",
+       y = "Nombre de bâtiments") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+
+
+
+
+
 ```
 
+#### Interprétation des résultats
 
+On remarque que la plupart des batiments ont une hauteur inférieure à 10 m. Celà peut être lié au fait que la ville de Troyes n'a pas subi une urbanisation dense.
+Ensuite, on remarque que la plupart des bâtiments sont à usage résidentiel.
 
+Contrairement à l'hypothèse de départ, la plupart des bâtiments à usage commercial ont une hauteur inférieure à 10 m.  Celà s'explique par le fait que les commerces sont intégrés en rez-de-chaussée des bâtiments résidentiels.
