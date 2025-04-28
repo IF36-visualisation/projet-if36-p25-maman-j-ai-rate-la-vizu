@@ -243,7 +243,7 @@ Nous pensons que :
 
 ### Visualisation
 
-```{r graphique 1}
+```{r graphique 1, fig.width=10, fig.height=6}
 batiments1 <- batiments
 
 # visualisation
@@ -299,7 +299,7 @@ Nous pensons que :
 
 ### Visualisation
 
-```{r graphique 2}
+```{r graphique 2, fig.width=8, fig.height=8}
 batiments_sf = st_as_sf(batiments, coords = c("LONGITUDE", "LATITUDE"), crs = 4326)
 batiments_sf = mutate(batiments_sf, DATE_APP = as.double(substr(DATE_APP, 1, 4)))
 periodes = c("Avant 1600", "1600-1700", "1700-1800", "1800-1900", "1900-2000", "Depuis 2000")
