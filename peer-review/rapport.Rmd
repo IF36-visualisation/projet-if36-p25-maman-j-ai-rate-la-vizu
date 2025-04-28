@@ -372,15 +372,18 @@ On remarque aussi que l'agglomération de Troyes avait sa forme assez tôt et m�
 
 ### 3. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
 
-L'objectif ici est de comprendre si l'évolution des matériaux a un impact sur la hauteur des bâtiments.
-Nous aimerions comparer la distribution des hauteurs en fonction des matériaux et vérifier si certains matériaux sont associés à des hauteurs spécifiques.
-Nous utiliserions de nouveau les variables `mat_murs` et `mat_toits` que nous mettrions en relation avec la variable `hauteur`.
+L'objectif ici est de comprendre si l'évolution des matériaux, principalement des murs a un impact sur la hauteur des bâtiments.
+Pour cela nous allons réaliser deux violinplot, l'un lié au matériau des murs et l'autre des toits afin de confirmer une corrélation.
 
-Pour cela, nous envisageons d'utiliser :
+Les variables utilisées sont :
 
--   Un violon plot ou box plot :
-    -   L'axe des abscisses représentant le type de matériau
-    -   L'axe des ordonnées représentant la hauteur des bâtiments
+-   MAT_MURS: variable nominal: code des matériaux des murs, croisé avec [materiaux_murs.csv](data/materiaux_murs.csv)
+
+-   MAT_TOITS: variable nominal: code des matériaux de la toiture, croisé avec [materiaux_toits.csv](data/materiaux_toits.csv)
+
+-   HAUTEUR: variable continue représentant la hauteur absolue du bâtiment
+
+Nous nous attendons à ce que les matériaux plus modernes et denses comme le béton ( au niveau des murs et aussi de la toiture ) composent les batîments les plus hauts de l'agglomération troyenne.
 
 ### Visualisation
 
@@ -439,3 +442,7 @@ final_plot
 ```
 
 ### Interprétation des résultats
+
+Tout d'abord
+
+Cependant, quand l'on observe le graphique lié à la hauteur des bâtiments selon le matérieu de la toiture
