@@ -455,3 +455,44 @@ Cela indique une possible corrélation entre le type de matériau utilisé pour 
 En conclusion, la question est partiellement répondue et les résultats diffèrent sensiblement de nos attentes initiales.
 On remarque une corrélation significative entre les matériaux de toiture et la hauteur des bâtiments, alors que celle entre les matériaux des murs et la hauteur est beaucoup plus difficile à établir sans pour autant pouvoir l'écarter du champ des possibilités.
 Cela soulève donc une nouvelle question : pourquoi le matériau de la toiture semble-t-il mieux refléter la hauteur d'un bâtiment que celui des murs ?
+
+### 4. Peut-on voir des matériaux de construction des murs de prédiléction selon les époques ?
+
+L'objectif ici est de comprendre si l'utilisation des matériaux changent salon les époques.
+Pour cela nous allons réaliser un violinplot lié matériau des murs.
+
+Les variables utilisées sont :
+
+-   MAT_MURS: variable nominal: code des matériaux des murs, croisé avec [materiaux_murs.csv](data/materiaux_murs.csv)
+
+-   DATE_APP: variable discrète d'apparition des batiements
+
+Nous nous attendons à ce que les matériaux les plus solides de chaque époque soit utilisés successivement.
+
+### Visualisation
+
+```{r}
+# Récupération des variables utilisées
+batiments1 = batiments %>%
+  select(DATE_APP,MAT_MURS)
+
+# Nettoyage des données
+batiments1 = batiments1 %>%
+  filter(!is.na(MAT_MURS) | MAT_MURS != "" |!is.na(DATE_APP) | DATE_APP != "" )
+
+# Création du graphique 
+ggplot(batiments, aes(x = DATE_APP, y=MAT_MURS)) +
+  geom_violin() +
+  labs(title = "Nombre de batiments par matériaux et par date",
+       x = "Dates",
+       y = "Matériaux des murs") +
+  theme_minimal()
+
+```
+
+### Interprétation des résultats
+
+Tout d'abord, il faut préciser que nous manquant de beaucoup d'information, particulièrement sur les années avant 1800. Il est donc impossible de généraliser les informations du graphe. De plus, un certain nombre de batiments n'ont pas de matriaux connus. Nous passons donc de 107 946 observations à 59097 observations. 
+Cependant, nous pouvons voir des tendances se dégagner. Certains matériaux sont présent depuis avant 1600, comme l'agglomere et le bois. D'autres ont connu des pics de popularité récents, comme le béton, la brique et l'agglomere. On peut aussi remarqué l'utilisation massive de la pierre autours des années 1900 mais s'est rarifié depuis.  Même si certains matériaux s'imposent à certaines époques, on peut voir qu'il y a une diveristé de ceux-ci et beaucoup de mélange de matériaux.
+
+Pour aller plus loin, on aurait pu faire le même graphique mais en ayant une distribution des matériaux par période en pourcentage, ce qui éviterait "l'écrasement" des données plus anciennes et moins nombre, mais ferait perdre du détatil sur la chronologie. 
