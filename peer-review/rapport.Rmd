@@ -127,57 +127,106 @@ Pour cela, nous envisageons d'utiliser :
     -   L'axe des ordonnées représenterait le nombre de bâtiments
     -   Chaque barre avec une répartition des usages
 
-## Analyse du dataset
+# Exploration
 
-### 1- Lien entre la hauteur des batiments et leur usage.
+## Import des packages et des données\*
 
-#### 
+```{r}
+library(dplyr, warn.conflicts = FALSE)
+library(ggplot2)
+library(patchwork)
+library(readr)
+library(sf)
+library(viridis, quietly = TRUE)
 
-Il s'agit de déterminer s'il existe une relation entre la hauteur d'un bâtiment et son usage. Les variables utilisées sont : la variable `hauteur` et la variable `usage1`.
+batiments = read_csv("../data/batiments_troyes_coords.csv", col_types = cols(
+    ID = col_character(),
+    NATURE = col_character(),
+    USAGE1 = col_character(),
+    USAGE2 = col_character(),
+    LEGER = col_character(),
+    ETAT = col_character(),
+    DATE_CREAT = col_datetime(),
+    DATE_MAJ = col_datetime(),
+    DATE_APP = col_date(),
+    DATE_CONF = col_date(),
+    SOURCE = col_character(),
+    ID_SOURCE = col_character(),
+    ACQU_PLANI = col_character(),
+    PREC_PLANI = col_double(),
+    ACQU_ALTI = col_character(),
+    PREC_ALTI = col_double(),
+    NB_LOGTS = col_double(),
+    NB_ETAGES = col_double(),
+    MAT_MURS = col_character(),
+    MAT_TOITS = col_character(),
+    HAUTEUR = col_double(),
+    Z_MIN_SOL = col_double(),
+    Z_MIN_TOIT = col_double(),
+    Z_MAX_TOIT = col_double(),
+    Z_MAX_SOL = col_double(),
+    ORIGIN_BAT = col_character(),
+    APP_FF = col_character(),
+    LONGITUDE = col_double(),
+    LATITUDE = col_double()
+))
 
-Résultats attendus:
+materiaux_murs = read_csv("../data/materiaux_murs.csv", col_types = cols(
+    code = col_character(),
+    valeur = col_character()
+))
+materiaux_toits = read_csv("../data/materiaux_toits.csv", col_types = cols(
+    code = col_character(),
+    valeur = col_character()
+))
 
-Nous pensons que:
-- Les bâtiments résidentiels seraient majoritairement de petite ou moyenne hauteur
+batiments = batiments %>%
+    mutate(LEGER = if_else(LEGER == "Oui", TRUE, FALSE))
 
-- Les bâtiments à usage commercial ou industriel pourraient être de hauteur élévée.
+batiments = batiments %>%
+    left_join(materiaux_murs, by = c("MAT_MURS" = "code"), relationship = "many-to-one") %>%
+    select(-MAT_MURS) %>%
+    rename(MAT_MURS = valeur)
+
+batiments = batiments %>%
+    left_join(materiaux_toits, by = c("MAT_TOITS" = "code"), relationship = "many-to-one") %>%
+    select(-MAT_TOITS) %>%
+    rename(MAT_TOITS = valeur)
+
+batiments = batiments %>%
+    select(c(NATURE, USAGE1, USAGE2, LEGER, DATE_APP, ACQU_PLANI, NB_LOGTS, NB_ETAGES, MAT_MURS, MAT_TOITS, HAUTEUR, Z_MIN_SOL, Z_MAX_TOIT, ETAT, LONGITUDE, LATITUDE))
+```
+
+```{r}
+head(batiments)
+```
+
+## 1. Lien entre la hauteur des bâtiments et leur usage.
+
+Il s'agit de déterminer s'il existe une relation entre la hauteur d'un bâtiment et son usage.
+Les variables utilisées sont : la variable `hauteur` et la variable `usage1`.
+
+Résultats attendus :
+
+Nous pensons que :
+
+-   Les bâtiments résidentiels seraient majoritairement de petite ou moyenne hauteur
+
+-   Les bâtiments à usage commercial ou industriel pourraient être de hauteur élevée.
 
 #### Visualisation
 
 ```{r graphique 1, Lien entre la hauteur des batiments et leur usage. }
-
-#packages
-library(dplyr)
-library(readr)
-library(ggplot2)
-
-#données
-batiments <- read_csv("C:\\Users\\djouw\\Desktop\\School\\P25\\IF36\\projet\\batiments_troyes.csv")
-adresses <- read_csv("C:/Users/djouw/Desktop/School/P25/IF36/projet/adresses-10.csv")
-materiaux_murs <- read_csv("C:/Users/djouw/Desktop/School/P25/IF36/projet/materiaux_murs.csv")
-materiaux_toits <- read_csv("C:/Users/djouw/Desktop/School/P25/IF36/projet/materiaux_toits.csv")
-
-
-#nettoyage
-
-#relier les datasets
-batiments <- batiments %>% left_join(materiaux_murs, by = c("MAT_MURS" = "code"))
-batiments <- batiments %>% rename(nom_materiau_murs = valeur)
-
-batiments <- batiments %>% left_join(materiaux_toits, by = c("MAT_TOITS" = "code"))
-batiments <- batiments %>% rename(nom_materiau_toits = valeur)
-batiments <- batiments %>% select(-MAT_MURS, -MAT_TOITS)
-
-batiments <- batiments %>% select(-DATE_CREAT, -DATE_MAJ, -DATE_CONF, -SOURCE, -ID_SOURCE,-PREC_PLANI, -ACQU_ALTI, -PREC_ALTI, - ORIGIN_BAT, -APP_FF )
+batiments1 <- batiments
 
 # visualisation
 
 ##créer les tranches de hauteur
-batiments$hauteur_tranche <- cut(batiments$HAUTEUR,  breaks = c(0, 10, 20, 30, 40, 50, 100), labels = c("0-10m", "10-20m", "20-30m", "30-40m", "40-50m", "50+m"), right = FALSE)
+batiments1$hauteur_tranche <- cut(batiments$HAUTEUR,  breaks = c(0, 10, 20, 30, 40, 50, 100), labels = c("0-10m", "10-20m", "20-30m", "30-40m", "40-50m", "50+m"), right = FALSE)
 
 #
 # Calculer la répartition des usages par tranche de hauteur
-repartition_usage <- batiments %>%
+repartition_usage <- batiments1 %>%
   group_by(hauteur_tranche, USAGE1) %>%
   summarise(nombre_batiments = n(), .groups = "drop")
 
@@ -203,7 +252,9 @@ ggplot(repartition_usage, aes(x = hauteur_tranche, y = nombre_batiments, fill = 
 
 #### Interprétation des résultats
 
-On remarque que la plupart des batiments ont une hauteur inférieure à 10 m. Celà peut être lié au fait que la ville de Troyes n'a pas subi une urbanisation dense.
+On remarque que la plupart des bâtiments ont une hauteur inférieure à 10 m.
+Cela peut être lié au fait que la ville de Troyes n'a pas subi une urbanisation dense.
 Ensuite, on remarque que la plupart des bâtiments sont à usage résidentiel.
 
-Contrairement à l'hypothèse de départ, la plupart des bâtiments à usage commercial ont une hauteur inférieure à 10 m.  Celà s'explique par le fait que les commerces sont intégrés en rez-de-chaussée des bâtiments résidentiels.
+Contrairement à l'hypothèse de départ, la plupart des bâtiments à usage commercial ont une hauteur inférieure à 10 m.
+Cela s'explique par le fait que les commerces sont intégrés en rez-de-chaussée des bâtiments résidentiels.
