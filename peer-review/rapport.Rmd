@@ -49,7 +49,7 @@ Dans notre étude, nous allons considérer 16 variables.
 Nous avons sélectionné 14 variables dans le 1er jeu de données.
 
 | Nom | Type | Description |
-|------------------|------------------|------------------------------------|
+|-------------------|-------------------|-----------------------------------|
 | NATURE | nominal | architecture du bâtiment |
 | USAGE1 | nominal | utilisation du bâtiment (agricole, résidentiel, religieux...) |
 | USAGE2 | nominal (optionnel) | utilisation du bâtiment |
@@ -156,10 +156,12 @@ Pour cela, nous envisageons d'utiliser :
 
 # Exploration
 
-## Import des packages et des données
+```{r include=FALSE}
+knitr::opts_chunk$set(
+    echo = FALSE
+)
 
-```{r}
-library(dplyr, warn.conflicts = FALSE)
+library(dplyr)
 library(ggplot2)
 library(patchwork)
 library(readr)
@@ -228,10 +230,6 @@ batiments = batiments %>%
              ETAT, LONGITUDE, LATITUDE))
 ```
 
-```{r}
-head(batiments)
-```
-
 ## 1. Lien entre la hauteur des bâtiments et leur usage.
 
 Il s'agit de déterminer s'il existe une relation entre la hauteur d'un bâtiment et son usage.
@@ -247,7 +245,7 @@ Nous pensons que :
 
 ### Visualisation
 
-```{r graphique 1, fig.width=10, fig.height=6}
+```{r graphique 1, fig.height=6, fig.width=10}
 batiments1 <- batiments
 
 # visualisation
