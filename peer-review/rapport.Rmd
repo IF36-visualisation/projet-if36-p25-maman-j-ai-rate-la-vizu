@@ -1,9 +1,11 @@
 ---
 title: "Peer-review - Bâtiments de Troyes Champagne Métropole"
 author: "Maman j'ai raté la vizu"
-output: pdf_document
-editor_options: 
-  markdown: 
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  markdown:
     wrap: sentence
 ---
 
@@ -49,7 +51,7 @@ Dans notre étude, nous allons considérer 16 variables.
 Nous avons sélectionné 14 variables dans le 1er jeu de données.
 
 | Nom | Type | Description |
-|-------------------|-------------------|-----------------------------------|
+|------------------------|------------------------|------------------------|
 | NATURE | nominal | architecture du bâtiment |
 | USAGE1 | nominal | utilisation du bâtiment (agricole, résidentiel, religieux...) |
 | USAGE2 | nominal (optionnel) | utilisation du bâtiment |
@@ -156,6 +158,8 @@ Pour cela, nous envisageons d'utiliser :
 
 # Exploration
 
+
+
 ```{r include=FALSE}
 knitr::opts_chunk$set(
     echo = FALSE
@@ -228,6 +232,30 @@ batiments = batiments %>%
     select(c(NATURE, USAGE1, USAGE2, LEGER, DATE_APP, ACQU_PLANI, NB_LOGTS,
              NB_ETAGES, MAT_MURS, MAT_TOITS, HAUTEUR, Z_MIN_SOL, Z_MAX_TOIT, 
              ETAT, LONGITUDE, LATITUDE))
+```
+
+##Questions répartion simples
+
+### La distribution des matériaux mûrs
+
+Hypothèses: Ces visualisations nous permettront de voir la distribution des bâtiments en fonction des matériaux utilisés pour les mûrs et les toîts. On pourrait identifier les matériaux les plus utilisés  et trouver les raisons pour les quelles ces matériaux sont aussi utilisés.
+
+Graphe:
+
+Pour celà, nous allons faire un barplot.
+
+→ Matériaux des mûrs:
+
+On utilisera les variables matériaux mûrs.
+
+```{r matériaux murs}  
+ggplot(batiments, aes(x = MAT_MURS))+
+  geom_bar() +
+  labs( title =" Distribution des matériaux des mûrs des batiments", 
+        x = "Matériaux",
+        y = "Nombre de bâtiments")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 ## 1. Lien entre la hauteur des bâtiments et leur usage.
