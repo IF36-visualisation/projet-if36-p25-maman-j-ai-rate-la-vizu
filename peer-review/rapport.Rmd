@@ -344,6 +344,30 @@ ggplot(batiments_filtre_dates, aes(x=periode))+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+##Distribution en fonction des usages.
+
+```{r usages} 
+batiments_filtre_usages <- batiments %>%
+  filter(!is.na(USAGE1 ))
+ggplot(batiments_filtre_usages, aes(x = USAGE1))+
+  geom_bar(fill = "steelblue") +
+  labs( title =" Distribution des matériaux en fonction des usages.", 
+        x = "Usages",
+        y = "Nombre de bâtiments")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
+
+
+
+
+
+
+
+
+
 
 ## 1. Lien entre la hauteur des bâtiments et leur usage.
 
