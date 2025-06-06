@@ -236,23 +236,110 @@ batiments = batiments %>%
 
 ##Questions répartion simples
 
-### La distribution des matériaux mûrs
+### La distribution des matériaux 
 
 Hypothèses: Ces visualisations nous permettront de voir la distribution des bâtiments en fonction des matériaux utilisés pour les mûrs et les toîts. On pourrait identifier les matériaux les plus utilisés  et trouver les raisons pour les quelles ces matériaux sont aussi utilisés.
 
 Graphe:
 
-Pour celà, nous allons faire un barplot.
+Pour celà, nous allons faire des barplots.
 
 → Matériaux des mûrs:
 
 On utilisera les variables matériaux mûrs.
 
 ```{r matériaux murs}  
-ggplot(batiments, aes(x = MAT_MURS))+
-  geom_bar() +
+batiments_filtre_murs <- batiments %>%
+  filter(!is.na(MAT_MURS), MAT_MURS != "INDETERMINE")
+ggplot(batiments_filtre_murs, aes(x = MAT_MURS))+
+  geom_bar(fill = "steelblue") +
   labs( title =" Distribution des matériaux des mûrs des batiments", 
-        x = "Matériaux",
+        x = "Matériaux des mûrs",
+        y = "Nombre de bâtiments")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+On constate que les matériaux les plus utilisés pour les mûrs sont les briques et l'agglomere.
+
+→ Matériaux des toîts:
+
+
+On utilisera les variables matériaux toîts.
+
+```{r matériaux toîts}  
+batiments_filtre_toits <- batiments %>%
+  filter(!is.na(MAT_TOITS ), MAT_TOITS != "INDETERMINE")
+ggplot(batiments_filtre_toits, aes(x = MAT_TOITS))+
+  geom_bar(fill = "steelblue") +
+  scale_y_log10() +
+  labs( title =" Distribution des matériaux des toîts des batiments", 
+        x = "Matériaux des toîts",
+        y = "Nombre de bâtiments")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+On constate que le matériau le plus utilisé pour les toîts est les tuiles.
+
+### Distribution des hauteurs
+
+L'objectif est de voir la distribution des batîments en fonction de la hauteur des batîments.
+
+```{r hauteurs}  
+batiments1 <- batiments
+
+# visualisation
+
+##créer les tranches de hauteur
+batiments1$hauteur_tranche <- cut(batiments$HAUTEUR,  
+                                  breaks = c(0, 10, 20, 30, 40, 50, 100), 
+                                  labels = c("0-10m", "10-20m", "20-30m", 
+                                             "30-40m", "40-50m", "50+m"), 
+                                  right = FALSE)
+
+batiments_filtre_hauteurs <- batiments1 %>%
+  filter(!is.na(hauteur_tranche))
+
+
+ggplot(batiments_filtre_hauteurs, aes(x = hauteur_tranche))+
+  geom_bar(fill = "steelblue") +
+  scale_y_log10(labels = scales::label_number()) +
+  labs( title =" Distribution  des batiments en fonction de la hauteur", 
+        x = "Hauteur",
+        y = "Nombre de bâtiments")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+On remarque que la plupart des bâtiments ont une hauteur située entre 0 et 10m.
+
+
+### Distribution des dates de construction
+
+L'objectif est de voir la distribution des batîments en fonction de l'année de construction.
+
+```{r dates}  
+library (lubridate)
+batiments_filtre_dates <- batiments %>%
+  filter(!is.na(DATE_APP))
+batiments_filtre_dates$annee_construction <- year(batiments_filtre_dates$DATE_APP)
+
+#créer les périodes
+batiments_filtre_dates$periode <- cut(
+  batiments_filtre_dates$annee_construction,
+  breaks = c(1400, 1600, 1800, 1900, 1950, 2000, Inf),
+  labels = c("1400–1600", "1600–1800", "1800–1900", "1900–1950","1950-2000", "2000+"),
+  right = FALSE # pour que 1600 soit inclus dans 1600–1800, etc.
+)
+
+
+ggplot(batiments_filtre_dates, aes(x=periode))+
+  geom_bar(fill = "steelblue") +
+  labs( title =" Distribution en fonction de l'année de construction ", 
+        x = "Année de construction",
         y = "Nombre de bâtiments")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -274,16 +361,6 @@ Nous pensons que :
 ### Visualisation
 
 ```{r graphique 1, fig.height=6, fig.width=10}
-batiments1 <- batiments
-
-# visualisation
-
-##créer les tranches de hauteur
-batiments1$hauteur_tranche <- cut(batiments$HAUTEUR,  
-                                  breaks = c(0, 10, 20, 30, 40, 50, 100), 
-                                  labels = c("0-10m", "10-20m", "20-30m", 
-                                             "30-40m", "40-50m", "50+m"), 
-                                  right = FALSE)
 
 #
 # Calculer la répartition des usages par tranche de hauteur
@@ -299,7 +376,7 @@ repartition_usage <- repartition_usage %>%
 #diagramme
 ggplot(repartition_usage, aes(x = hauteur_tranche, y = nombre_batiments, fill = USAGE1)) +
   geom_bar(stat = "identity") +
-  labs(title = "Répartition des usages des bâtiments selon leur hauteur",
+  labs( title = "Répartition des usages des bâtiments selon leur hauteur",
        x = "Tranches de Hauteur (m)",
        y = "Nombre de bâtiments") +
   theme_minimal() +
