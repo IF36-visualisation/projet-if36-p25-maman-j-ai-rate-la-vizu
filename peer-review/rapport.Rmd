@@ -48,7 +48,7 @@ Dans notre étude, nous allons considérer 16 variables.
 
 #### BATI
 
-Nous avons sélectionné 14 variables dans le 1er jeu de données.
+Nous avons sélectionné 14 variables dans le premier jeu de données.
 
 | Nom | Type | Description |
 |------------------------|------------------------|------------------------|
@@ -158,8 +158,6 @@ Pour cela, nous envisageons d'utiliser :
 
 # Exploration
 
-
-
 ```{r include=FALSE}
 knitr::opts_chunk$set(
     echo = FALSE
@@ -167,6 +165,8 @@ knitr::opts_chunk$set(
 
 library(dplyr)
 library(ggplot2)
+library(ggspatial)
+library(osmdata)
 library(patchwork)
 library(readr)
 library(sf)
@@ -234,60 +234,59 @@ batiments = batiments %>%
              ETAT, LONGITUDE, LATITUDE))
 ```
 
-##Questions répartion simples
+## Questions répartition simples
 
-### La distribution des matériaux 
+### Distribution des matériaux
 
-Hypothèses: Ces visualisations nous permettront de voir la distribution des bâtiments en fonction des matériaux utilisés pour les mûrs et les toîts. On pourrait identifier les matériaux les plus utilisés  et trouver les raisons pour les quelles ces matériaux sont aussi utilisés.
+Hypothèses: Ces visualisations nous permettront de voir la distribution des bâtiments en fonction des matériaux utilisés pour les murs et les toits.
+On pourrait identifier les matériaux les plus utilisés et trouver les raisons pour les quelles ces matériaux sont aussi utilisés.
 
 Graphe:
 
-Pour celà, nous allons faire des barplots.
+Pour cela, nous allons faire des barplots.
 
-→ Matériaux des mûrs:
+#### Matériaux des murs:
 
-On utilisera les variables matériaux mûrs.
+On utilisera les variables matériaux murs.
 
-```{r matériaux murs}  
+```{r matériaux murs}
 batiments_filtre_murs <- batiments %>%
   filter(!is.na(MAT_MURS), MAT_MURS != "INDETERMINE")
 ggplot(batiments_filtre_murs, aes(x = MAT_MURS))+
   geom_bar(fill = "steelblue") +
-  labs( title =" Distribution des matériaux des mûrs des batiments", 
-        x = "Matériaux des mûrs",
+  labs( title =" Distribution des matériaux des murs des batiments", 
+        x = "Matériaux des murs",
         y = "Nombre de bâtiments")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+On constate que les matériaux les plus utilisés pour les murs sont les briques et l’aggloméré.
 
-On constate que les matériaux les plus utilisés pour les mûrs sont les briques et l'agglomere.
+#### Matériaux des toits:
 
-→ Matériaux des toîts:
+On utilisera les variables matériaux toits.
 
-
-On utilisera les variables matériaux toîts.
-
-```{r matériaux toîts}  
+```{r matériaux toits}
 batiments_filtre_toits <- batiments %>%
   filter(!is.na(MAT_TOITS ), MAT_TOITS != "INDETERMINE")
 ggplot(batiments_filtre_toits, aes(x = MAT_TOITS))+
   geom_bar(fill = "steelblue") +
   scale_y_log10() +
-  labs( title =" Distribution des matériaux des toîts des batiments", 
-        x = "Matériaux des toîts",
+  labs( title =" Distribution des matériaux des toits des batiments", 
+        x = "Matériaux des toits",
         y = "Nombre de bâtiments")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-On constate que le matériau le plus utilisé pour les toîts est les tuiles.
+On constate que le matériau le plus utilisé pour les toits est les tuiles.
 
 ### Distribution des hauteurs
 
-L'objectif est de voir la distribution des batîments en fonction de la hauteur des batîments.
+L'objectif est de voir la distribution des bâtiments en fonction de la hauteur des bâtiments.
 
-```{r hauteurs}  
+```{r hauteurs}
 batiments1 <- batiments
 
 # visualisation
@@ -313,15 +312,13 @@ ggplot(batiments_filtre_hauteurs, aes(x = hauteur_tranche))+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-
 On remarque que la plupart des bâtiments ont une hauteur située entre 0 et 10m.
-
 
 ### Distribution des dates de construction
 
-L'objectif est de voir la distribution des batîments en fonction de l'année de construction.
+L'objectif est de voir la distribution des bâtiments en fonction de l'année de construction.
 
-```{r dates}  
+```{r dates}
 library (lubridate)
 batiments_filtre_dates <- batiments %>%
   filter(!is.na(DATE_APP))
@@ -344,14 +341,15 @@ ggplot(batiments_filtre_dates, aes(x=periode))+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
-##Distribution en fonction des usages.
 
-```{r usages} 
+### Distribution en fonction des usages.
+
+```{r usages}
 batiments_filtre_usages <- batiments %>%
   filter(!is.na(USAGE1 ))
 ggplot(batiments_filtre_usages, aes(x = USAGE1))+
   geom_bar(fill = "steelblue") +
-  labs( title =" Distribution des matériaux en fonction des usages.", 
+  labs( title =" Distribution en fonction des usages.", 
         x = "Usages",
         y = "Nombre de bâtiments")+
   theme_minimal() +
@@ -359,15 +357,6 @@ ggplot(batiments_filtre_usages, aes(x = USAGE1))+
 
 
 ```
-
-
-
-
-
-
-
-
-
 
 ## 1. Lien entre la hauteur des bâtiments et leur usage.
 
@@ -460,10 +449,27 @@ batiments_sf = filter(batiments_sf, PERIODE != "Inconnu")
 batiments_sf = mutate(batiments_sf, PERIODE = factor(PERIODE, levels = periodes))
 bbox = st_bbox(batiments_sf)
 
+osm_bbox = c(
+  min(bbox["xmin"], bbox["xmax"]),
+  min(bbox["ymin"], bbox["ymax"]),
+  max(bbox["xmin"], bbox["xmax"]),
+  max(bbox["ymin"], bbox["ymax"])
+)
+
+osm_roads = opq(bbox = osm_bbox) %>%
+  add_osm_feature(key = "highway") %>%
+  osmdata_sf()
+
+osm_water = opq(bbox = osm_bbox) %>%
+  add_osm_feature(key = "waterway") %>%
+  osmdata_sf()
+
 plot_périodes = function(df, period_list) {
     df = filter(df, PERIODE %in% period_list)
   
     ggplot(df) +
+    geom_sf(data = osm_roads$osm_lines, color = "grey80", size = 0.15, inherit.aes = FALSE) +
+    geom_sf(data = osm_water$osm_lines, color = "skyblue", size = 0.2, inherit.aes = FALSE) +
     geom_sf(aes(color = PERIODE), size = 0.2) +
     scale_color_manual(values = couleurs) +
     coord_sf(
@@ -504,7 +510,7 @@ Il est difficile de connaître la date de construction des bâtiments qui ont é
 J'ai dû masquer tous les bâtiments dont on a pas la date de construction car cela nuisait à la lisibilité du graphique.
 
 On remarque la construction de beaucoup de bâtiments entre 1700 et 1800, puis une assez grosse expansion entre 1800 et 1900.
-On remarque aussi que l'agglomération de Troyes avait sa forme assez tôt et même si elle s'est densifiée, elle ne s'est pas vraiment étendue.
+On remarque aussi que l'agglomération de Troyes avait sa forme assez tôt et que même si elle s'est densifiée, elle ne s'est pas vraiment étendue.
 
 ### 3. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
 
@@ -594,7 +600,7 @@ En conclusion, la question est partiellement répondue et les résultats diffèr
 On remarque une corrélation significative entre les matériaux de toiture et la hauteur des bâtiments, alors que celle entre les matériaux des murs et la hauteur est beaucoup plus difficile à établir sans pour autant pouvoir l'écarter du champ des possibilités.
 Cela soulève donc une nouvelle question : pourquoi le matériau de la toiture semble-t-il mieux refléter la hauteur d'un bâtiment que celui des murs ?
 
-### 4. Peut-on voir des matériaux de construction des murs de prédiléction selon les époques ?
+### 4. Peut-on voir des matériaux de construction des murs de prédilection selon les époques ?
 
 L'objectif ici est de comprendre si l'utilisation des matériaux changent salon les époques.
 Pour cela nous allons réaliser un violinplot lié matériau des murs.
@@ -603,7 +609,7 @@ Les variables utilisées sont :
 
 -   MAT_MURS: variable nominal: code des matériaux des murs, croisé avec [materiaux_murs.csv](data/materiaux_murs.csv)
 
--   DATE_APP: variable discrète d'apparition des batiements
+-   DATE_APP: variable discrète d'apparition des bâtiments
 
 Nous nous attendons à ce que les matériaux les plus solides de chaque époque soit utilisés successivement.
 
@@ -632,12 +638,12 @@ ggplot(batiments, aes(x = DATE_APP, y=MAT_MURS)) +
 
 Tout d'abord, il faut préciser que nous manquant de beaucoup d'information, particulièrement sur les années avant 1800.
 Il est donc impossible de généraliser les informations du graphe.
-De plus, un certain nombre de batiments n'ont pas de matriaux connus.
+De plus, un certain nombre de bâtiments n'ont pas de matériaux connus.
 Nous passons donc de 107 946 observations à 59097 observations.
-Cependant, nous pouvons voir des tendances se dégagner.
-Certains matériaux sont présent depuis avant 1600, comme l'agglomere et le bois.
-D'autres ont connu des pics de popularité récents, comme le béton, la brique et l'agglomere.
-On peut aussi remarqué l'utilisation massive de la pierre autours des années 1900 mais s'est rarifié depuis.
-Même si certains matériaux s'imposent à certaines époques, on peut voir qu'il y a une diveristé de ceux-ci et beaucoup de mélange de matériaux.
+Cependant, nous pouvons voir des tendances se dégager.
+Certains matériaux sont présent depuis avant 1600, comme l’aggloméré et le bois.
+D'autres ont connu des pics de popularité récents, comme le béton, la brique et l’aggloméré.
+On peut aussi remarqué l'utilisation massive de la pierre autours des années 1900 mais s'est raréfié depuis.
+Même si certains matériaux s'imposent à certaines époques, on peut voir qu'il y a une diversité de ceux-ci et beaucoup de mélange de matériaux.
 
-Pour aller plus loin, on aurait pu faire le même graphique mais en ayant une distribution des matériaux par période en pourcentage, ce qui éviterait "l'écrasement" des données plus anciennes et moins nombre, mais ferait perdre du détatil sur la chronologie.
+Pour aller plus loin, on aurait pu faire le même graphique mais en ayant une distribution des matériaux par période en pourcentage, ce qui éviterait "l'écrasement" des données plus anciennes et moins nombre, mais ferait perdre du détail sur la chronologie.
