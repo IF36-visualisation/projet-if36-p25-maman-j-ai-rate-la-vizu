@@ -83,7 +83,19 @@ Nous avons aussi enlevé les variables que nous n'avons pas trouvées pertinente
 
 ## Plan d'analyse
 
-### 1. Comment la ville de Troyes s'est étendue géographiquement au fil des années ?
+### 1. Y a-t-il une liaison entre la hauteur des bâtiments et leur usage ?
+
+Il s'agit de déterminer s'il existe une relation entre la hauteur d'un bâtiment et son usage.
+Les variables utilisées sont : la variable `hauteur` et la variable `usage1`.
+
+Pour cela, nous envisageons d'utiliser :
+
+-   Un diagramme à barres empilées pour étudier la répartition des usages :
+    -   L'axe des abscisses représenterait les tranches de hauteur
+    -   L'axe des ordonnées représenterait le nombre de bâtiments
+    -   Chaque barre avec une répartition des usages
+
+### 2. Comment la ville de Troyes s'est étendue géographiquement au fil des années ?
 
 Il s'agit ici de visualiser l'évolution spatiale de la ville de Troyes au fil du temps.
 Pour cela, nous utiliserons la variable `date_app` et les variables de coordonnées géographiques : `latitude` et `longitude`.
@@ -96,7 +108,7 @@ Les problèmes potentiels :
 
 -   l'absence de date de construction pour certains bâtiments
 
-### 2. Y a-t-il un lien entre les matériaux de construction et les dates de construction ?
+### 3. Y a-t-il un lien entre les matériaux de construction et les dates de construction ?
 
 Il s'agit ici de déterminer s'il existe une relation entre les variables `date_app`, `mat_murs` et `mat_toits`.
 L'objectif est de vérifier si les matériaux de construction des bâtiments varient en fonction des époques.
@@ -118,7 +130,7 @@ Pour cela, nous envisageons deux types de visualisations :
 
     -   un grand nombre de catégories de matériaux (risque de graphe illisible)
 
-### 3. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
+### 4. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
 
 L'objectif ici est de comprendre si l'évolution des matériaux a un impact sur la hauteur des bâtiments.
 Nous aimerions comparer la distribution des hauteurs en fonction des matériaux et vérifier si certains matériaux sont associés à des hauteurs spécifiques.
@@ -130,7 +142,7 @@ Pour cela, nous envisageons d'utiliser :
     -   L'axe des abscisses représentant le type de matériau
     -   L'axe des ordonnées représentant la hauteur des bâtiments
 
-### 4. Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
+### 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
 
 L'objectif ici est de déterminer si certains types d'usage des bâtiments sont spécifiquement localisés dans certaines zones de la ville de Troyes.
 Pouvons-nous identifier des zones résidentielles, des zones industrielles et des zones commerciales ?
@@ -144,35 +156,35 @@ Les problèmes potentiels :
 
 -   il sera peut-être nécessaire de regrouper les usages
 
-### 5. Y a-t-il une liaison entre la hauteur des bâtiments et leur usage ?
-
-Il s'agit de déterminer s'il existe une relation entre la hauteur d'un bâtiment et son usage.
-Les variables utilisées sont : la variable `hauteur` et la variable `usage1`.
-
-Pour cela, nous envisageons d'utiliser :
-
--   Un diagramme à barres empilées pour étudier la répartition des usages :
-    -   L'axe des abscisses représenterait les tranches de hauteur
-    -   L'axe des ordonnées représenterait le nombre de bâtiments
-    -   Chaque barre avec une répartition des usages
-
-### 6. QUESTION
+### 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
 
 texte
 
-### 7. QUESTION
+test
 
 texte
 
-### 8. QUESTION
+### 7. XXX
 
 texte
 
-### 9. QUESTION
+### 8. XXX
 
 texte
 
-### 10. QUESTION
+### 9. XXX
+
+texte
+
+### 10. XXX
+
+texte
+
+### 11. XXX
+
+texte
+
+### 12. XXX
 
 texte
 
@@ -534,7 +546,55 @@ J'ai dû masquer tous les bâtiments dont on a pas la date de construction car c
 On remarque la construction de beaucoup de bâtiments entre 1700 et 1800, puis une assez grosse expansion entre 1800 et 1900.
 On remarque aussi que l'agglomération de Troyes avait sa forme assez tôt et que même si elle s'est densifiée, elle ne s'est pas vraiment étendue.
 
-## 3. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
+## 3. Y a-t-il un lien entre les matériaux de construction et les dates de construction ?
+
+texte
+
+texte
+
+## 4. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
+
+texte
+
+texte
+
+## 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
+
+texte
+
+texte
+
+## 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
+
+texte
+
+texte
+
+## 7. XXX
+
+texte
+
+## 8. XXX
+
+texte
+
+## 9. XXX
+
+texte
+
+## 10. XXX
+
+texte
+
+## 11. XXX
+
+texte
+
+## 12. XXX
+
+texte
+
+## X. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
 
 L'objectif ici est de comprendre si l'évolution des matériaux, principalement des murs a un impact sur la hauteur des bâtiments.
 Pour cela, nous allons réaliser deux violinplot, l'un lié au matériau des murs et l'autre des toits afin de confirmer une corrélation.
@@ -622,7 +682,7 @@ En conclusion, la question est partiellement répondue et les résultats diffèr
 On remarque une corrélation significative entre les matériaux de toiture et la hauteur des bâtiments, alors que celle entre les matériaux des murs et la hauteur est beaucoup plus difficile à établir sans pour autant pouvoir l'écarter du champ des possibilités.
 Cela soulève donc une nouvelle question : pourquoi le matériau de la toiture semble-t-il mieux refléter la hauteur d'un bâtiment que celui des murs ?
 
-## 4. Peut-on voir des matériaux de construction des murs de prédilection selon les époques ?
+## X. Peut-on voir des matériaux de construction des murs de prédilection selon les époques ?
 
 L'objectif ici est de comprendre si l'utilisation des matériaux changent salon les époques.
 Pour cela nous allons réaliser un violinplot lié matériau des murs.
@@ -796,3 +856,17 @@ theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 \### Interpretation En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
 Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
+
+# **Conclusion**
+
+texte
+
+# Annexe
+
+Alexis H:
+
+Alexis M:
+
+Camille:
+
+Danielle:
