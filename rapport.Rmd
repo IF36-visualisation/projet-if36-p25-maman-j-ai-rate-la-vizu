@@ -2,7 +2,8 @@
 title: "Peer-review - Bâtiments de Troyes Champagne Métropole"
 author: "Maman j'ai raté la vizu"
 output:
-  html_document: default
+  prettydoc::html_pretty:
+    theme: architect
 editor_options:
   markdown:
     wrap: sentence
@@ -165,6 +166,7 @@ knitr::opts_chunk$set(
 library(dplyr)
 library(ggplot2)
 library(ggspatial)
+library(lubridate)
 library(osmdata)
 library(patchwork)
 library(readr)
@@ -318,7 +320,6 @@ On remarque que la plupart des bâtiments ont une hauteur située entre 0 et 10m
 L'objectif est de voir la distribution des bâtiments en fonction de l'année de construction.
 
 ```{r dates}
-library (lubridate)
 batiments_filtre_dates <- batiments %>%
   filter(!is.na(DATE_APP))
 batiments_filtre_dates$annee_construction <- year(batiments_filtre_dates$DATE_APP)
@@ -437,7 +438,7 @@ batiments_sf = mutate(batiments_sf, PERIODE = case_when(
     .default = "Inconnu"
 ))
 couleurs = c(
-    "Avant 1600" = "#2f4b7c",
+    "Avant 1600" = "#a65628",
     "1600-1700" = "#a05195",
     "1700-1800" = "#59a89c",
     "1800-1900" = "#ffa600",
@@ -467,8 +468,8 @@ plot_périodes = function(df, period_list) {
     df = filter(df, PERIODE %in% period_list)
   
     ggplot(df) +
-    geom_sf(data = osm_roads$osm_lines, color = "grey80", size = 0.15, inherit.aes = FALSE) +
-    geom_sf(data = osm_water$osm_lines, color = "skyblue", size = 0.2, inherit.aes = FALSE) +
+    geom_sf(data = osm_roads$osm_lines, color = "grey80", size = 0.1, inherit.aes = FALSE) +
+    geom_sf(data = osm_water$osm_lines, color = "skyblue", size = 0.15, inherit.aes = FALSE) +
     geom_sf(aes(color = PERIODE), size = 0.2) +
     scale_color_manual(values = couleurs) +
     coord_sf(
@@ -500,7 +501,7 @@ final_plot = wrap_plots(plots, ncol = 2) +
         legend.position = "right",
         legend.justification = "center"
     ) +
-    guides(color = guide_legend(override.aes = list(size = 4)))
+    guides(color = guide_legend(override.aes = list(size = 3)))
 
 final_plot
 ```
@@ -623,16 +624,15 @@ batiments1 = batiments %>%
 
 # Nettoyage des données
 batiments1 = batiments1 %>%
-  filter(!is.na(MAT_MURS) | MAT_MURS != "" |!is.na(DATE_APP) | DATE_APP != "" )
+  filter(!is.na(MAT_MURS) & !is.na(DATE_APP))
 
 # Création du graphique 
-ggplot(batiments, aes(x = DATE_APP, y=MAT_MURS)) +
+ggplot(batiments1, aes(x = DATE_APP, y=MAT_MURS)) +
   geom_violin() +
   labs(title = "Nombre de batiments par matériaux et par date",
        x = "Dates",
        y = "Matériaux des murs") +
   theme_minimal()
-
 ```
 
 ### Interprétation des résultats
@@ -648,3 +648,132 @@ On peut aussi remarqué l'utilisation massive de la pierre autours des années 1
 Même si certains matériaux s'imposent à certaines époques, on peut voir qu'il y a une diversité de ceux-ci et beaucoup de mélange de matériaux.
 
 Pour aller plus loin, on aurait pu faire le même graphique mais en ayant une distribution des matériaux par période en pourcentage, ce qui éviterait "l'écrasement" des données plus anciennes et moins nombre, mais ferait perdre du détail sur la chronologie.
+
+### Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmis les résidences?
+
+Variables utilisées: NB_LOGTS (nombre de logements par batiment), USAGE1 et USAGE2
+Moyenne nationale selon FNAIM: 55% de maison, 45% d'appartement
+Moyenne dans l'Aube selon FNAIM: entre 20% et 40% d'appartement
+Qu'en est-il de Troyes?
+
+### Visualisation
+
+```{r, fig.width=8, fig.height=12}
+batiments_filtre1 <- batiments %>%
+  select(NB_LOGTS,USAGE1,USAGE2)
+
+batiments_filtre2 <- batiments_filtre1 %>%
+  filter(!is.na(USAGE1) | !is.na(USAGE2) | USAGE1 != "" | USAGE2 != "")
+
+batiments_filtre_final <-batiments_filtre2 %>%
+  filter(tolower(USAGE1) %in% c("résidentiel", "indifférencié") |
+           tolower(USAGE2) %in% c("résidentiel", "indifférencié"))
+
+
+
+batiments_filtre_final$NB_LOGTS <- cut(batiments_filtre_final$NB_LOGTS,  
+                                  breaks = c(0, 1, 2, 10, 95), 
+                                  labels = c("1", "2", "3-10", "+10"), 
+                                  right = FALSE)
+
+batiment_pourcentage <- batiments_filtre_final %>%
+  count(NB_LOGTS) %>%
+  mutate(pct = n / sum(n) * 100,
+         label = paste0(round(pct, 1), "%"))
+
+ggplot(batiment_pourcentage, aes(x = NB_LOGTS, y = pct)) +
+  geom_col(fill = "steelblue") +
+  geom_text(aes(label = label), vjust = -0.5, size = 3, color = "black") +
+  labs(
+    title = "Distribution des bâtiments en fonction du nombre de logements", 
+    x = "Nombre de logements",
+    y = "Pourcentage de bâtiments"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  ```
+
+  ### Interprétation
+
+  On observe que Seulement 1% des batiments sont des logements uniques. Cette information est surprenante, d'autant que le pourcentage de bâtiment à logement unique à Paris est de 0,88%.
+  Il parraît improbable qu'il y ait si peu de maison à Troyes. Nous remarquons que la quasi totalité des bâtiments "indifférencié" ont un nombre inconnu de logement.
+  Il est probable que le reste des maisons (bâtiments à 1 logement) soit dans cette catégorie. 
+  En regroupant tous les batiments ayant plus d'un logement, nous avons presque la moitié des bâtiments résidentiels, ce qui est au-dessus de la moyenne nationale. 
+  Ce n'est pas très surprenant, Troyes est une ville et la moyenne nationale comprend également les résidences rurales.
+  En revanche, il est surprenant de voir que presque la moitié des bâtiments résidentiels (45%) ont seulement 2 logements.
+  Cela n'est probablement pas dû aux colocations. En effet, un logement doit être composé au minimum d'une chambre, une cuisine et une salle de bain (la chambre et la cuisine peuvent être dans la même pièce).
+  Les colocations sont donc considerées comme un unique logement quelque soit le nombre de personne pouvant vivre dedans.
+  Nous pouvons supposer qu'un des logements est un commerce et que l'autre est une résidence. 
+  Pour cela, nous allons voir quel pourcentage de batiments residentiels à 2 logements sont aussi commerciaux.
+
+  ### Quel est la part de batiments résidentiels à 2 logements sont aussi commerciaux?
+
+  ###Visualisation
+
+  Pour USAGE1:
+
+```{r, fig.width=8, fig.height=12}
+  batiments_filtre1 <- batiments %>%
+  select(NB_LOGTS,USAGE1,USAGE2)
+
+batiments_filtre2 <- batiments_filtre1 %>%
+  filter(!is.na(USAGE1) | !is.na(USAGE2) | USAGE1 != "" | USAGE2 != "")
+
+batiments_filtre3 <-batiments_filtre2 %>%
+  filter((tolower(USAGE1) %in% c("résidentiel") |
+           tolower(USAGE2) %in% c("résidentiel")) & 
+           (NB_LOGTS= 2))
+
+batiment_pourcentage <- batiments_filtre3 %>%
+  count(USAGE1) %>%
+  mutate(pct = n / sum(n) * 100,
+         label = paste0(round(pct, 1), "%"))
+
+
+ggplot(batiment_pourcentage, aes(x = USAGE1, y = pct)) +
+  geom_col(fill = "steelblue") +
+  geom_text(aes(label = label), vjust = -0.5, size = 3, color = "black") +
+  labs(
+    title = "Distribution de l'usage des bâtiments ayant 2 logements", 
+    x = "Usage",
+    y = "Pourcentage de bâtiments"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  ```
+
+  Pour USAGE2:
+
+  ```{r}
+  batiments_filtre1 <- batiments %>%
+  select(NB_LOGTS,USAGE1,USAGE2)
+
+batiments_filtre2 <- batiments_filtre1 %>%
+  filter(!is.na(USAGE1) | !is.na(USAGE2) | USAGE1 != "" | USAGE2 != "")
+
+batiments_filtre3 <-batiments_filtre2 %>%
+  filter((tolower(USAGE1) %in% c("résidentiel") |
+           tolower(USAGE2) %in% c("résidentiel")) & 
+           (NB_LOGTS= 2))
+
+batiment_pourcentage <- batiments_filtre3 %>%
+  count(USAGE2) %>%
+  mutate(pct = n / sum(n) * 100,
+         label = paste0(round(pct, 1), "%"))
+
+
+ggplot(batiment_pourcentage, aes(x = USAGE2, y = pct)) +
+  geom_col(fill = "steelblue") +
+  geom_text(aes(label = label), vjust = -0.5, size = 3, color = "black") +
+  labs(
+    title = "Distribution de l'usage des bâtiments ayant 2 logements", 
+    x = "Usage",
+    y = "Pourcentage de bâtiments"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  ```
+
+  ### Interpretation
+  En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
+  Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
