@@ -601,14 +601,14 @@ Nous nous attendons à ce que les matériaux les plus solides de chaque époque 
 ### Visualisation
 
 ```{r, fig.width=8, fig.height=12}
-batiments <- batiments %>%
+batiments_selec <- batiments %>%
   select(DATE_APP,MAT_MURS)
 
-batiments <- batiments%>%
+batiments_selec <- batiments_selec%>%
   mutate(DATE_APP = as.double(substr(DATE_APP, 1, 4)))
 
 
-batiments_année <- batiments %>% 
+batiments_année <- batiments_selec %>% 
   mutate(PERIODE = case_when(
   DATE_APP < 1600 ~ "Avant 1600",
   1600 <= DATE_APP & DATE_APP < 1700 ~ "1600-1700",
@@ -672,14 +672,14 @@ Les variables utilisées sont :
 ### Visualisation
 
 ```{r, fig.width=8, fig.height=12}
-batiments <- batiments %>%
+batiments <- batiments_selec %>%
   select(DATE_APP,MAT_TOITS)
 
-batiments <- batiments%>%
+batiments_selec <- batiments%>%
   mutate(DATE_APP = as.double(substr(DATE_APP, 1, 4)))
 
 
-batiments_année <- batiments %>% 
+batiments_année <- batiments_selec %>% 
   mutate(PERIODE = case_when(
   DATE_APP < 1600 ~ "Avant 1600",
   1600 <= DATE_APP & DATE_APP < 1700 ~ "1600-1700",
