@@ -148,28 +148,38 @@ L'objectif ici est de déterminer si certains types d'usage des bâtiments sont 
 Pouvons-nous identifier des zones résidentielles, des zones industrielles et des zones commerciales ?
 Nous utiliserons les variables de coordonnées géographiques (`longitude` et `latitude`) et les variables `usage1` et `usage2`.
 
-Pour cela, nous envisageons :
+**Pour cela, nous envisageons :**
 
--   Une carte avec les bâtiments colorés selon leur usage
--   Un graphique en barre réprésent
--   XXXX
+-   Tableau
+    -   Une carte avec les bâtiments colorés selon leur usage principal (`usage1`), afin de visualiser leur répartition spatiale dans la ville.
+    -   Un graphique en barres représentant le nombre de bâtiments pour chaque usage.
+    -   Une carte en clusters ou une carte de densité (heatmap) pour identifier les concentrations d’usages spécifiques.
 
-Les problèmes potentiels :
+**Les problèmes potentiels :**
 
--   il sera peut-être nécessaire de regrouper les usages
--   Timestamp
+-   Il sera peut-être nécessaire de regrouper les usages afin de ne pas surcharger la carte et de rendre les différences lisibles.
+-   La précision des coordonnées géographiques peut poser problème (erreurs ou imprécisions dans la base).
+-   Des effets de densité peuvent masquer certaines tendances (ex. : une zone très dense en bâtiments résidentiels peut rendre difficile la détection de petits usages secondaires).
 
 ### 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
 
-Dans la continuité de la question précédente, nous nous demandons si on remarque
+*L’objectif est de déterminer si l’année de construction d’un bâtiment a une influence sur son usage principal (`usage1`). L’hypothèse sous-jacente est que certains types d’usage sont plus fréquents pour des bâtiments récents (par exemple les bâtiments tertiaires ou commerciaux), tandis que d'autres usages (comme l'habitat individuel ou collectif) sont plus répandus dans des bâtiments anciens.*
 
-Pour cela, nous envisageons :
+*Nous utiliserons la variable `annee_construction` croisée avec `usage1`, et éventuellement `usage2`, afin de visualiser les évolutions des usages au fil du temps.*
 
--   XXXX
+**Pour cela, nous envisageons :**
 
-Les problèmes potentiels :
+-   *Un graphique en barres ou en aires empilées représentant la répartition des usage1 par tranche d’années de construction (ex. : avant 1950, 1950–1970, etc.).*
+-   *Un diagramme de densité ou histogramme montrant la distribution de l’année de construction pour chaque type d’usage principal.*
+-   *Un nuage de points (scatter plot) ou un boxplot représentant l’année de construction en fonction des usages, pour comparer la variabilité temporelle entre types de bâtiments.*
+-   *Une analyse croisée avec nb_lgmts pour voir si l’évolution dans le temps des usages s’accompagne d’une évolution dans la densité résidentielle.*
 
--   XXXX
+**Les problèmes potentiels :**
+
+-   *La variable annee_construction peut être manquante ou imprécise pour certains bâtiments (valeurs nulles, erronées ou hors du timestamp).*
+-   *Il faudra regrouper les années par tranches cohérentes pour faciliter l’analyse (ex. : décennies ou périodes historiques de développement urbain).*
+-   *Certains usages peuvent avoir été modifiés après construction, rendant la relation avec l’année de construction moins directe (ex. : un bâtiment ancien réaffecté à un usage commercial).*
+-   *Des biais peuvent exister dans la base si certains types d'usages sont surreprésentés dans certaines périodes.*
 
 ### 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
 
@@ -178,14 +188,14 @@ Cela permettrait de mieux comprendre les combinaisons d’usages fréquentes (pa
 
 Nous allons utiliser dans un premier temps la variable correspondant au nombre de logements (`nb_lgmts`) afin de vérifier si, dans la base de données, un bâtiment à usage commercial peut également être comptabilisé comme comportant des logements.
 
-Pour cela, nous envisageons :
+**Pour cela, nous envisageons :**
 
 -   *Une **carte de chaleur (heatmap)** croisant `usage1` et `usage2`, avec des couleurs représentant la fréquence des combinaisons.*
 -   *Un **graphique en barres empilées** pour visualiser, pour chaque `usage1`, la répartition des différents `usage2`.*
 -   *Un **tableau croisé (table de contingence)** pour calculer un indicateur statistique de corrélation (comme le coefficient de Cramer), et objectiver l’intensité du lien entre `usage1` et `usage2`.*
 -   *Un **filtrage exploratoire par le nombre de logements (`nb_lgmts`)** pour identifier d’éventuelles incohérences ou combinaisons non pertinentes (ex. : bâtiment déclaré uniquement commercial mais comportant des logements).*
 
-Les problèmes potentiels :
+**Les problèmes potentiels :**
 
 -   Certains bâtiments n’ont peut-être pas d’usage secondaire renseigné (`usage2` vide ou manquant).
 -   Il faut vérifier si les usages secondaires sont bien pertinents ou s’ils sont parfois des doublons ou redondants de l’usage principal.
@@ -593,7 +603,7 @@ texte
 
 texte
 
-## 7. Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un batiement
+## 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
 
 texte
 
