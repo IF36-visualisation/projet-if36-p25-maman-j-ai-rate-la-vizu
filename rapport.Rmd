@@ -581,53 +581,145 @@ On remarque aussi que l'agglomération de Troyes avait sa forme assez tôt et qu
 
 ## 3. Y a-t-il un lien entre les matériaux de construction et les dates de construction ?
 
-texte
+### Murs
 
-texte
+L'objectif ici est de comprendre si l'utilisation des matériaux changent selon les époques.
+Pour cela nous allons réaliser une heatmap liée aux matériaux des murs.
+
+Les variables utilisées sont :
+
+-   MAT_MURS: variable nominal: code des matériaux des murs, croisé avec [materiaux_murs.csv](data/materiaux_murs.csv)
+
+-   DATE_APP: variable discrète d'apparition des bâtiments
+
+Nous nous attendons à ce que les matériaux les plus solides de chaque époque soit utilisés successivement.
+
+### Visualisation
+
+```{r, fig.width=8, fig.height=12}
+batiments <- batiments %>%
+  select(DATE_APP,MAT_MURS)
+
+batiments <- batiments%>%
+  mutate(DATE_APP = as.double(substr(DATE_APP, 1, 4)))
+
+
+batiments_année <- batiments %>% 
+  mutate(PERIODE = case_when(
+  DATE_APP < 1600 ~ "Avant 1600",
+  1600 <= DATE_APP & DATE_APP < 1700 ~ "1600-1700",
+  1700 <= DATE_APP & DATE_APP < 1800 ~ "1700-1800",
+  1800 <= DATE_APP & DATE_APP < 1900 ~ "1800-1900",
+  1900 <= DATE_APP & DATE_APP < 2000 ~ "1900-2000",
+  2000 <= DATE_APP ~ "Depuis 2000",
+  .default = "Inconnu"
+))
+
+ordre_periodes <- c("Avant 1600", "1600-1700", "1700-1800",
+                    "1800-1900", "1900-2000", "Depuis 2000")
+
+batiments_année <- batiments_année %>%
+  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
+
+
+batiments_filtre <- batiments_année %>%
+  filter(PERIODE != "Inconnu" & MAT_MURS != "NA")
+
+batiments_counts <- batiments_filtre  %>%
+  count(MAT_MURS, PERIODE) %>%
+    complete(MAT_MURS, PERIODE = ordre_periodes, fill = list(n = 0))
+
+batiments_counts <- batiments_counts %>%
+  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
+
+
+ggplot(batiments_counts, aes(x = PERIODE, y = MAT_MURS, fill = n)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = n), color = "black", size = 3) +
+  scale_fill_gradient(low = "cyan",high = "orange") +
+  theme_minimal() +
+  labs(title = "Répartition des bâtiments par matériau et période",
+       fill = "Nombre")
+```
+
+### Interprétation des résultats
+
+Tout d'abord, il faut préciser que nous manquant de beaucoup d'information, particulièrement sur les années avant 1800.
+Il est donc difficile de généraliser les informations du graphe.
+De plus, un certain nombre de bâtiments n'ont pas de matériaux connus.
+Nous passons donc de 107 946 observations à 59097 observations.
+Cependant, nous pouvons voir des tendances se dégager.
+Certains matériaux sont présent depuis avant 1600, comme l’aggloméré et le bois.
+D'autres ont connu des pics de popularité récents, comme le béton, la brique et l’aggloméré.
+On peut aussi remarqué l'utilisation massive de la pierre autours des années 1900 mais s'est raréfié depuis.
+Même si certains matériaux s'imposent à certaines époques, on peut voir qu'il y a une diversité de ceux-ci et beaucoup de mélange de matériaux.
+
+### Toits
+
+L'objectif ici est de comprendre si l'utilisation des matériaux changent selon les époques.
+Pour cela nous allons réaliser une heatmap liée aux matériaux des toits.
+
+Les variables utilisées sont :
+
+-   MAT_TOITS: variable nominal: code des matériaux des murs, croisé avec [materiaux_toits.csv](data/materiaux_murs.csv)
+
+-   DATE_APP: variable discrète d'apparition des bâtiments
+
+### Visualisation
+
+```{r, fig.width=8, fig.height=12}
+batiments <- batiments %>%
+  select(DATE_APP,MAT_TOITS)
+
+batiments <- batiments%>%
+  mutate(DATE_APP = as.double(substr(DATE_APP, 1, 4)))
+
+
+batiments_année <- batiments %>% 
+  mutate(PERIODE = case_when(
+  DATE_APP < 1600 ~ "Avant 1600",
+  1600 <= DATE_APP & DATE_APP < 1700 ~ "1600-1700",
+  1700 <= DATE_APP & DATE_APP < 1800 ~ "1700-1800",
+  1800 <= DATE_APP & DATE_APP < 1900 ~ "1800-1900",
+  1900 <= DATE_APP & DATE_APP < 2000 ~ "1900-2000",
+  2000 <= DATE_APP ~ "Depuis 2000",
+  .default = "Inconnu"
+))
+
+ordre_periodes <- c("Avant 1600", "1600-1700", "1700-1800",
+                    "1800-1900", "1900-2000", "Depuis 2000")
+
+batiments_année <- batiments_année %>%
+  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
+
+
+batiments_filtre <- batiments_année %>%
+  filter(PERIODE != "Inconnu" & MAT_TOITS != "NA")
+
+batiments_counts <- batiments_filtre  %>%
+  count(MAT_TOITS, PERIODE) %>%
+    complete(MAT_TOITS, PERIODE = ordre_periodes, fill = list(n = 0))
+
+batiments_counts <- batiments_counts %>%
+  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
+
+
+ggplot(batiments_counts, aes(x = PERIODE, y = MAT_TOITS, fill = n)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = n), color = "black", size = 3) +
+  scale_fill_gradient(low = "cyan",high = "orange") +
+  theme_minimal() +
+  labs(title = "Répartition des bâtiments par matériau et période",
+       fill = "Nombre")
+ ```
+
+### Interprétation des résultats
+
+Sans surprise, les tuiles sont le matériau le plus utilisé pour les toits. Au niveau national, les tuiles représentent 74% des toitures françaises.
+Les autres matériaux fortement utilisés sont le zinc aluminium et l'ardoise. 
+Si nous n'avons pas trouvé de chiffres précis pour ces matériaux, ils font partis des matériaux les plus utilisés pour les toitures en France. Il n'est donc pas surprenant de les retrouver dans le graphe.
 
 ## 4. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
-
-texte
-
-texte
-
-## 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
-
-texte
-
-texte
-
-## 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
-
-texte
-
-texte
-
-## 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
-
-texte
-
-## 8. XXX
-
-texte
-
-## 9. XXX
-
-texte
-
-## 10. XXX
-
-texte
-
-## 11. XXX
-
-texte
-
-## 12. XXX
-
-texte
-
-## X. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
 
 L'objectif ici est de comprendre si l'évolution des matériaux, principalement des murs a un impact sur la hauteur des bâtiments.
 Pour cela, nous allons réaliser deux violinplot, l'un lié au matériau des murs et l'autre des toits afin de confirmer une corrélation.
@@ -715,145 +807,24 @@ En conclusion, la question est partiellement répondue et les résultats diffèr
 On remarque une corrélation significative entre les matériaux de toiture et la hauteur des bâtiments, alors que celle entre les matériaux des murs et la hauteur est beaucoup plus difficile à établir sans pour autant pouvoir l'écarter du champ des possibilités.
 Cela soulève donc une nouvelle question : pourquoi le matériau de la toiture semble-t-il mieux refléter la hauteur d'un bâtiment que celui des murs ?
 
-### Peut-on voir des matériaux de construction des murs de prédilection selon les époques ?
 
-L'objectif ici est de comprendre si l'utilisation des matériaux changent selon les époques.
-Pour cela nous allons réaliser une heatmap liée aux matériaux des murs.
+## 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
 
-Les variables utilisées sont :
+texte
 
--   MAT_MURS: variable nominal: code des matériaux des murs, croisé avec [materiaux_murs.csv](data/materiaux_murs.csv)
+texte
 
--   DATE_APP: variable discrète d'apparition des bâtiments
+## 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
 
-Nous nous attendons à ce que les matériaux les plus solides de chaque époque soit utilisés successivement.
+texte
 
-### Visualisation
+texte
 
-```{r, fig.width=8, fig.height=12}
-batiments <- batiments %>%
-  select(DATE_APP,MAT_MURS)
+## 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
 
-batiments <- batiments%>%
-  mutate(DATE_APP = as.double(substr(DATE_APP, 1, 4)))
+texte
 
-
-batiments_année <- batiments %>% 
-  mutate(PERIODE = case_when(
-  DATE_APP < 1600 ~ "Avant 1600",
-  1600 <= DATE_APP & DATE_APP < 1700 ~ "1600-1700",
-  1700 <= DATE_APP & DATE_APP < 1800 ~ "1700-1800",
-  1800 <= DATE_APP & DATE_APP < 1900 ~ "1800-1900",
-  1900 <= DATE_APP & DATE_APP < 2000 ~ "1900-2000",
-  2000 <= DATE_APP ~ "Depuis 2000",
-  .default = "Inconnu"
-))
-
-ordre_periodes <- c("Avant 1600", "1600-1700", "1700-1800",
-                    "1800-1900", "1900-2000", "Depuis 2000")
-
-batiments_année <- batiments_année %>%
-  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
-
-
-batiments_filtre <- batiments_année %>%
-  filter(PERIODE != "Inconnu" & MAT_MURS != "NA")
-
-batiments_counts <- batiments_filtre  %>%
-  count(MAT_MURS, PERIODE) %>%
-    complete(MAT_MURS, PERIODE = ordre_periodes, fill = list(n = 0))
-
-batiments_counts <- batiments_counts %>%
-  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
-
-
-ggplot(batiments_counts, aes(x = PERIODE, y = MAT_MURS, fill = n)) +
-  geom_tile(color = "white") +
-  geom_text(aes(label = n), color = "black", size = 3) +
-  scale_fill_gradient(low = "cyan",high = "orange") +
-  theme_minimal() +
-  labs(title = "Répartition des bâtiments par matériau et période",
-       fill = "Nombre")
-```
-
-### Interprétation des résultats
-
-Tout d'abord, il faut préciser que nous manquant de beaucoup d'information, particulièrement sur les années avant 1800.
-Il est donc difficile de généraliser les informations du graphe.
-De plus, un certain nombre de bâtiments n'ont pas de matériaux connus.
-Nous passons donc de 107 946 observations à 59097 observations.
-Cependant, nous pouvons voir des tendances se dégager.
-Certains matériaux sont présent depuis avant 1600, comme l’aggloméré et le bois.
-D'autres ont connu des pics de popularité récents, comme le béton, la brique et l’aggloméré.
-On peut aussi remarqué l'utilisation massive de la pierre autours des années 1900 mais s'est raréfié depuis.
-Même si certains matériaux s'imposent à certaines époques, on peut voir qu'il y a une diversité de ceux-ci et beaucoup de mélange de matériaux.
-
-### Peut-on voir des matériaux de construction des toits de prédilection selon les époques ?
-
-L'objectif ici est de comprendre si l'utilisation des matériaux changent selon les époques.
-Pour cela nous allons réaliser une heatmap liée aux matériaux des toits.
-
-Les variables utilisées sont :
-
--   MAT_TOITS: variable nominal: code des matériaux des murs, croisé avec [materiaux_toits.csv](data/materiaux_murs.csv)
-
--   DATE_APP: variable discrète d'apparition des bâtiments
-
-### Visualisation
-
-```{r, fig.width=8, fig.height=12}
-batiments <- batiments %>%
-  select(DATE_APP,MAT_TOITS)
-
-batiments <- batiments%>%
-  mutate(DATE_APP = as.double(substr(DATE_APP, 1, 4)))
-
-
-batiments_année <- batiments %>% 
-  mutate(PERIODE = case_when(
-  DATE_APP < 1600 ~ "Avant 1600",
-  1600 <= DATE_APP & DATE_APP < 1700 ~ "1600-1700",
-  1700 <= DATE_APP & DATE_APP < 1800 ~ "1700-1800",
-  1800 <= DATE_APP & DATE_APP < 1900 ~ "1800-1900",
-  1900 <= DATE_APP & DATE_APP < 2000 ~ "1900-2000",
-  2000 <= DATE_APP ~ "Depuis 2000",
-  .default = "Inconnu"
-))
-
-ordre_periodes <- c("Avant 1600", "1600-1700", "1700-1800",
-                    "1800-1900", "1900-2000", "Depuis 2000")
-
-batiments_année <- batiments_année %>%
-  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
-
-
-batiments_filtre <- batiments_année %>%
-  filter(PERIODE != "Inconnu" & MAT_TOITS != "NA")
-
-batiments_counts <- batiments_filtre  %>%
-  count(MAT_TOITS, PERIODE) %>%
-    complete(MAT_TOITS, PERIODE = ordre_periodes, fill = list(n = 0))
-
-batiments_counts <- batiments_counts %>%
-  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
-
-
-ggplot(batiments_counts, aes(x = PERIODE, y = MAT_TOITS, fill = n)) +
-  geom_tile(color = "white") +
-  geom_text(aes(label = n), color = "black", size = 3) +
-  scale_fill_gradient(low = "cyan",high = "orange") +
-  theme_minimal() +
-  labs(title = "Répartition des bâtiments par matériau et période",
-       fill = "Nombre")
- ```
-
-### Interprétation des résultats
-
-Sans surprise, les tuiles sont le matériau le plus utilisé pour les toits. Au niveau national, les tuiles représentent 74% des toitures françaises.
-Les autres matériaux fortement utilisés sont le zinc aluminium et l'ardoise. 
-Si nous n'avons pas trouvé de chiffres précis pour ces matériaux, ils font partis des matériaux les plus utilisés pour les toitures en France. Il n'est donc pas surprenant de les retrouver dans le graphe.
-
-### Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmis les résidences?
+## 8. Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmis les résidences?
 
 Variables utilisées: NB_LOGTS (nombre de logements par batiment), USAGE1 et USAGE2
 Moyenne nationale selon FNAIM: 55% de maison, 45% d'appartement
@@ -910,7 +881,7 @@ ggplot(batiment_pourcentage, aes(x = NB_LOGTS, y = pct)) +
   Nous pouvons supposer qu'un des logements est un commerce et que l'autre est une résidence. 
   Pour cela, nous allons voir quel pourcentage de batiments residentiels à 2 logements sont aussi commerciaux.
 
-  ### Quel est la part de batiments résidentiels à 2 logements sont aussi commerciaux?
+## 9. Quel est la part de batiments résidentiels à 2 logements sont aussi commerciaux?
 
   ###Visualisation
 
@@ -981,6 +952,19 @@ ggplot(batiment_pourcentage, aes(x = USAGE2, y = pct)) +
   ### Interpretation
   En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
   Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
+
+## 10. XXX
+
+texte
+
+## 11. XXX
+
+texte
+
+## 12. XXX
+
+texte
+ 
 
 # **Conclusion**
 
