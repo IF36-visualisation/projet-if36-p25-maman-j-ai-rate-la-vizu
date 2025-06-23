@@ -151,22 +151,45 @@ Nous utiliserons les variables de coordonnées géographiques (`longitude` et `l
 Pour cela, nous envisageons :
 
 -   Une carte avec les bâtiments colorés selon leur usage
+-   Un graphique en barre réprésent
+-   XXXX
 
 Les problèmes potentiels :
 
 -   il sera peut-être nécessaire de regrouper les usages
+-   Timestamp
 
 ### 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
 
-texte
+Dans la continuité de la question précédente, nous nous demandons si on remarque
 
-test
+Pour cela, nous envisageons :
 
-texte
+-   XXXX
 
-### 7. XXX
+Les problèmes potentiels :
 
-texte
+-   XXXX
+
+### 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
+
+L’objectif est de déterminer s’il existe une corrélation ou un lien statistique entre l’usage principal (`usage1`) et l’usage secondaire (`usage2`) d’un bâtiment.
+Cela permettrait de mieux comprendre les combinaisons d’usages fréquentes (par exemple : habitation principale avec un usage secondaire de type commerce ou entrepôt), et d’éventuellement identifier des profils types de bâtiments à usage mixte.
+
+Nous allons utiliser dans un premier temps la variable correspondant au nombre de logements (`nb_lgmts`) afin de vérifier si, dans la base de données, un bâtiment à usage commercial peut également être comptabilisé comme comportant des logements.
+
+Pour cela, nous envisageons :
+
+-   *Une **carte de chaleur (heatmap)** croisant `usage1` et `usage2`, avec des couleurs représentant la fréquence des combinaisons.*
+-   *Un **graphique en barres empilées** pour visualiser, pour chaque `usage1`, la répartition des différents `usage2`.*
+-   *Un **tableau croisé (table de contingence)** pour calculer un indicateur statistique de corrélation (comme le coefficient de Cramer), et objectiver l’intensité du lien entre `usage1` et `usage2`.*
+-   *Un **filtrage exploratoire par le nombre de logements (`nb_lgmts`)** pour identifier d’éventuelles incohérences ou combinaisons non pertinentes (ex. : bâtiment déclaré uniquement commercial mais comportant des logements).*
+
+Les problèmes potentiels :
+
+-   Certains bâtiments n’ont peut-être pas d’usage secondaire renseigné (`usage2` vide ou manquant).
+-   Il faut vérifier si les usages secondaires sont bien pertinents ou s’ils sont parfois des doublons ou redondants de l’usage principal.
+-   Des biais peuvent exister si certains types d’usage ne sont saisis que partiellement dans les données.
 
 ### 8. XXX
 
@@ -570,7 +593,7 @@ texte
 
 texte
 
-## 7. XXX
+## 7. Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un batiement
 
 texte
 
