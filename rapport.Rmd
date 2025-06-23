@@ -151,7 +151,7 @@ Nous utiliserons les variables de coordonnées géographiques (`longitude` et `l
 **Pour cela, nous envisageons :**
 
 -   Tableau
-    -   Une carte avec les bâtiments colorés selon leur usage principal (`usage1`), afin de visualiser leur répartition spatiale dans la ville.
+-   Une carte avec les bâtiments colorés selon leur usage principal (`usage1`), afin de visualiser leur répartition spatiale dans la ville.
     -   Un graphique en barres représentant le nombre de bâtiments pour chaque usage.
     -   Une carte en clusters ou une carte de densité (heatmap) pour identifier les concentrations d’usages spécifiques.
 
@@ -715,10 +715,10 @@ En conclusion, la question est partiellement répondue et les résultats diffèr
 On remarque une corrélation significative entre les matériaux de toiture et la hauteur des bâtiments, alors que celle entre les matériaux des murs et la hauteur est beaucoup plus difficile à établir sans pour autant pouvoir l'écarter du champ des possibilités.
 Cela soulève donc une nouvelle question : pourquoi le matériau de la toiture semble-t-il mieux refléter la hauteur d'un bâtiment que celui des murs ?
 
-## X. Peut-on voir des matériaux de construction des murs de prédilection selon les époques ?
+### Peut-on voir des matériaux de construction des murs de prédilection selon les époques ?
 
-L'objectif ici est de comprendre si l'utilisation des matériaux changent salon les époques.
-Pour cela nous allons réaliser un violinplot lié matériau des murs.
+L'objectif ici est de comprendre si l'utilisation des matériaux changent selon les époques.
+Pour cela nous allons réaliser une heatmap liée aux matériaux des murs.
 
 Les variables utilisées sont :
 
@@ -731,27 +731,55 @@ Nous nous attendons à ce que les matériaux les plus solides de chaque époque 
 ### Visualisation
 
 ```{r, fig.width=8, fig.height=12}
-# Récupération des variables utilisées
-batiments1 = batiments %>%
+batiments <- batiments %>%
   select(DATE_APP,MAT_MURS)
 
-# Nettoyage des données
-batiments1 = batiments1 %>%
-  filter(!is.na(MAT_MURS) & !is.na(DATE_APP))
+batiments <- batiments%>%
+  mutate(DATE_APP = as.double(substr(DATE_APP, 1, 4)))
 
-# Création du graphique 
-ggplot(batiments1, aes(x = DATE_APP, y=MAT_MURS)) +
-  geom_violin() +
-  labs(title = "Nombre de batiments par matériaux et par date",
-       x = "Dates",
-       y = "Matériaux des murs") +
-  theme_minimal()
+
+batiments_année <- batiments %>% 
+  mutate(PERIODE = case_when(
+  DATE_APP < 1600 ~ "Avant 1600",
+  1600 <= DATE_APP & DATE_APP < 1700 ~ "1600-1700",
+  1700 <= DATE_APP & DATE_APP < 1800 ~ "1700-1800",
+  1800 <= DATE_APP & DATE_APP < 1900 ~ "1800-1900",
+  1900 <= DATE_APP & DATE_APP < 2000 ~ "1900-2000",
+  2000 <= DATE_APP ~ "Depuis 2000",
+  .default = "Inconnu"
+))
+
+ordre_periodes <- c("Avant 1600", "1600-1700", "1700-1800",
+                    "1800-1900", "1900-2000", "Depuis 2000")
+
+batiments_année <- batiments_année %>%
+  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
+
+
+batiments_filtre <- batiments_année %>%
+  filter(PERIODE != "Inconnu" & MAT_MURS != "NA")
+
+batiments_counts <- batiments_filtre  %>%
+  count(MAT_MURS, PERIODE) %>%
+    complete(MAT_MURS, PERIODE = ordre_periodes, fill = list(n = 0))
+
+batiments_counts <- batiments_counts %>%
+  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
+
+
+ggplot(batiments_counts, aes(x = PERIODE, y = MAT_MURS, fill = n)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = n), color = "black", size = 3) +
+  scale_fill_gradient(low = "cyan",high = "orange") +
+  theme_minimal() +
+  labs(title = "Répartition des bâtiments par matériau et période",
+       fill = "Nombre")
 ```
 
 ### Interprétation des résultats
 
 Tout d'abord, il faut préciser que nous manquant de beaucoup d'information, particulièrement sur les années avant 1800.
-Il est donc impossible de généraliser les informations du graphe.
+Il est donc difficile de généraliser les informations du graphe.
 De plus, un certain nombre de bâtiments n'ont pas de matériaux connus.
 Nous passons donc de 107 946 observations à 59097 observations.
 Cependant, nous pouvons voir des tendances se dégager.
@@ -760,11 +788,77 @@ D'autres ont connu des pics de popularité récents, comme le béton, la brique 
 On peut aussi remarqué l'utilisation massive de la pierre autours des années 1900 mais s'est raréfié depuis.
 Même si certains matériaux s'imposent à certaines époques, on peut voir qu'il y a une diversité de ceux-ci et beaucoup de mélange de matériaux.
 
-Pour aller plus loin, on aurait pu faire le même graphique mais en ayant une distribution des matériaux par période en pourcentage, ce qui éviterait "l'écrasement" des données plus anciennes et moins nombre, mais ferait perdre du détail sur la chronologie.
+### Peut-on voir des matériaux de construction des toits de prédilection selon les époques ?
+
+L'objectif ici est de comprendre si l'utilisation des matériaux changent selon les époques.
+Pour cela nous allons réaliser une heatmap liée aux matériaux des toits.
+
+Les variables utilisées sont :
+
+-   MAT_TOITS: variable nominal: code des matériaux des murs, croisé avec [materiaux_toits.csv](data/materiaux_murs.csv)
+
+-   DATE_APP: variable discrète d'apparition des bâtiments
+
+### Visualisation
+
+```{r, fig.width=8, fig.height=12}
+batiments <- batiments %>%
+  select(DATE_APP,MAT_TOITS)
+
+batiments <- batiments%>%
+  mutate(DATE_APP = as.double(substr(DATE_APP, 1, 4)))
+
+
+batiments_année <- batiments %>% 
+  mutate(PERIODE = case_when(
+  DATE_APP < 1600 ~ "Avant 1600",
+  1600 <= DATE_APP & DATE_APP < 1700 ~ "1600-1700",
+  1700 <= DATE_APP & DATE_APP < 1800 ~ "1700-1800",
+  1800 <= DATE_APP & DATE_APP < 1900 ~ "1800-1900",
+  1900 <= DATE_APP & DATE_APP < 2000 ~ "1900-2000",
+  2000 <= DATE_APP ~ "Depuis 2000",
+  .default = "Inconnu"
+))
+
+ordre_periodes <- c("Avant 1600", "1600-1700", "1700-1800",
+                    "1800-1900", "1900-2000", "Depuis 2000")
+
+batiments_année <- batiments_année %>%
+  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
+
+
+batiments_filtre <- batiments_année %>%
+  filter(PERIODE != "Inconnu" & MAT_TOITS != "NA")
+
+batiments_counts <- batiments_filtre  %>%
+  count(MAT_TOITS, PERIODE) %>%
+    complete(MAT_TOITS, PERIODE = ordre_periodes, fill = list(n = 0))
+
+batiments_counts <- batiments_counts %>%
+  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
+
+
+ggplot(batiments_counts, aes(x = PERIODE, y = MAT_TOITS, fill = n)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = n), color = "black", size = 3) +
+  scale_fill_gradient(low = "cyan",high = "orange") +
+  theme_minimal() +
+  labs(title = "Répartition des bâtiments par matériau et période",
+       fill = "Nombre")
+ ```
+
+### Interprétation des résultats
+
+Sans surprise, les tuiles sont le matériau le plus utilisé pour les toits. Au niveau national, les tuiles représentent 74% des toitures françaises.
+Les autres matériaux fortement utilisés sont le zinc aluminium et l'ardoise. 
+Si nous n'avons pas trouvé de chiffres précis pour ces matériaux, ils font partis des matériaux les plus utilisés pour les toitures en France. Il n'est donc pas surprenant de les retrouver dans le graphe.
 
 ### Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmis les résidences?
 
-Variables utilisées: NB_LOGTS (nombre de logements par batiment), USAGE1 et USAGE2 Moyenne nationale selon FNAIM: 55% de maison, 45% d'appartement Moyenne dans l'Aube selon FNAIM: entre 20% et 40% d'appartement Qu'en est-il de Troyes?
+Variables utilisées: NB_LOGTS (nombre de logements par batiment), USAGE1 et USAGE2
+Moyenne nationale selon FNAIM: 55% de maison, 45% d'appartement
+Moyenne dans l'Aube selon FNAIM: entre 20% et 40% d'appartement
+Qu'en est-il de Troyes?
 
 ### Visualisation
 
@@ -801,29 +895,26 @@ ggplot(batiment_pourcentage, aes(x = NB_LOGTS, y = pct)) +
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
+  ```
 
-\### Interprétation
+  ### Interprétation
 
-On observe que Seulement 1% des batiments sont des logements uniques.
-Cette information est surprenante, d'autant que le pourcentage de bâtiment à logement unique à Paris est de 0,88%.
-Il parraît improbable qu'il y ait si peu de maison à Troyes.
-Nous remarquons que la quasi totalité des bâtiments "indifférencié" ont un nombre inconnu de logement.
-Il est probable que le reste des maisons (bâtiments à 1 logement) soit dans cette catégorie.
-En regroupant tous les batiments ayant plus d'un logement, nous avons presque la moitié des bâtiments résidentiels, ce qui est au-dessus de la moyenne nationale.
-Ce n'est pas très surprenant, Troyes est une ville et la moyenne nationale comprend également les résidences rurales.
-En revanche, il est surprenant de voir que presque la moitié des bâtiments résidentiels (45%) ont seulement 2 logements.
-Cela n'est probablement pas dû aux colocations.
-En effet, un logement doit être composé au minimum d'une chambre, une cuisine et une salle de bain (la chambre et la cuisine peuvent être dans la même pièce).
-Les colocations sont donc considerées comme un unique logement quelque soit le nombre de personne pouvant vivre dedans.
-Nous pouvons supposer qu'un des logements est un commerce et que l'autre est une résidence.
-Pour cela, nous allons voir quel pourcentage de batiments residentiels à 2 logements sont aussi commerciaux.
+  On observe que seulement 1% des batiments sont des logements uniques. Cette information est surprenante, d'autant que le pourcentage de bâtiment à logement unique à Paris est de 0,88%.
+  Il parraît improbable qu'il y ait si peu de maison à Troyes. Nous remarquons que la quasi totalité des bâtiments "indifférencié" ont un nombre inconnu de logement.
+  Il est probable que le reste des maisons (bâtiments à 1 logement) soit dans cette catégorie. 
+  En regroupant tous les batiments ayant plus d'un logement, nous avons presque la moitié des bâtiments résidentiels, ce qui est au-dessus de la moyenne nationale. 
+  Ce n'est pas très surprenant, Troyes est une ville et la moyenne nationale comprend également les résidences rurales.
+  En revanche, il est surprenant de voir que presque la moitié des bâtiments résidentiels (45%) ont seulement 2 logements.
+  Cela n'est probablement pas dû aux colocations. En effet, un logement doit être composé au minimum d'une chambre, une cuisine et une salle de bain (la chambre et la cuisine peuvent être dans la même pièce).
+  Les colocations sont donc considerées comme un unique logement quelque soit le nombre de personne pouvant vivre dedans.
+  Nous pouvons supposer qu'un des logements est un commerce et que l'autre est une résidence. 
+  Pour cela, nous allons voir quel pourcentage de batiments residentiels à 2 logements sont aussi commerciaux.
 
-\### Quel est la part de batiments résidentiels à 2 logements sont aussi commerciaux?
+  ### Quel est la part de batiments résidentiels à 2 logements sont aussi commerciaux?
 
-###Visualisation
+  ###Visualisation
 
-Pour USAGE1:
+  Pour USAGE1:
 
 ```{r, fig.width=8, fig.height=12}
   batiments_filtre1 <- batiments %>%
@@ -853,42 +944,43 @@ ggplot(batiment_pourcentage, aes(x = USAGE1, y = pct)) +
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
+  ```
 
-Pour USAGE2:
+  Pour USAGE2:
 
-```{r}
-batiments_filtre1 <- batiments %>%
-select(NB_LOGTS,USAGE1,USAGE2)
+  ```{r}
+  batiments_filtre1 <- batiments %>%
+  select(NB_LOGTS,USAGE1,USAGE2)
 
 batiments_filtre2 <- batiments_filtre1 %>%
-filter(!is.na(USAGE1) | !is.na(USAGE2) | USAGE1 != "" | USAGE2 != "")
+  filter(!is.na(USAGE1) | !is.na(USAGE2) | USAGE1 != "" | USAGE2 != "")
 
 batiments_filtre3 <-batiments_filtre2 %>%
-filter((tolower(USAGE1) %in% c("résidentiel") |
-         tolower(USAGE2) %in% c("résidentiel")) & 
-         (NB_LOGTS= 2))
+  filter((tolower(USAGE1) %in% c("résidentiel") |
+           tolower(USAGE2) %in% c("résidentiel")) & 
+           (NB_LOGTS= 2))
 
 batiment_pourcentage <- batiments_filtre3 %>%
-count(USAGE2) %>%
-mutate(pct = n / sum(n) * 100,
-       label = paste0(round(pct, 1), "%"))
+  count(USAGE2) %>%
+  mutate(pct = n / sum(n) * 100,
+         label = paste0(round(pct, 1), "%"))
 
 
 ggplot(batiment_pourcentage, aes(x = USAGE2, y = pct)) +
-geom_col(fill = "steelblue") +
-geom_text(aes(label = label), vjust = -0.5, size = 3, color = "black") +
-labs(
-  title = "Distribution de l'usage des bâtiments ayant 2 logements", 
-  x = "Usage",
-  y = "Pourcentage de bâtiments"
-) +
-theme_minimal() +
-theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
+  geom_col(fill = "steelblue") +
+  geom_text(aes(label = label), vjust = -0.5, size = 3, color = "black") +
+  labs(
+    title = "Distribution de l'usage des bâtiments ayant 2 logements", 
+    x = "Usage",
+    y = "Pourcentage de bâtiments"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  ```
 
-\### Interpretation En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
-Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
+  ### Interpretation
+  En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
+  Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
 
 # **Conclusion**
 
