@@ -238,6 +238,7 @@ library(readr)
 library(sf)
 library(scales)
 library(cowplot)
+library(kableExtra)
 library(purrr)
 library(viridis, quietly = TRUE)
 
@@ -714,15 +715,18 @@ ggplot(batiments_counts, aes(x = PERIODE, y = MAT_TOITS, fill = n)) +
   theme_minimal() +
   labs(title = "Répartition des bâtiments par matériau et période",
        fill = "Nombre")
- ```
+```
 
 ### Interprétation des résultats
 
-Sans surprise, les tuiles sont le matériau le plus utilisé pour les toits. Au niveau national, les tuiles représentent 74% des toitures françaises.
-Les autres matériaux fortement utilisés sont le zinc aluminium et l'ardoise. 
-Si nous n'avons pas trouvé de chiffres précis pour ces matériaux, ils font partis des matériaux les plus utilisés pour les toitures en France. Il n'est donc pas surprenant de les retrouver dans le graphe.
+Sans surprise, les tuiles sont le matériau le plus utilisé pour les toits.
+Au niveau national, les tuiles représentent 74% des toitures françaises.
+Les autres matériaux fortement utilisés sont le zinc aluminium et l'ardoise.
+Si nous n'avons pas trouvé de chiffres précis pour ces matériaux, ils font partis des matériaux les plus utilisés pour les toitures en France.
+Il n'est donc pas surprenant de les retrouver dans le graphe.
 
 ## 4. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
+
 texte
 
 texte
@@ -806,8 +810,24 @@ ggplot(proportion_na, aes(x = reorder(USAGE1, prop_na), y = prop_na, fill = USAG
   ) +
   theme_minimal()
 
+tableau_complet <- batiments6 %>%
+  group_by(USAGE1) %>%
+  summarise(
+    `Nombre avec date` = sum(!is.na(ANNEE)),
+    `Nombre total` = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(`Nombre total`))
+
+tableau_complet %>%
+  kable("html", caption = "Nombre de bâtiments avec une année de construction disponible par usage") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+
+#Préparation pour les diagrammes de densité
+
 batiments6 <- batiments6 %>%
-  filter(!is.na(DATE_APP)) #On retire les lignes vides
+  filter(!is.na(DATE_APP))  #On retire les lignes vides
 
 power_trans <- function(power = 1/3, offset = 0) {
   trans_new(
@@ -818,18 +838,40 @@ power_trans <- function(power = 1/3, offset = 0) {
   )
 }
 
-ggplot(batiments6, aes(x = ANNEE, fill = USAGE1, color = USAGE1)) +
-  geom_density(aes(y = after_stat(density)), alpha = 0.4, adjust = 1) +
+
+#Diagramme de densité global et pondéré
+
+# Liste des densités pondérées pour chaque usage
+densities <- batiments6 %>%
+  group_split(USAGE1) %>%
+  map_dfr(function(df) {
+    usage <- unique(df$USAGE1)
+    n_usage <- nrow(df)
+    
+    # Calcul de densité manuelle
+    dens <- density(df$ANNEE, adjust = 1, na.rm = TRUE)
+    
+    tibble(
+      x = dens$x,
+      y = dens$y * (n_usage / nrow(batiments6)),  # pondération par proportion réelle
+      USAGE1 = usage
+    )
+  })
+
+# Graphique final empilé
+ggplot(densities, aes(x = x, y = y, fill = USAGE1)) +
+  geom_area(position = "stack", alpha = 0.7) +
   scale_fill_manual(values = palette_uses) +
-  scale_color_manual(values = palette_uses) +
-  scale_y_continuous(trans = power_trans(power = 1/4)) +
+  scale_y_continuous(name = "Densité réelle (pondérée)",trans = power_trans(1/4)) +
   labs(
-    title = "Distribution racine carrée de l'année de construction selon l'usage",
+    title = "Distribution globale des années de construction (pondérée par usage)",
     x = "Année de construction",
-    y = "Densité (sqrt)",
-    fill = "Usage principal",
-    color = "Usage principal"
-  )
+    fill = "Usage principal"
+  ) +
+  theme_minimal()
+
+
+#Diagramme de densité pour chaque usage
 
 # Calcul de la plus petite année de construction globale (non-NA)
 xmin <- min(batiments6$ANNEE, na.rm = TRUE)
@@ -869,11 +911,22 @@ final_plot
 
 ### Interprétation des résultats:
 
-Tout d'abord, on remarque, .
+Tout d'abord, on remarque dans le premier bargraphe que aucun bâtiment religieux n'a de date de construction et qu'une grande majorité des bâtiments indifférencié, agricole, sportif et industriel n'en ont pas non plus.
+Suite à cela j'ai établi un tableau donnant le nombre de bâtiment ayant une date de constructions par rapport aux nombre total par usage afin de voir si les visualisations suivantes seront significatives.
 
-Densité
+On remarque dans le tableau que le nombre est faible pour les bâtiments agricole et indifférencié, il faut donc prendre du retrait sur ces usages et leur graphique.
 
-Ouverture
+-   Après quelques recherches sur un échantillon de ses bâtiments indifférenciés, nous avons remarquer que cela correspond a des bâtiments, souvent de grande taille et ayant subit beaucoup d’extensions ou de travaux comme l'hôpital ou des bâtiments public comme la préfecture, d'autres sont tout simplement en ruine.
+    Il est donc compréhensible que les informations dans la base de données soit incomplètes.
+
+-   Concernant les bâtiments agricoles, on se retrouve sur presque la même situation, ces bâtiments sont vieux et ayant obtenu des extensions.
+    Il est donc difficile de les dater.
+
+Concernant les diagrammes de densité, il est important de précisé que l'échelle de l'axe des ordonnées est en `sqrt^4` , cette transformation est faite afin de pouvoir observer tous les usages de bâtiments et que les années récentes ne rende pas la lecture difficile (les constructions étant beaucoup plus fréquentes):
+
+-   Le premier est un diagramme de densité pondéré
+
+-   Le second, un semble de diagramme de densité pour chaque usage.
 
 ## 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
 
@@ -997,7 +1050,6 @@ En conclusion, la question est partiellement répondue et les résultats diffèr
 On remarque une corrélation significative entre les matériaux de toiture et la hauteur des bâtiments, alors que celle entre les matériaux des murs et la hauteur est beaucoup plus difficile à établir sans pour autant pouvoir l'écarter du champ des possibilités.
 Cela soulève donc une nouvelle question : pourquoi le matériau de la toiture semble-t-il mieux refléter la hauteur d'un bâtiment que celui des murs ?
 
-
 ## 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
 
 texte
@@ -1016,10 +1068,7 @@ texte
 
 ## 8. Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmis les résidences?
 
-Variables utilisées: NB_LOGTS (nombre de logements par batiment), USAGE1 et USAGE2
-Moyenne nationale selon FNAIM: 55% de maison, 45% d'appartement
-Moyenne dans l'Aube selon FNAIM: entre 20% et 40% d'appartement
-Qu'en est-il de Troyes?
+Variables utilisées: NB_LOGTS (nombre de logements par batiment), USAGE1 et USAGE2 Moyenne nationale selon FNAIM: 55% de maison, 45% d'appartement Moyenne dans l'Aube selon FNAIM: entre 20% et 40% d'appartement Qu'en est-il de Troyes?
 
 ### Visualisation
 
@@ -1056,26 +1105,29 @@ ggplot(batiment_pourcentage, aes(x = NB_LOGTS, y = pct)) +
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  ```
+```
 
-  ### Interprétation
+\### Interprétation
 
-  On observe que seulement 1% des batiments sont des logements uniques. Cette information est surprenante, d'autant que le pourcentage de bâtiment à logement unique à Paris est de 0,88%.
-  Il parraît improbable qu'il y ait si peu de maison à Troyes. Nous remarquons que la quasi totalité des bâtiments "indifférencié" ont un nombre inconnu de logement.
-  Il est probable que le reste des maisons (bâtiments à 1 logement) soit dans cette catégorie. 
-  En regroupant tous les batiments ayant plus d'un logement, nous avons presque la moitié des bâtiments résidentiels, ce qui est au-dessus de la moyenne nationale. 
-  Ce n'est pas très surprenant, Troyes est une ville et la moyenne nationale comprend également les résidences rurales.
-  En revanche, il est surprenant de voir que presque la moitié des bâtiments résidentiels (45%) ont seulement 2 logements.
-  Cela n'est probablement pas dû aux colocations. En effet, un logement doit être composé au minimum d'une chambre, une cuisine et une salle de bain (la chambre et la cuisine peuvent être dans la même pièce).
-  Les colocations sont donc considerées comme un unique logement quelque soit le nombre de personne pouvant vivre dedans.
-  Nous pouvons supposer qu'un des logements est un commerce et que l'autre est une résidence. 
-  Pour cela, nous allons voir quel pourcentage de batiments residentiels à 2 logements sont aussi commerciaux.
+On observe que seulement 1% des batiments sont des logements uniques.
+Cette information est surprenante, d'autant que le pourcentage de bâtiment à logement unique à Paris est de 0,88%.
+Il parraît improbable qu'il y ait si peu de maison à Troyes.
+Nous remarquons que la quasi totalité des bâtiments "indifférencié" ont un nombre inconnu de logement.
+Il est probable que le reste des maisons (bâtiments à 1 logement) soit dans cette catégorie.
+En regroupant tous les batiments ayant plus d'un logement, nous avons presque la moitié des bâtiments résidentiels, ce qui est au-dessus de la moyenne nationale.
+Ce n'est pas très surprenant, Troyes est une ville et la moyenne nationale comprend également les résidences rurales.
+En revanche, il est surprenant de voir que presque la moitié des bâtiments résidentiels (45%) ont seulement 2 logements.
+Cela n'est probablement pas dû aux colocations.
+En effet, un logement doit être composé au minimum d'une chambre, une cuisine et une salle de bain (la chambre et la cuisine peuvent être dans la même pièce).
+Les colocations sont donc considerées comme un unique logement quelque soit le nombre de personne pouvant vivre dedans.
+Nous pouvons supposer qu'un des logements est un commerce et que l'autre est une résidence.
+Pour cela, nous allons voir quel pourcentage de batiments residentiels à 2 logements sont aussi commerciaux.
 
 ## 9. Quel est la part de batiments résidentiels à 2 logements sont aussi commerciaux?
 
-  ###Visualisation
+###Visualisation
 
-  Pour USAGE1:
+Pour USAGE1:
 
 ```{r, fig.width=8, fig.height=12}
   batiments_filtre1 <- batiments %>%
@@ -1105,43 +1157,42 @@ ggplot(batiment_pourcentage, aes(x = USAGE1, y = pct)) +
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  ```
+```
 
-  Pour USAGE2:
+Pour USAGE2:
 
-  ```{r}
-  batiments_filtre1 <- batiments %>%
-  select(NB_LOGTS,USAGE1,USAGE2)
+```{r}
+batiments_filtre1 <- batiments %>%
+select(NB_LOGTS,USAGE1,USAGE2)
 
 batiments_filtre2 <- batiments_filtre1 %>%
-  filter(!is.na(USAGE1) | !is.na(USAGE2) | USAGE1 != "" | USAGE2 != "")
+filter(!is.na(USAGE1) | !is.na(USAGE2) | USAGE1 != "" | USAGE2 != "")
 
 batiments_filtre3 <-batiments_filtre2 %>%
-  filter((tolower(USAGE1) %in% c("résidentiel") |
-           tolower(USAGE2) %in% c("résidentiel")) & 
-           (NB_LOGTS= 2))
+filter((tolower(USAGE1) %in% c("résidentiel") |
+         tolower(USAGE2) %in% c("résidentiel")) & 
+         (NB_LOGTS= 2))
 
 batiment_pourcentage <- batiments_filtre3 %>%
-  count(USAGE2) %>%
-  mutate(pct = n / sum(n) * 100,
-         label = paste0(round(pct, 1), "%"))
+count(USAGE2) %>%
+mutate(pct = n / sum(n) * 100,
+       label = paste0(round(pct, 1), "%"))
 
 
 ggplot(batiment_pourcentage, aes(x = USAGE2, y = pct)) +
-  geom_col(fill = "steelblue") +
-  geom_text(aes(label = label), vjust = -0.5, size = 3, color = "black") +
-  labs(
-    title = "Distribution de l'usage des bâtiments ayant 2 logements", 
-    x = "Usage",
-    y = "Pourcentage de bâtiments"
-  ) +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  ```
+geom_col(fill = "steelblue") +
+geom_text(aes(label = label), vjust = -0.5, size = 3, color = "black") +
+labs(
+  title = "Distribution de l'usage des bâtiments ayant 2 logements", 
+  x = "Usage",
+  y = "Pourcentage de bâtiments"
+) +
+theme_minimal() +
+theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
-  ### Interpretation
-  En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
-  Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
+\### Interpretation En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
+Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
 
 ## 10. XXX
 
@@ -1154,7 +1205,6 @@ texte
 ## 12. XXX
 
 texte
- 
 
 # **Conclusion**
 
