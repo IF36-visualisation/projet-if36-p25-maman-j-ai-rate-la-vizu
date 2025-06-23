@@ -228,18 +228,19 @@ knitr::opts_chunk$set(
     echo = FALSE
 )
 
+library(cowplot)
 library(dplyr)
 library(ggplot2)
 library(ggspatial)
+library(kableExtra)
 library(lubridate)
 library(osmdata)
 library(patchwork)
+library(purrr)
 library(readr)
 library(sf)
 library(scales)
-library(cowplot)
-library(kableExtra)
-library(purrr)
+library(tidyr)
 library(viridis, quietly = TRUE)
 
 batiments = read_csv("data/batiments_troyes_coords.csv", col_types = cols(
@@ -672,10 +673,10 @@ Les variables utilisées sont :
 ### Visualisation
 
 ```{r, fig.width=8, fig.height=12}
-batiments <- batiments_selec %>%
+batiments_selec <- batiments %>%
   select(DATE_APP,MAT_TOITS)
 
-batiments_selec <- batiments%>%
+batiments_selec <- batiments_selec%>%
   mutate(DATE_APP = as.double(substr(DATE_APP, 1, 4)))
 
 
@@ -1233,3 +1234,4 @@ Alexis M:
 Camille:
 
 Danielle:
+
