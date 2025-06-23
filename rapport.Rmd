@@ -898,7 +898,7 @@ plots <- batiments6 %>%
   })
 
 # Extraire une légende depuis un plot
-legend_plot <- ggplot(batiments_usages, aes(x = ANNEE, fill = USAGE1)) +
+legend_plot <- ggplot(batiments6, aes(x = ANNEE, fill = USAGE1)) +
   geom_density(alpha = 0.5) +
   theme_minimal() +
   theme(legend.position = "right")

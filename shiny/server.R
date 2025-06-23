@@ -250,7 +250,7 @@ function(input, output, session) {
                 marker = list(
                     size = 10,
                     color = ~ HAUTEUR,
-                    colorscale = "Rainbow",
+                    colorscale = "Viridis",
                     showscale = TRUE,
                     colorbar = list(title = "Hauteur (en m)")
                 )
