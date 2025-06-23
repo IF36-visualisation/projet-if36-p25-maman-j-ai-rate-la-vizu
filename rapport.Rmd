@@ -163,23 +163,23 @@ Nous utiliserons les variables de coordonnées géographiques (`longitude` et `l
 
 ### 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
 
-*L’objectif est de déterminer si l’année de construction d’un bâtiment a une influence sur son usage principal (`usage1`). L’hypothèse sous-jacente est que certains types d’usage sont plus fréquents pour des bâtiments récents (par exemple les bâtiments tertiaires ou commerciaux), tandis que d'autres usages (comme l'habitat individuel ou collectif) sont plus répandus dans des bâtiments anciens.*
+L’objectif est de déterminer si l’année de construction d’un bâtiment a une influence sur son usage principal (`usage1`).
+L’hypothèse sous-jacente est que certains types d’usage sont plus fréquents pour des bâtiments récents (par exemple les bâtiments industriels, commerciaux ou sportifs), tandis que d'autres usages (comme les habitions ou les bâtiments religieux) sont plus répandus dans des bâtiments anciens.
 
-*Nous utiliserons la variable `annee_construction` croisée avec `usage1`, et éventuellement `usage2`, afin de visualiser les évolutions des usages au fil du temps.*
+Nous utiliserons la variable `date_app` pour la croisée avec `usage1`, et éventuellement `usage2`, afin de visualiser les évolutions des usages au fil du temps.
 
 **Pour cela, nous envisageons :**
 
--   *Un graphique en barres ou en aires empilées représentant la répartition des usage1 par tranche d’années de construction (ex. : avant 1950, 1950–1970, etc.).*
--   *Un diagramme de densité ou histogramme montrant la distribution de l’année de construction pour chaque type d’usage principal.*
--   *Un nuage de points (scatter plot) ou un boxplot représentant l’année de construction en fonction des usages, pour comparer la variabilité temporelle entre types de bâtiments.*
--   *Une analyse croisée avec nb_lgmts pour voir si l’évolution dans le temps des usages s’accompagne d’une évolution dans la densité résidentielle.*
+-   ***Un nuage de points (scatter plot) ou un boxplot représentant l’année de construction en fonction des usages, pour comparer la variabilité temporelle entre types de bâtiments.***
+-   Afin de montrer la distribution de l’année de construction pour chaque type d’usage principal, nous allons faire un diagramme de densité des usages sur les années.
+    -   ***Un graphique en barres ou en aires empilées représentant la répartition des usage1 par tranche d’années de construction (par décennies ou par période historique)***
 
 **Les problèmes potentiels :**
 
--   *La variable annee_construction peut être manquante ou imprécise pour certains bâtiments (valeurs nulles, erronées ou hors du timestamp).*
--   *Il faudra regrouper les années par tranches cohérentes pour faciliter l’analyse (ex. : décennies ou périodes historiques de développement urbain).*
--   *Certains usages peuvent avoir été modifiés après construction, rendant la relation avec l’année de construction moins directe (ex. : un bâtiment ancien réaffecté à un usage commercial).*
--   *Des biais peuvent exister dans la base si certains types d'usages sont surreprésentés dans certaines périodes.*
+-   La variable `date_app` peut être manquante ou imprécise pour certains bâtiments (valeurs nulles, erronées ou hors du timestamp en cas d'utilisation dans Tableau).
+-   Il faudra peut-être regrouper les années par tranches cohérentes pour faciliter l’analyse et donner du contexte historique (ex. : décennies ou périodes historiques de développement urbain comme la révolution industrielle).
+-   Certains usages peuvent avoir été modifiés après construction, rendant la relation avec l’année de construction moins directe (ex. : un bâtiment ancien réaffecté à un usage commercial).
+-   Des biais peuvent exister dans la base si certains types d'usages sont sur-représentés dans certaines périodes.
 
 ### 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
 
@@ -201,7 +201,7 @@ Nous allons utiliser dans un premier temps la variable correspondant au nombre d
 -   Il faut vérifier si les usages secondaires sont bien pertinents ou s’ils sont parfois des doublons ou redondants de l’usage principal.
 -   Des biais peuvent exister si certains types d’usage ne sont saisis que partiellement dans les données.
 
-### 8. XXX
+### 8. QUI VEUT - A quels usages sont attribués les bâtiments de nature spéciale?
 
 texte
 
@@ -236,6 +236,9 @@ library(osmdata)
 library(patchwork)
 library(readr)
 library(sf)
+library(scales)
+library(cowplot)
+library(purrr)
 library(viridis, quietly = TRUE)
 
 batiments = read_csv("data/batiments_troyes_coords.csv", col_types = cols(
@@ -593,21 +596,161 @@ texte
 
 ## 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
 
+### Exposition du problème:
+
 texte
+
+### Visualisation:
+
+texte
+
+### Interprétation des résultats:
 
 texte
 
 ## 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
 
-texte
+### Exposition du problème:
 
-texte
+L’objectif de cette exploration est de comprendre s’il existe une relation entre l’année de construction d’un bâtiment et son usage principal.
+Cette question soulève une hypothèse simple mais pertinente : les usages des bâtiments évoluent dans le temps, en lien avec les dynamiques urbaines.
+
+**On peut ainsi supposer que :**
+
+-   Certains usages récents comme les bâtiments commerciaux ou industriels spécialisés sont associés à des constructions récentes
+
+-   Les bâtiments religieux sont tous anciens, à cause de la nature historique et du fait que l'on n'évite de les détruire pour en construire de nouveaux.
+
+-   Les bâtiments d'habitations sont répartis sur toute la période historique.
+
+**Nous mobiliserons ces variables:**
+
+-   La variable `date_app`, qui indique la date de construction (d'apparition) du bâtiment.
+
+-   Les variables `usage1` (et éventuellement `usage2`), qui décrivent la ou les fonctions principales du bâtiment.
+
+### Visualisation:
+
+```{r graphique 6, fig.width=8, fig.height=8}
+
+batiments6 <- batiments %>%
+  mutate(ANNEE = year(DATE_APP))
+
+# Identifier les usages présents
+usages <- sort(unique(na.omit(batiments6$USAGE1)))
+batiments6$USAGE1 <- factor(batiments6$USAGE1, levels = usages)
+
+# Créer une palette avec autant de couleurs que d'usages
+palette_uses <- RColorBrewer::brewer.pal(length(usages), "Set2")
+names(palette_uses) <- usages
+
+# Calculer la proportion de valeurs nulles (NA) dans ANNEE par USAGE1
+proportion_na <- batiments6 %>%
+  group_by(USAGE1) %>%
+  summarise(
+    total = n(),
+    nb_na = sum(is.na(ANNEE)),
+    prop_na = nb_na / total
+  ) %>%
+  arrange(desc(prop_na))
+
+# Barplot de la proportion de valeurs nulles par USAGE1
+ggplot(proportion_na, aes(x = reorder(USAGE1, prop_na), y = prop_na, fill = USAGE1)) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_manual(values = palette_uses) +
+  coord_flip() +  # barres horizontales, plus lisible si beaucoup de catégories
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    title = "Proportion des années de constructions manquantes par usage principal",
+    x = "Usage principal",
+    y = "Années manquantes (%)"
+  ) +
+  theme_minimal()
+
+batiments6 <- batiments6 %>%
+  filter(!is.na(DATE_APP)) #On retire les lignes vides
+
+power_trans <- function(power = 1/3, offset = 0) {
+  trans_new(
+    name = paste0("power-", power),
+    transform = function(x) (x + offset)^power,
+    inverse = function(x) x^(1 / power) - offset,
+    domain = c(0, Inf)
+  )
+}
+
+ggplot(batiments6, aes(x = ANNEE, fill = USAGE1, color = USAGE1)) +
+  geom_density(aes(y = after_stat(density)), alpha = 0.4, adjust = 1) +
+  scale_fill_manual(values = palette_uses) +
+  scale_color_manual(values = palette_uses) +
+  scale_y_continuous(trans = power_trans(power = 1/4)) +
+  labs(
+    title = "Distribution racine carrée de l'année de construction selon l'usage",
+    x = "Année de construction",
+    y = "Densité (sqrt)",
+    fill = "Usage principal",
+    color = "Usage principal"
+  )
+
+# Calcul de la plus petite année de construction globale (non-NA)
+xmin <- min(batiments6$ANNEE, na.rm = TRUE)
+xmax <- max(batiments6$ANNEE, na.rm = TRUE)
+
+# Créer un graphique de densité pour chaque usage
+plots <- batiments6 %>%
+  split(.$USAGE1) %>%
+  keep(~ nrow(.) > 0) %>%
+  map(function(df) {
+    ggplot(df, aes(x = ANNEE, fill = USAGE1)) +
+      geom_density(alpha = 0.5, adjust = 1) +
+      scale_fill_manual(values = palette_uses) +
+      scale_y_continuous(trans = power_trans(power = 1/4)) +
+      scale_x_continuous(limits = c(xmin, xmax)) +
+      labs(
+        title = unique(df$USAGE1),
+        x = "Année de construction",
+        y = "Densité"
+      ) +
+      theme_minimal() +
+      theme(legend.position = "none")
+  })
+
+# Extraire une légende depuis un plot
+legend_plot <- ggplot(batiments_usages, aes(x = ANNEE, fill = USAGE1)) +
+  geom_density(alpha = 0.5) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+# Combiner les graphiques en 4x2, avec la dernière cellule pour la légende
+final_plot <- wrap_plots(plots, ncol = 2, nrow = 4) +
+  plot_layout(ncol = 2, nrow = 4, guides = "collect")
+
+final_plot
+```
+
+### Interprétation des résultats:
+
+Tout d'abord, on remarque, .
+
+Densité
+
+Ouverture
 
 ## 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
 
+### Exposition du problème:
+
 texte
 
-## 8. XXX
+### Visualisation:
+
+texte
+
+### Interprétation des résultats:
+
+texte
+
+## 8. QUI VEUT - A quels usages sont attribués les bâtiments de nature spéciale?
 
 texte
 
@@ -892,11 +1035,25 @@ Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 lo
 
 # **Conclusion**
 
-texte
+texte texte
+
+texte texte
+
+Alexis H:
+
+Alexis M:
+
+Camille:
+
+Camille:
 
 # Annexe
 
 Alexis H:
+
+-   Réalisation des questions 5,6 et 7 dans le plan d'analyse et dans l'exploration.
+
+-   Réalisation des travaux sur Tableau
 
 Alexis M:
 
