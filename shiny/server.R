@@ -116,7 +116,7 @@ function(input, output, session) {
 
     output$nb_logements = renderInfoBox({
         infoBox(
-            "Nombre de logements moyen",
+            "Nombre de logements moyen par bâtiment",
             round(mean(batiments$NB_LOGTS, na.rm = TRUE), 2),
             icon = icon("people-roof"),
             color = "olive"
@@ -139,18 +139,61 @@ function(input, output, session) {
         )
     })
 
+    output$ruines = renderInfoBox({
+        infoBox(
+            "Nombre de bâtiments en ruine",
+            nrow(filter(batiments, ETAT == "En ruine")),
+            icon = icon("house-chimney-crack"),
+            color = "navy"
+        )
+    })
+
+    abscisse = reactive({
+        case_when(
+            input$abscisse == "Nature" ~ "NATURE",
+            input$abscisse == "Usage" ~ "USAGE1",
+            input$abscisse == "Année de construction" ~ "DATE_APP",
+            input$abscisse == "Nombre de logements" ~ "NB_LOGTS",
+            input$abscisse == "Nombre d'étages" ~ "NB_ETAGES",
+            input$abscisse == "Matériaux des murs" ~ "MAT_MURS",
+            input$abscisse == "Matériaux des toits" ~ "MAT_TOITS",
+            input$abscisse == "Hauteur" ~ "HAUTEUR"
+        )
+    })
+
     output$distribution = renderPlotly({
-        abscisse = input$abscisse
+        abscisse = abscisse()
         batiments = batiments %>% filter(!is.na(.[[abscisse]]))
         if (abscisse == "NATURE")
             batiments = batiments %>% filter(.[[abscisse]] != "Indifférenciée")
+        if (abscisse == "USAGE1")
+            batiments = batiments %>% filter(.[[abscisse]] != "Indifférencié")
         if (abscisse == "HAUTEUR") {
             max_hauteur = ceiling(max(batiments[[abscisse]]))
             batiments = batiments %>% mutate(HAUTEUR = cut(
                 .[[abscisse]],
                 breaks = seq(0, max_hauteur, by = 1),
                 right = FALSE,
-                labels = paste0(seq(0, max_hauteur - 1, by = 1), "-", seq(1, max_hauteur, by = 1))
+                labels = paste0(
+                    seq(0, max_hauteur - 1, by = 1),
+                    "-",
+                    seq(1, max_hauteur, by = 1)
+                )
+            ))
+        }
+        if (abscisse == "DATE_APP") {
+            batiments = batiments %>% mutate(DATE_APP = as.numeric(format(DATE_APP, "%Y")))
+            max_annee = ceiling(max(batiments[[abscisse]]) / 10) * 10
+            min_annee = floor(min(batiments[[abscisse]]) / 10) * 10
+            batiments = batiments %>% mutate(DATE_APP = cut(
+                .[[abscisse]],
+                breaks = seq(min_annee, max_annee, by = 10),
+                right = FALSE,
+                labels = paste0(
+                    seq(min_annee, max_annee - 10, by = 10),
+                    "-",
+                    seq(min_annee + 10, max_annee, by = 10)
+                )
             ))
         }
         layout(
@@ -160,14 +203,10 @@ function(input, output, session) {
                 marker = list(color = "dimgrey"),
                 type = "histogram"
             ),
-            xaxis = list(title = abscisse),
+            xaxis = list(title = input$abscisse),
             yaxis = list(
                 title = "Nombre de bâtiments",
-                type = if_else(
-                    input$echelle == "Linéaire",
-                    "linear",
-                    "log"
-                )
+                type = if_else(input$echelle == "Linéaire", "linear", "log")
             ),
             annotations = list(
                 list(
@@ -187,4 +226,41 @@ function(input, output, session) {
         )
     })
 
+    output$infos = renderUI({
+        abscisse = abscisse()
+        if (abscisse == "NATURE") {
+            batiments = batiments %>% filter(.[[abscisse]] == "Indifférenciée")
+        }  else if (abscisse == "USAGE1") {
+            batiments = batiments %>% filter(.[[abscisse]] == "Indifférencié")
+        } else {
+            batiments = batiments %>% filter(is.na(.[[abscisse]]))
+        }
+        HTML(paste0("<b>", nrow(batiments), "</b>"))
+    })
+
+    output$carte <- renderPlotly({
+        batiments = batiments %>% mutate(HAUTEUR = if_else(is.na(HAUTEUR), "N/A", as.character(HAUTEUR)))
+        plot_ly(data = batiments) %>%
+            add_trace(
+                type = "scattermapbox",
+                lat = ~ LATITUDE,
+                lon = ~ LONGITUDE,
+                text = ~ HAUTEUR,
+                mode = "markers",
+                marker = list(
+                    size = 10,
+                    color = ~ HAUTEUR,
+                    colorscale = "Rainbow",
+                    showscale = TRUE,
+                    colorbar = list(title = "Hauteur (en m)")
+                )
+            ) %>%
+            layout(
+                mapbox = list(
+                    style = "open-street-map",
+                    zoom = 9,
+                    center = list(lat = 48.29, lon = 4.08)
+                )
+            )
+    })
 }
