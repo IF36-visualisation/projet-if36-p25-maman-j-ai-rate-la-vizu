@@ -766,12 +766,15 @@ De, plus nous pensons que le matériau des murs aura plus d'influence que celui 
 
 rm(list = setdiff(ls(), c("batiments")))
 
-batiments_clean <- batiments %>%
+batiments3_murs <- batiments %>%
   filter(!is.na(MAT_MURS), !is.na(HAUTEUR)) %>%
-  mutate(MAT_MURS = as.factor(MAT_MURS))
-  
+  mutate(MAT_MURS = as.factor(MAT_MURS)) %>%
+  group_by(MAT_MURS) %>%
+  filter(n() > 1) %>%
+  ungroup()
+
 # Violin plot basé sur MAT_MURS
-plot_murs <- ggplot(batiments_clean, 
+plot_murs <- ggplot(batiments3_murs, 
                     aes(x = MAT_MURS, y = HAUTEUR, fill = MAT_MURS)) +
   geom_violin(trim = FALSE, color = "black") +
   scale_fill_viridis_d(option = "C") +
@@ -785,11 +788,14 @@ plot_murs <- ggplot(batiments_clean,
   )
 
 # Violin plot basé sur MAT_TOITS pour varier
-batiments_toits_clean <- batiments %>%
+batiments3_toits <- batiments %>%
   filter(!is.na(MAT_TOITS), !is.na(HAUTEUR)) %>%
-  mutate(MAT_TOITS = as.factor(MAT_TOITS))
+  mutate(MAT_TOITS = as.factor(MAT_TOITS)) %>%
+  group_by(MAT_TOITS) %>%
+  filter(n() > 1) %>%
+  ungroup()
 
-plot_toits <- ggplot(batiments_toits_clean, 
+plot_toits <- ggplot(batiments3_toits, 
                      aes(x = MAT_TOITS, y = HAUTEUR, fill = MAT_TOITS)) +
   geom_violin(trim = FALSE, color = "black") +
   scale_fill_viridis_d(option = "D") +
