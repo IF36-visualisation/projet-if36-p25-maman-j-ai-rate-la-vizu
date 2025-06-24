@@ -771,8 +771,49 @@ La représentation sur situe sur dans le fichier "Classeur_tableau.twb"
 
 Il est possible d'interagir avec la carte et d'isoler certains usages en sélectionnant un ou plusieurs usages dans la légende.
 De plus, on peut voir le détails des bâtiments en les survolants ou en cliquant dessus.
+Il aussi possible de zoomer sur la carte ou d'intégrer plus de détails en modifiant la visualisation dans la feuille de calcul "Géographie" du classeur.
 
 ### Interprétation des résultats:
+
+Voici ce que l'on peut observer sur la carte lorsque l'on sélectionne les différents usages:
+
+-   Concernant les bâtiments agricoles, on n'en retrouve aucun à proximité de la métropole troyenne et uniquement en périphérie, ce qui fait naturellement du sens.
+
+-   Les activités sportives se trouvent en périphérie et on observe notamment une petite concentration au Sud de la ville, au niveau du complexe Henri Terré.
+
+-   Pour les bâtiments religieux, c'est étrange, on en retrouve uniquement à proximité du centre-ville, alors que la plupart des villages ont généralement une église.
+    Nous supposons donc que ceux-ci sont mal renseigné dans la base de données.
+
+-   Les bâtiments indifférencié sont très présents et partout sur la carte.
+    Ceux-ci correspondent peut-être à des bâtiments mal renseignés.
+
+-   Les bâtiments industriels sont pour la plupart concentrés entre eux, en périphérie de la métropole, avec uniquement des bâtiments commerciaux et de services dans leur proximité immédiate.
+    Cela rappelle les zones industriels comme celle de la Chapelle-St-Luc.
+    On remarque cependant que certains bâtiments de grandes tailles manque à la base de données comme la grande usine de Michelin Pneumatique.
+    Il des quelques bâtiments industrielles isolés comme les anciennes usines textiles EMO situées derrière la gare, qui sont situées derrière la gare et se sont fait encapsulées par l'urbanisme importants durant la années plus récentes.
+
+-   Concernant les bâtiments commerciaux et de services, on peut en retrouver un peu partout mais on en retrouve quelques grandes concentration, comme:
+
+    -   Le centre-ville, où l'on repère bien la base du bouchon troyen.
+
+    -   Le campus universitaire où l'on repère les grands bâtiments comme la faculté ou l'UTT.
+
+    -   La grande concentration de magasins d'usine à Pont-Sainte-Marie
+
+-   Enfin, au sujet des bâtiments résidentiels et des annexes, ceux-ci sont inter-connectés.
+    En effet, on retrouvera des habitations partout où l'urbanisme est présent sauf dans les grandes zones d'activités.
+    Les annexes seront aussi toujours dans ces zones d'habitations et présentes nulle part ailleurs.
+    De plus, on remarque que pour la métropole, au plus les habitations sont éloignés du centre, au plus celles-ci sont espacées et organisées.
+
+En conclusion, par observation, on peut confirmer la plupart de nos suppositions.
+On retrouve en effet des concentrations géographiques des usages qui peuvent, après recherches, s'expliquer par le centres historiques ou des zones d'activités spécifiques pour les activités commerciales, d'éducation, sportives ou industrielles.
+
+On peut donc se demander ensuite si certains quartiers identifiés retrouvent plus certains usages dans leur bâtiment.
+Cependant, cela nécessiterait, soit une grande transformation des données à partir des adresses pour faire une variable nous-mêmes, soit qu'il existe une source de données possédant cette variable.
+
+On peut aussi remarqué certains éléments graphiques prennent une forme incorrecte, notamment pour les grande structure comme l'UTT ou l'aéroport.
+Cela est dû à la façon dont les données géographiques sont relevées.
+En effet, le personnel les relevants ne prend que quelques points sur le bâtiment, ne permettant pas de former la structure exacte du bâtiment.
 
 ## 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
 
