@@ -923,11 +923,27 @@ On remarque dans le tableau que le nombre est faible pour les bâtiments agricol
 -   Concernant les bâtiments agricoles, on se retrouve sur presque la même situation, ces bâtiments sont vieux et ayant obtenu des extensions.
     Il est donc difficile de les dater.
 
-Concernant les diagrammes de densité, il est important de précisé que l'échelle de l'axe des ordonnées est en `sqrt^4` , cette transformation est faite afin de pouvoir observer tous les usages de bâtiments et que les années récentes ne rende pas la lecture difficile (les constructions étant beaucoup plus fréquentes):
+Concernant les diagrammes de densité, il est important de précisé que l'échelle de l'axe des ordonnées est en `sqrt^4` (il était impossible d'utiliser l'échelle logarithmique, la densité étant parfois proche de 0, cela ruine la visualisation).
+Cette transformation est faite afin de pouvoir observer tous les usages de bâtiments et que les années récentes ne rende pas la lecture difficile (les constructions étant beaucoup plus fréquentes):
 
--   Le premier est un diagramme de densité pondéré
+-   Le premier est un diagramme de densité pondéré, celui ci permet de montrer à la fois l'évolution des de la quantité de construction de tout usage au fur à mesure des années, où l'on peut notamment observer la croissance constante du nombre de construction par an, avec des bonds durant certains évènements historiques (fin du XVIIIème: révolution française et début de la révolution industrielle et années 50: fin de la seconde guerre mondiale et baby boom).
+    On observe aussi une immense croissance de la construction résidentielle (malgré l'échelle `sqrt^4` !) dans les années 50 confirmant le baby boom.
 
 -   Le second, un semble de diagramme de densité pour chaque usage.
+    On peut donc observer plus clairement l'évolution des dates de constructions des bâtiments de chaque usage:
+
+    -   On voit notamment que les infrastructure n'apparaissent pas avant les années 50 et on retrouve la grande croissance des bâtiments résidentiels, industriels et commerciaux à la même date.
+        Montrant la grande croissance économique des années d'après guerre et synonyme de la croissance démographique.
+
+    -   On remarque aussi que la construction de bâtiments utilisés pour le commerce et l'habitation est présente depuis le début.
+        Nous supposons que cela correspond à la vieille ville et ses bâtiments historique.
+
+    -   On remarque que le début d'une croissance importante, correspondant aux révolutions industrielles.
+        La croissance autour de 1650 correspond, quant à elle, probablement à des halles ou des bâtiments agricoles reconvertis dans les années récentes.
+
+    -   Les annexes correspondant souvent à des garages, des cabanes de jardins ou petites structures similaires, il est logique que leur construction suivent la tendance de la construction de bâtiments résidentiels.
+
+    -   Comme précisé avant, l'échantillon des bâtiments étant limité et sûrement peu représentatif, nous ne préférons pas interpréter de résultats sur ces graphiques.
 
 ## 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
 
