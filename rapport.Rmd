@@ -150,7 +150,6 @@ Nous utiliserons les variables de coordonnées géographiques (`longitude` et `l
 
 **Pour cela, nous envisageons :**
 
--   Tableau
 -   Une carte avec les bâtiments colorés selon leur usage principal (`usage1`), afin de visualiser leur répartition spatiale dans la ville.
     -   Un graphique en barres représentant le nombre de bâtiments pour chaque usage.
     -   Une carte en clusters ou une carte de densité (heatmap) pour identifier les concentrations d’usages spécifiques.
@@ -742,11 +741,30 @@ texte
 
 ### Exposition du problème:
 
-texte
+L’objectif de cette exploration est de comprendre s’il existe une relation entre la localisation géographique d’un bâtiment et son usage principal.
+Cette question repose sur une hypothèse simple mais significative : les fonctions attribuées aux bâtiments varient selon leur implantation sur le territoire, en lien avec l’organisation spatiale des villes, des zones rurales, et des secteurs d’activité.
+
+On peut ainsi supposer que :
+
+-   Les bâtiments industriels sont davantage implantés en périphérie des villes ou dans des zones dédiées à l'industrie.
+
+-   Les bâtiments commerciaux se concentrent plutôt dans le "Bouchon" (centre-ville) et dans des zones concentrés en périphérie, représentant les zones commerciales.
+
+-   Les bâtiments d’habitation et d'annexe sont répartis de façon plus diffuse, mais leur densité varie selon les quartiers.
+
+Nous mobiliserons les variables suivantes :
+
+-   Les données géographiques fournies avec le fichier de liaison "Adresses-Bâti", qui permet de situer et représenter avec une relativement bonne précision chaque bâtiment sur le territoire.
+
+-   Les variables `usage1` (et éventuellement `usage2`), qui décrivent la ou les fonctions actuelles du bâtiment.
+
+-   Différentes variables afin de pouvoir appliquer des filtres efficaces et de donner des détails complets sur chaque bâtiment en cas d’interaction.
 
 ### Visualisation:
 
-texte
+Tableau
+
+Screen
 
 ### Interprétation des résultats:
 
