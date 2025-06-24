@@ -197,8 +197,7 @@ Nous allons utiliser dans un premier temps la variable correspondant au nombre d
 -   Il faut vérifier si les usages secondaires sont bien pertinents ou s’ils sont parfois des doublons ou redondants de l’usage principal.
 -   Des biais peuvent exister si certains types d’usage ne sont saisis que partiellement dans les données.
 
-### 8.  A quels usages sont attribués les bâtiments de nature spéciale?
-
+### 8. A quels usages sont attribués les bâtiments de nature spéciale?
 
 ### 9. Est-ce que les bâtiments du centre-ville sont plus hauts que les bâtiments plus éloignés ?
 
@@ -742,6 +741,8 @@ Il n'est donc pas surprenant de les retrouver dans le graphe.
 
 ## 4. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
 
+### Exposition du problème:
+
 L'objectif ici est de comprendre si l'évolution des matériaux, principalement des murs a un impact sur la hauteur des bâtiments.
 Pour cela, nous allons réaliser deux violinplot, l'un lié au matériau des murs et l'autre des toits afin de confirmer une corrélation.
 
@@ -1130,22 +1131,19 @@ Nous mobiliserons les variables suivantes :
 
 Pour cette visualisation, j'ai aussi utilisé Tableau afin de bénéficier de l'interactivité du logiciel et de faire une heatmap à facettes aisément.
 
-![Tableau de bords réalisé sur Tableau](images/7_Usages principal et secondaire.png)
+![Tableau de bords réalisé sur Tableau](images/7_Usages%20principal%20et%20secondaire.png)
 
 Dans le même classeur que pour la question 5., elle correspond au tableau de bord "6. Usages principal et secondaire"
 
 ### Interprétation des résultats:
 
-texte
+Multi-usages et logements
 
 ## 8. A quels usages sont attribués les bâtiments de nature spéciale?
 
 L'objectif est d'identifier si certaines natures de bâtiments sont spécifiques à un usage particulier.
 Pour celà, nous allons faire un barplot.
-Comme hypothèses de départ, nous avons:
-- certaines natures de bâtiments ont des usages spécifiques
-
-
+Comme hypothèses de départ, nous avons: - certaines natures de bâtiments ont des usages spécifiques
 
 ```{r graphique... }
 # On compte le nombre de bâtiments pour chaque combinaison NATURE / USAGE1
@@ -1169,18 +1167,17 @@ ggplot(df_nature_usage, aes(x = NATURE, y = Nombre, fill = USAGE1)) +
 
 ```
 
-Analyse et interprétation:
+### Analyse et interprétation:
 
 On remarque premièrement que les bâtiments de nature indifférencié ont une grande diversité d'usages.Ce qui peut s'expliquer par le fait qu'il s'agit d'une catégorie fourre-tout utilisée pour des bâtiments difficiles à classer par nature.
 
-Pour les bâtiments de nature "Industriel, agricole ou commercial" ont une forte diversité d'usages également . Les usages prédominants sont agricole, commerciale, annexe et industriel.
+Pour les bâtiments de nature "Industriel, agricole ou commercial" ont une forte diversité d'usages également .
+Les usages prédominants sont agricole, commerciale, annexe et industriel.
 
-
-Pour les bâtiments de nature chapelle et église, l'usage  est exclusivement réligieux.
+Pour les bâtiments de nature chapelle et église, l'usage est exclusivement réligieux.
 Les bâtiments ayant pour nature serre et silo, l'usage est exclusivement agricole.
 
 En somme,nous avons des natures avec des usages fortement spécialisés et des natures à usages multiples.
-
 
 ## 9. Est-ce que les bâtiments du centre-ville sont plus hauts que les bâtiments plus éloignés ?
 
@@ -1212,106 +1209,6 @@ Nous remarquons aussi des points plus hauts qui semblent être les clochers des 
 En dehors du centre ville, les hauteurs sont plus hétérogènes avec des immeubles à plus de 30 mètres et beaucoup de maison ou autres bâtiments à 2 étages maximum.
 Nous pouvons bien distinguer les zones résidentielles avec uniquement des maisons où il n'y que des points violets avec les zones où il y a des immeubles.
 On peut aussi voir des bâtiments industriels qui sont assez haut en dehors de la ville, comme l'usine Michelin qui monte à près de 30m de haut.
-
-## 10. XXX
-
-texte
-
-## 11. XXX
-
-texte
-
-## 12. XXX
-
-texte
-
-## X. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
-
-L'objectif ici est de comprendre si l'évolution des matériaux, principalement des murs a un impact sur la hauteur des bâtiments.
-Pour cela, nous allons réaliser deux violinplot, l'un lié au matériau des murs et l'autre des toits afin de confirmer une corrélation.
-
-Les variables utilisées sont :
-
--   MAT_MURS : variable nominale : code des matériaux des murs, croisé avec [materiaux_murs.csv](data/materiaux_murs.csv)
-
--   MAT_TOITS : variable nominale : code des matériaux de la toiture, croisé avec [materiaux_toits.csv](data/materiaux_toits.csv)
-
--   HAUTEUR : variable continue représentant la hauteur absolue du bâtiment
-
-Nous nous attendons à ce que les matériaux plus modernes et denses comme le béton ( au niveau des murs et aussi de la toiture ) composent les bâtiments les plus hauts de l'agglomération troyenne.
-De, plus nous pensons que le matériau des murs aura plus d'influence que celui de la toiture.
-
-### Visualisation
-
-```{r graphique 3, fig.width=10, fig.height=12}
-
-rm(list = setdiff(ls(), c("batiments")))
-
-batiments_clean <- batiments %>%
-  filter(!is.na(MAT_MURS), !is.na(HAUTEUR)) %>%
-  mutate(MAT_MURS = as.factor(MAT_MURS))
-  
-# Violin plot basé sur MAT_MURS
-plot_murs <- ggplot(batiments_clean, 
-                    aes(x = MAT_MURS, y = HAUTEUR, fill = MAT_MURS)) +
-  geom_violin(trim = FALSE, color = "black") +
-  scale_fill_viridis_d(option = "C") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "none") +
-  labs(
-    title = "Hauteur selon le matériau des murs",
-    x = "Matériau des murs",
-    y = "Hauteur (m)"
-  )
-
-# Violin plot basé sur MAT_TOITS pour varier
-batiments_toits_clean <- batiments %>%
-  filter(!is.na(MAT_TOITS), !is.na(HAUTEUR)) %>%
-  mutate(MAT_TOITS = as.factor(MAT_TOITS))
-
-plot_toits <- ggplot(batiments_toits_clean, 
-                     aes(x = MAT_TOITS, y = HAUTEUR, fill = MAT_TOITS)) +
-  geom_violin(trim = FALSE, color = "black") +
-  scale_fill_viridis_d(option = "D") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "none") +
-  labs(
-    title = "Hauteur selon le matériau des toits",
-    x = "Matériau des toits",
-    y = "Hauteur (m)"
-  )
-
-# Regroupement des deux plots
-plots <- list(plot_murs, plot_spacer(), plot_toits)
-
-# Assemblage final
-final_plot = wrap_plots(plots, ncol = 1, nrow = 3) +
-  plot_layout(guides = "collect", heights = c(1, 0.2, 1)) +
-  plot_annotation(
-    title = "Analyse des hauteurs de bâtiments selon matériaux",
-    subtitle = "Ville de Troyes",
-    caption = "Données : BDD PARCELAIRE - Troyes Champagne Métropole"
-  )
-
-final_plot
-
-```
-
-### Interprétation des résultats
-
-Tout d'abord, quand l'on regarde le graphique de la hauteur par rapport aux matériaux des murs, il est difficile d'observer une corrélation.
-En effet, on remarque de très faibles différences dans la distribution des hauteurs pour chaque combinaison de matériau.
-Cela pourrait amener à penser que le matériau des murs n'a pas une influence déterminante sur la hauteur des bâtiments, du moins d'après cette visualisation.
-Une approche complémentaire, comme représenter la hauteur moyenne ou médiane pour chaque matériau, pourrait nous apporter des réponses plus claires et mettre en évidence des tendances qui peuvent être plus légères.
-
-Cependant, quand l'on observe le graphique lié à la hauteur des bâtiments selon le matériau de la toiture, on peut clairement observer que les matériaux ZINC ALUMINIUM, BETON et ARDOISES recouvrent les bâtiments les plus hauts, alors que les TUILES ne dépassent que très rarement la dizaine de mètres de hauteur.
-Cela indique une possible corrélation entre le type de matériau utilisé pour la toiture et la hauteur des bâtiments.
-
-En conclusion, la question est partiellement répondue et les résultats diffèrent sensiblement de nos attentes initiales.
-On remarque une corrélation significative entre les matériaux de toiture et la hauteur des bâtiments, alors que celle entre les matériaux des murs et la hauteur est beaucoup plus difficile à établir sans pour autant pouvoir l'écarter du champ des possibilités.
-Cela soulève donc une nouvelle question : pourquoi le matériau de la toiture semble-t-il mieux refléter la hauteur d'un bâtiment que celui des murs ?
 
 ## 10. Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmi les résidences?
 
@@ -1443,15 +1340,14 @@ theme(axis.text.x = element_text(angle = 45, hjust = 1))
 En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
 Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
 
-
 ## 12.Quels sont les usages fréquents pour les bâtiments à structure légère ?
 
-L'objectif de cette question est d'analyser la répartition des usages des bâtiments en fonction de leur structure,  en particulier de comparer les usages des bâtiments à structure légère par rapport aux autres.
-Comme hypothèses de départ, on a:
-- les bâtiments résidentiels sont majoritairement à structure non légère pour des raisons de durabilité.
+L'objectif de cette question est d'analyser la répartition des usages des bâtiments en fonction de leur structure, en particulier de comparer les usages des bâtiments à structure légère par rapport aux autres.
+Comme hypothèses de départ, on a: - les bâtiments résidentiels sont majoritairement à structure non légère pour des raisons de durabilité.
 - les bâtiments à structure légère ont des usages spécifiques.
 
-Pour répondre à cette question, nous allons réaliser un diagramme à barres 100% empilées. Il va nous permettre de comparer les proportions d'usages entre les deux types de structure.
+Pour répondre à cette question, nous allons réaliser un diagramme à barres 100% empilées.
+Il va nous permettre de comparer les proportions d'usages entre les deux types de structure.
 
 ### Visualisation
 
@@ -1496,15 +1392,16 @@ ggplot(df_usages, aes(x = reorder(USAGE1, -Pourcentage), y = Pourcentage, fill =
 
 Le graphique présente la répartition en pourcentage des structures légères et non légères pour chaque usage principal de bâtiment.
 
-On observe que la grande majorité des bâtiments sont à structure non légère.Celà peut s'expliquer par le fait que les structures non légères offrent plus de résistance aux intempéries, nécessitent moins d'entretien à long terme et offrent un comfort accru. De plus, les règles de sécurité et d'urbanisme imposent des normes strictes de construction donc la plupart des bâtiments ont une structure non légère et les bâtiments à structure légère sont temporaires.
+On observe que la grande majorité des bâtiments sont à structure non légère.Celà peut s'expliquer par le fait que les structures non légères offrent plus de résistance aux intempéries, nécessitent moins d'entretien à long terme et offrent un comfort accru.
+De plus, les règles de sécurité et d'urbanisme imposent des normes strictes de construction donc la plupart des bâtiments ont une structure non légère et les bâtiments à structure légère sont temporaires.
 
-On observe une répartition égale des bâtiments à usage indifférencié (50% à structure légère et 50% à structure non légère). 
+On observe une répartition égale des bâtiments à usage indifférencié (50% à structure légère et 50% à structure non légère).
 
-On observe également que 23% des bâtiments agricoles sont à structure légère. Certains bâtiments servent à l'entreposage temporaire des récoltes, des outils ou des machines, ils n'ont donc pas besoin d'être permanents. D'où l'usage de bâtiments à structure légère.
+On observe également que 23% des bâtiments agricoles sont à structure légère.
+Certains bâtiments servent à l'entreposage temporaire des récoltes, des outils ou des machines, ils n'ont donc pas besoin d'être permanents.
+D'où l'usage de bâtiments à structure légère.
 
 En somme,la visualisation confirme les hypothèses de départ.
-
-
 
 # **Conclusion**
 
@@ -1530,13 +1427,15 @@ Voici notre travail individuel:
 
 -   Alexis H:
 
-    -   Réalisation des questions 5,6 et 7 dans le plan d'analyse et dans l'exploration.
+    -   Réalisation des questions 4, 5, 6 et 7 dans le plan d'analyse et dans l'exploration.
 
     -   Réalisation des travaux sur Tableau
 
 -   Alexis M:
 
     -   Réalisation des question 2 et 9
+
+    -   Aide technique sur la question 4
 
     -   Réalisation de l'application Shiny
 
@@ -1547,4 +1446,4 @@ Voici notre travail individuel:
 -   Danielle:
 
     -   Réalisation des questions 1,8 et 12.
-    -  Réalisation des répartitions simples
+    -   Réalisation des répartitions simples
