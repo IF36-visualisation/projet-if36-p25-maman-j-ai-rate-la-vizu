@@ -189,7 +189,6 @@ Nous allons utiliser dans un premier temps la variable correspondant au nombre d
 
 -   Diagramme en barres du nombre de logements (`nb_lgmts`) par usages menant à un filtrage pour affiner les visualisations suivantes.
 -   Une heatmap croisant `usage1` et `usage2`, avec des couleurs représentant la fréquence des combinaisons.
--   ***Un graphique en barres empilées pour visualiser, pour chaque `usage1`, la répartition des différents `usage2`.***
 
 **Les problèmes potentiels :**
 
@@ -1129,15 +1128,36 @@ Nous mobiliserons les variables suivantes :
 
 ### Visualisation:
 
-Pour cette visualisation, j'ai aussi utilisé Tableau afin de bénéficier de l'interactivité du logiciel et de faire une heatmap à facettes aisément.
+Pour cette visualisation, j'ai aussi utilisé Tableau afin de bénéficier de l'interactivité du logiciel et de faire une heatmap "à facettes" aisément.
+
+Il est important que l'axe des ordonnées du bargraphe et la colorisation de la heatmap suivent une échelle logarithmique afin de laisser les usages avec peu de bâtiments apparaître.
+De plus, une partie de la légende de la heatmap ne peut pas s'exporter (en bas à droite).
 
 ![Tableau de bords réalisé sur Tableau](images/7_Usages%20principal%20et%20secondaire.png)
 
-Dans le même classeur que pour la question 5., elle correspond au tableau de bord "6. Usages principal et secondaire"
+Dans le même classeur que pour la question 5., elle correspond au tableau de bord "6. Usages principal et secondaire".
 
 ### Interprétation des résultats:
 
-Multi-usages et logements
+Tout d'abord, sur le bargraphe, on remarque que les usages peut propice aux partages de leur locaux comme les bâtiments agricoles, religieux et sportifs ont 0 ou 1 logements.
+De plus, certains bâtiments industriels, commerciaux ou annexes dépassent les 3 logements!
+C'est assez suspect pour des bâtiments de cet usage, je suppose donc que parfois un "logement" est en vérité un découpage du bâtiment entre plusieurs propriétaires (plusieurs entreprises dans une grande halle. Cela relèverait une certaine inconsistance dans la méthode de relevé du nombre de logements.
+
+Quand on se penche plus en détails sur la heatmap à facettes on remarque que :
+
+-   Pour aucune donnée sur le nombre de logement: On remarque 4 usages multiples, correspondant sûrement à une erreur de recensement.
+
+-   Pour 0 logement: On remarque principalement 311 usages industrialo-commercials, cela fait beaucoup de sens. Les locaux étant sûrement partagés, un commerçant et un industriel peuvent être hébergés dans la même halle par exemple.
+    Il y a aussi autre partage comme sportif et commercial, cela peut, par exemple, correspondre à un club sportif.
+
+-   Pour 1 logement: On remarque beaucoup de bâtiments résidentiels/annexes et résidentiels/commerciaux.
+    Résidentiel annexe est assez logique avec une cabane ou un garage extérieur pour une maison individuelle par exemple.
+    Quant aux bâtiments résidentiels/commerciaux, on peut supposer que cela correspond a des bâtiments avec un commerce au rez-de-chaussée et une habitation dans les étages que l'on peut retrouver notamment dans le centre-ville de Troyes.
+    On remarque aussi des commerces/annexes avec 1 logement correspondant possiblement à l'inconsistance de relevé cité ci-dessus.
+
+-   Pour 2 logements et plus: On retrouve des éléments similaires à ce qu'il se passe pour 1 logements mais en moins grandes quantité dû au nombre plus faible de bâtiments à 2 "logements"
+
+En conclusion, on pourrait continuer l'exploration de cette question avec une carte détaillée des multi-usages, si cela confirme nos remarques.
 
 ## 8. A quels usages sont attribués les bâtiments de nature spéciale?
 
