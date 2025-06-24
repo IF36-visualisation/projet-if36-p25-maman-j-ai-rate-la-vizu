@@ -2,8 +2,8 @@
 title: "Peer-review - Bâtiments de Troyes Champagne Métropole"
 author: "Maman j'ai raté la vizu"
 output:
-  html_document:
-    df_print: paged
+  prettydoc::html_pretty:
+    theme: architect
 editor_options:
   markdown:
     wrap: sentence
@@ -83,7 +83,19 @@ Nous avons aussi enlevé les variables que nous n'avons pas trouvées pertinente
 
 ## Plan d'analyse
 
-### 1. Comment la ville de Troyes s'est étendue géographiquement au fil des années ?
+### 1. Y a-t-il une liaison entre la hauteur des bâtiments et leur usage ?
+
+Il s'agit de déterminer s'il existe une relation entre la hauteur d'un bâtiment et son usage.
+Les variables utilisées sont : la variable `hauteur` et la variable `usage1`.
+
+Pour cela, nous envisageons d'utiliser :
+
+-   Un diagramme à barres empilées pour étudier la répartition des usages :
+    -   L'axe des abscisses représenterait les tranches de hauteur
+    -   L'axe des ordonnées représenterait le nombre de bâtiments
+    -   Chaque barre avec une répartition des usages
+
+### 2. Comment la ville de Troyes s'est étendue géographiquement au fil des années ?
 
 Il s'agit ici de visualiser l'évolution spatiale de la ville de Troyes au fil du temps.
 Pour cela, nous utiliserons la variable `date_app` et les variables de coordonnées géographiques : `latitude` et `longitude`.
@@ -96,7 +108,7 @@ Les problèmes potentiels :
 
 -   l'absence de date de construction pour certains bâtiments
 
-### 2. Y a-t-il un lien entre les matériaux de construction et les dates de construction ?
+### 3. Y a-t-il un lien entre les matériaux de construction et les dates de construction ?
 
 Il s'agit ici de déterminer s'il existe une relation entre les variables `date_app`, `mat_murs` et `mat_toits`.
 L'objectif est de vérifier si les matériaux de construction des bâtiments varient en fonction des époques.
@@ -118,7 +130,7 @@ Pour cela, nous envisageons deux types de visualisations :
 
     -   un grand nombre de catégories de matériaux (risque de graphe illisible)
 
-### 3. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
+### 4. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
 
 L'objectif ici est de comprendre si l'évolution des matériaux a un impact sur la hauteur des bâtiments.
 Nous aimerions comparer la distribution des hauteurs en fonction des matériaux et vérifier si certains matériaux sont associés à des hauteurs spécifiques.
@@ -130,31 +142,84 @@ Pour cela, nous envisageons d'utiliser :
     -   L'axe des abscisses représentant le type de matériau
     -   L'axe des ordonnées représentant la hauteur des bâtiments
 
-### 4. Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
+### 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
 
 L'objectif ici est de déterminer si certains types d'usage des bâtiments sont spécifiquement localisés dans certaines zones de la ville de Troyes.
 Pouvons-nous identifier des zones résidentielles, des zones industrielles et des zones commerciales ?
 Nous utiliserons les variables de coordonnées géographiques (`longitude` et `latitude`) et les variables `usage1` et `usage2`.
 
-Pour cela, nous envisageons :
+**Pour cela, nous envisageons :**
 
--   Une carte avec les bâtiments colorés selon leur usage
+-   Tableau
+-   Une carte avec les bâtiments colorés selon leur usage principal (`usage1`), afin de visualiser leur répartition spatiale dans la ville.
+    -   Un graphique en barres représentant le nombre de bâtiments pour chaque usage.
+    -   Une carte en clusters ou une carte de densité (heatmap) pour identifier les concentrations d’usages spécifiques.
 
-Les problèmes potentiels :
+**Les problèmes potentiels :**
 
--   il sera peut-être nécessaire de regrouper les usages
+-   Il sera peut-être nécessaire de regrouper les usages afin de ne pas surcharger la carte et de rendre les différences lisibles.
+-   La précision des coordonnées géographiques peut poser problème (erreurs ou imprécisions dans la base).
+-   Des effets de densité peuvent masquer certaines tendances (ex. : une zone très dense en bâtiments résidentiels peut rendre difficile la détection de petits usages secondaires).
 
-### 5. Y a-t-il une liaison entre la hauteur des bâtiments et leur usage ?
+### 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
 
-Il s'agit de déterminer s'il existe une relation entre la hauteur d'un bâtiment et son usage.
-Les variables utilisées sont : la variable `hauteur` et la variable `usage1`.
+L’objectif est de déterminer si l’année de construction d’un bâtiment a une influence sur son usage principal (`usage1`).
+L’hypothèse sous-jacente est que certains types d’usage sont plus fréquents pour des bâtiments récents (par exemple les bâtiments industriels, commerciaux ou sportifs), tandis que d'autres usages (comme les habitions ou les bâtiments religieux) sont plus répandus dans des bâtiments anciens.
 
-Pour cela, nous envisageons d'utiliser :
+Nous utiliserons la variable `date_app` pour la croisée avec `usage1`, et éventuellement `usage2`, afin de visualiser les évolutions des usages au fil du temps.
 
--   Un diagramme à barres empilées pour étudier la répartition des usages :
-    -   L'axe des abscisses représenterait les tranches de hauteur
-    -   L'axe des ordonnées représenterait le nombre de bâtiments
-    -   Chaque barre avec une répartition des usages
+**Pour cela, nous envisageons :**
+
+-   ***Un nuage de points (scatter plot) ou un boxplot représentant l’année de construction en fonction des usages, pour comparer la variabilité temporelle entre types de bâtiments.***
+-   Afin de montrer la distribution de l’année de construction pour chaque type d’usage principal, nous allons faire un diagramme de densité des usages sur les années.
+    -   ***Un graphique en barres ou en aires empilées représentant la répartition des usage1 par tranche d’années de construction (par décennies ou par période historique)***
+
+**Les problèmes potentiels :**
+
+-   La variable `date_app` peut être manquante ou imprécise pour certains bâtiments (valeurs nulles, erronées ou hors du timestamp en cas d'utilisation dans Tableau).
+-   Il faudra peut-être regrouper les années par tranches cohérentes pour faciliter l’analyse et donner du contexte historique (ex. : décennies ou périodes historiques de développement urbain comme la révolution industrielle).
+-   Certains usages peuvent avoir été modifiés après construction, rendant la relation avec l’année de construction moins directe (ex. : un bâtiment ancien réaffecté à un usage commercial).
+-   Des biais peuvent exister dans la base si certains types d'usages sont sur-représentés dans certaines périodes.
+
+### 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
+
+L’objectif est de déterminer s’il existe une corrélation ou un lien statistique entre l’usage principal (`usage1`) et l’usage secondaire (`usage2`) d’un bâtiment.
+Cela permettrait de mieux comprendre les combinaisons d’usages fréquentes (par exemple : habitation principale avec un usage secondaire de type commerce ou entrepôt), et d’éventuellement identifier des profils types de bâtiments à usage mixte.
+
+Nous allons utiliser dans un premier temps la variable correspondant au nombre de logements (`nb_lgmts`) afin de vérifier si, dans la base de données, un bâtiment à usage commercial peut également être comptabilisé comme comportant des logements.
+
+**Pour cela, nous envisageons :**
+
+-   *Une **carte de chaleur (heatmap)** croisant `usage1` et `usage2`, avec des couleurs représentant la fréquence des combinaisons.*
+-   *Un **graphique en barres empilées** pour visualiser, pour chaque `usage1`, la répartition des différents `usage2`.*
+-   *Un **tableau croisé (table de contingence)** pour calculer un indicateur statistique de corrélation (comme le coefficient de Cramer), et objectiver l’intensité du lien entre `usage1` et `usage2`.*
+-   *Un **filtrage exploratoire par le nombre de logements (`nb_lgmts`)** pour identifier d’éventuelles incohérences ou combinaisons non pertinentes (ex. : bâtiment déclaré uniquement commercial mais comportant des logements).*
+
+**Les problèmes potentiels :**
+
+-   Certains bâtiments n’ont peut-être pas d’usage secondaire renseigné (`usage2` vide ou manquant).
+-   Il faut vérifier si les usages secondaires sont bien pertinents ou s’ils sont parfois des doublons ou redondants de l’usage principal.
+-   Des biais peuvent exister si certains types d’usage ne sont saisis que partiellement dans les données.
+
+### 8. QUI VEUT - A quels usages sont attribués les bâtiments de nature spéciale?
+
+texte
+
+### 9. XXX
+
+texte
+
+### 10. XXX
+
+texte
+
+### 11. XXX
+
+texte
+
+### 12. XXX
+
+texte
 
 # Exploration
 
@@ -163,16 +228,22 @@ knitr::opts_chunk$set(
     echo = FALSE
 )
 
+library(cowplot)
 library(dplyr)
 library(ggplot2)
 library(ggspatial)
+library(kableExtra)
+library(lubridate)
 library(osmdata)
 library(patchwork)
+library(purrr)
 library(readr)
 library(sf)
+library(scales)
+library(tidyr)
 library(viridis, quietly = TRUE)
 
-batiments = read_csv("../data/batiments_troyes_coords.csv", col_types = cols(
+batiments = read_csv("data/batiments_troyes_coords.csv", col_types = cols(
     ID = col_character(),
     NATURE = col_character(),
     USAGE1 = col_character(),
@@ -204,11 +275,11 @@ batiments = read_csv("../data/batiments_troyes_coords.csv", col_types = cols(
     LATITUDE = col_double()
 ))
 
-materiaux_murs = read_csv("../data/materiaux_murs.csv", col_types = cols(
+materiaux_murs = read_csv("data/materiaux_murs.csv", col_types = cols(
     code = col_character(),
     valeur = col_character()
 ))
-materiaux_toits = read_csv("../data/materiaux_toits.csv", col_types = cols(
+materiaux_toits = read_csv("data/materiaux_toits.csv", col_types = cols(
     code = col_character(),
     valeur = col_character()
 ))
@@ -234,9 +305,9 @@ batiments = batiments %>%
              ETAT, LONGITUDE, LATITUDE))
 ```
 
-## Questions répartitions simples
+## Questions répartition simples
 
-### Distribution des matériaux 
+### Distribution des matériaux
 
 Hypothèses: Ces visualisations nous permettront de voir la distribution des bâtiments en fonction des matériaux utilisés pour les murs et les toits.
 On pourrait identifier les matériaux les plus utilisés et trouver les raisons pour les quelles ces matériaux sont aussi utilisés.
@@ -249,7 +320,7 @@ Pour cela, nous allons faire des barplots.
 
 On utilisera les variables matériaux murs.
 
-```{r matériaux murs}  
+```{r matériaux murs}
 batiments_filtre_murs <- batiments %>%
   filter(!is.na(MAT_MURS), MAT_MURS != "INDETERMINE")
 ggplot(batiments_filtre_murs, aes(x = MAT_MURS))+
@@ -267,7 +338,7 @@ On constate que les matériaux les plus utilisés pour les murs sont les briques
 
 On utilisera les variables matériaux toits.
 
-```{r matériaux toits}  
+```{r matériaux toits}
 batiments_filtre_toits <- batiments %>%
   filter(!is.na(MAT_TOITS ), MAT_TOITS != "INDETERMINE")
 ggplot(batiments_filtre_toits, aes(x = MAT_TOITS))+
@@ -286,7 +357,7 @@ On constate que le matériau le plus utilisé pour les toits est les tuiles.
 
 L'objectif est de voir la distribution des bâtiments en fonction de la hauteur des bâtiments.
 
-```{r hauteurs}  
+```{r hauteurs}
 batiments1 <- batiments
 
 # visualisation
@@ -318,8 +389,7 @@ On remarque que la plupart des bâtiments ont une hauteur située entre 0 et 10m
 
 L'objectif est de voir la distribution des bâtiments en fonction de l'année de construction.
 
-```{r dates}  
-library (lubridate)
+```{r dates}
 batiments_filtre_dates <- batiments %>%
   filter(!is.na(DATE_APP))
 batiments_filtre_dates$annee_construction <- year(batiments_filtre_dates$DATE_APP)
@@ -344,7 +414,7 @@ ggplot(batiments_filtre_dates, aes(x=periode))+
 
 ### Distribution en fonction des usages.
 
-```{r usages} 
+```{r usages}
 batiments_filtre_usages <- batiments %>%
   filter(!is.na(USAGE1 ))
 ggplot(batiments_filtre_usages, aes(x = USAGE1))+
@@ -423,6 +493,7 @@ Nous pensons que :
 
 ### Visualisation
 
+
 ```{r graphique 2, fig.width=8, fig.height=8}
 batiments_sf = st_as_sf(batiments, coords = c("LONGITUDE", "LATITUDE"), crs = 4326)
 batiments_sf = mutate(batiments_sf, DATE_APP = as.double(substr(DATE_APP, 1, 4)))
@@ -438,12 +509,12 @@ batiments_sf = mutate(batiments_sf, PERIODE = case_when(
     .default = "Inconnu"
 ))
 couleurs = c(
-    "Avant 1600" = "#b2182b",
-    "1600-1700" = "#ef8a62",
-    "1700-1800" = "#fddbc7",
-    "1800-1900" = "#d1e5f0",
-    "1900-2000" = "#67a9cf",
-    "Depuis 2000" = "#2166ac"
+    "Avant 1600" = "#a65628",
+    "1600-1700" = "#a05195",
+    "1700-1800" = "#59a89c",
+    "1800-1900" = "#ffa600",
+    "1900-2000" = "#e02b35",
+    "Depuis 2000" = "#092a54"
 )
 batiments_sf = filter(batiments_sf, PERIODE != "Inconnu")
 batiments_sf = mutate(batiments_sf, PERIODE = factor(PERIODE, levels = periodes))
@@ -468,8 +539,8 @@ plot_périodes = function(df, period_list) {
     df = filter(df, PERIODE %in% period_list)
   
     ggplot(df) +
-    geom_sf(data = osm_roads$osm_lines, color = "grey80", size = 0.15, inherit.aes = FALSE) +
-    geom_sf(data = osm_water$osm_lines, color = "skyblue", size = 0.2, inherit.aes = FALSE) +
+    geom_sf(data = osm_roads$osm_lines, color = "grey80", size = 0.1, inherit.aes = FALSE) +
+    geom_sf(data = osm_water$osm_lines, color = "skyblue", size = 0.15, inherit.aes = FALSE) +
     geom_sf(aes(color = PERIODE), size = 0.2) +
     scale_color_manual(values = couleurs) +
     coord_sf(
@@ -496,10 +567,12 @@ final_plot = wrap_plots(plots, ncol = 2) +
         caption = "Données : Troyes Champagne Métropole"
     ) +
     labs(color = "Période de construction") +
+    # legend(pt.cex = 2) +
     theme(
         legend.position = "right",
         legend.justification = "center"
-    )
+    ) +
+    guides(color = guide_legend(override.aes = list(size = 3)))
 
 final_plot
 ```
@@ -512,7 +585,386 @@ J'ai dû masquer tous les bâtiments dont on a pas la date de construction car c
 On remarque la construction de beaucoup de bâtiments entre 1700 et 1800, puis une assez grosse expansion entre 1800 et 1900.
 On remarque aussi que l'agglomération de Troyes avait sa forme assez tôt et que même si elle s'est densifiée, elle ne s'est pas vraiment étendue.
 
-### 3. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
+## 3. Y a-t-il un lien entre les matériaux de construction et les dates de construction ?
+
+### Murs
+
+L'objectif ici est de comprendre si l'utilisation des matériaux changent selon les époques.
+Pour cela nous allons réaliser une heatmap liée aux matériaux des murs.
+
+Les variables utilisées sont :
+
+-   MAT_MURS: variable nominal: code des matériaux des murs, croisé avec [materiaux_murs.csv](data/materiaux_murs.csv)
+
+-   DATE_APP: variable discrète d'apparition des bâtiments
+
+Nous nous attendons à ce que les matériaux les plus solides de chaque époque soit utilisés successivement.
+
+### Visualisation
+
+```{r, fig.width=8, fig.height=12}
+batiments_selec <- batiments %>%
+  select(DATE_APP,MAT_MURS)
+
+batiments_selec <- batiments_selec%>%
+  mutate(DATE_APP = as.double(substr(DATE_APP, 1, 4)))
+
+
+batiments_année <- batiments_selec %>% 
+  mutate(PERIODE = case_when(
+  DATE_APP < 1600 ~ "Avant 1600",
+  1600 <= DATE_APP & DATE_APP < 1700 ~ "1600-1700",
+  1700 <= DATE_APP & DATE_APP < 1800 ~ "1700-1800",
+  1800 <= DATE_APP & DATE_APP < 1900 ~ "1800-1900",
+  1900 <= DATE_APP & DATE_APP < 2000 ~ "1900-2000",
+  2000 <= DATE_APP ~ "Depuis 2000",
+  .default = "Inconnu"
+))
+
+ordre_periodes <- c("Avant 1600", "1600-1700", "1700-1800",
+                    "1800-1900", "1900-2000", "Depuis 2000")
+
+batiments_année <- batiments_année %>%
+  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
+
+
+batiments_filtre <- batiments_année %>%
+  filter(PERIODE != "Inconnu" & MAT_MURS != "NA")
+
+batiments_counts <- batiments_filtre  %>%
+  count(MAT_MURS, PERIODE) %>%
+    complete(MAT_MURS, PERIODE = ordre_periodes, fill = list(n = 0))
+
+batiments_counts <- batiments_counts %>%
+  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
+
+
+ggplot(batiments_counts, aes(x = PERIODE, y = MAT_MURS, fill = n)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = n), color = "black", size = 3) +
+  scale_fill_gradient(low = "cyan",high = "orange") +
+  theme_minimal() +
+  labs(title = "Répartition des bâtiments par matériau et période",
+       fill = "Nombre")
+```
+
+### Interprétation des résultats
+
+Tout d'abord, il faut préciser que nous manquant de beaucoup d'information, particulièrement sur les années avant 1800.
+Il est donc difficile de généraliser les informations du graphe.
+De plus, un certain nombre de bâtiments n'ont pas de matériaux connus.
+Nous passons donc de 107 946 observations à 59097 observations.
+Cependant, nous pouvons voir des tendances se dégager.
+Certains matériaux sont présent depuis avant 1600, comme l’aggloméré et le bois.
+D'autres ont connu des pics de popularité récents, comme le béton, la brique et l’aggloméré.
+On peut aussi remarqué l'utilisation massive de la pierre autours des années 1900 mais s'est raréfié depuis.
+Même si certains matériaux s'imposent à certaines époques, on peut voir qu'il y a une diversité de ceux-ci et beaucoup de mélange de matériaux.
+
+### Toits
+
+L'objectif ici est de comprendre si l'utilisation des matériaux changent selon les époques.
+Pour cela nous allons réaliser une heatmap liée aux matériaux des toits.
+
+Les variables utilisées sont :
+
+-   MAT_TOITS: variable nominal: code des matériaux des murs, croisé avec [materiaux_toits.csv](data/materiaux_murs.csv)
+
+-   DATE_APP: variable discrète d'apparition des bâtiments
+
+### Visualisation
+
+```{r, fig.width=8, fig.height=12}
+batiments_selec <- batiments %>%
+  select(DATE_APP,MAT_TOITS)
+
+batiments_selec <- batiments_selec%>%
+  mutate(DATE_APP = as.double(substr(DATE_APP, 1, 4)))
+
+
+batiments_année <- batiments_selec %>% 
+  mutate(PERIODE = case_when(
+  DATE_APP < 1600 ~ "Avant 1600",
+  1600 <= DATE_APP & DATE_APP < 1700 ~ "1600-1700",
+  1700 <= DATE_APP & DATE_APP < 1800 ~ "1700-1800",
+  1800 <= DATE_APP & DATE_APP < 1900 ~ "1800-1900",
+  1900 <= DATE_APP & DATE_APP < 2000 ~ "1900-2000",
+  2000 <= DATE_APP ~ "Depuis 2000",
+  .default = "Inconnu"
+))
+
+ordre_periodes <- c("Avant 1600", "1600-1700", "1700-1800",
+                    "1800-1900", "1900-2000", "Depuis 2000")
+
+batiments_année <- batiments_année %>%
+  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
+
+
+batiments_filtre <- batiments_année %>%
+  filter(PERIODE != "Inconnu" & MAT_TOITS != "NA")
+
+batiments_counts <- batiments_filtre  %>%
+  count(MAT_TOITS, PERIODE) %>%
+    complete(MAT_TOITS, PERIODE = ordre_periodes, fill = list(n = 0))
+
+batiments_counts <- batiments_counts %>%
+  mutate(PERIODE = factor(PERIODE, levels = ordre_periodes))
+
+
+ggplot(batiments_counts, aes(x = PERIODE, y = MAT_TOITS, fill = n)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = n), color = "black", size = 3) +
+  scale_fill_gradient(low = "cyan",high = "orange") +
+  theme_minimal() +
+  labs(title = "Répartition des bâtiments par matériau et période",
+       fill = "Nombre")
+```
+
+### Interprétation des résultats
+
+Sans surprise, les tuiles sont le matériau le plus utilisé pour les toits.
+Au niveau national, les tuiles représentent 74% des toitures françaises.
+Les autres matériaux fortement utilisés sont le zinc aluminium et l'ardoise.
+Si nous n'avons pas trouvé de chiffres précis pour ces matériaux, ils font partis des matériaux les plus utilisés pour les toitures en France.
+Il n'est donc pas surprenant de les retrouver dans le graphe.
+
+## 4. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
+
+texte
+
+texte
+
+## 4. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
+
+texte
+
+texte
+
+## 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
+
+### Exposition du problème:
+
+texte
+
+### Visualisation:
+
+texte
+
+### Interprétation des résultats:
+
+texte
+
+## 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
+
+### Exposition du problème:
+
+L’objectif de cette exploration est de comprendre s’il existe une relation entre l’année de construction d’un bâtiment et son usage principal.
+Cette question soulève une hypothèse simple mais pertinente : les usages des bâtiments évoluent dans le temps, en lien avec les dynamiques urbaines.
+
+**On peut ainsi supposer que :**
+
+-   Certains usages récents comme les bâtiments commerciaux ou industriels spécialisés sont associés à des constructions récentes
+
+-   Les bâtiments religieux sont tous anciens, à cause de la nature historique et du fait que l'on n'évite de les détruire pour en construire de nouveaux.
+
+-   Les bâtiments d'habitations sont répartis sur toute la période historique.
+
+**Nous mobiliserons ces variables:**
+
+-   La variable `date_app`, qui indique la date de construction (d'apparition) du bâtiment.
+
+-   Les variables `usage1` (et éventuellement `usage2`), qui décrivent la ou les fonctions principales du bâtiment.
+
+### Visualisation:
+
+```{r graphique 6, fig.width=8, fig.height=8}
+
+batiments6 <- batiments %>%
+  mutate(ANNEE = year(DATE_APP))
+
+# Identifier les usages présents
+usages <- sort(unique(na.omit(batiments6$USAGE1)))
+batiments6$USAGE1 <- factor(batiments6$USAGE1, levels = usages)
+
+# Créer une palette avec autant de couleurs que d'usages
+palette_uses <- RColorBrewer::brewer.pal(length(usages), "Set2")
+names(palette_uses) <- usages
+
+# Calculer la proportion de valeurs nulles (NA) dans ANNEE par USAGE1
+proportion_na <- batiments6 %>%
+  group_by(USAGE1) %>%
+  summarise(
+    total = n(),
+    nb_na = sum(is.na(ANNEE)),
+    prop_na = nb_na / total
+  ) %>%
+  arrange(desc(prop_na))
+
+# Barplot de la proportion de valeurs nulles par USAGE1
+ggplot(proportion_na, aes(x = reorder(USAGE1, prop_na), y = prop_na, fill = USAGE1)) +
+  geom_col(show.legend = FALSE) +
+  scale_fill_manual(values = palette_uses) +
+  coord_flip() +  # barres horizontales, plus lisible si beaucoup de catégories
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(
+    title = "Proportion des années de constructions manquantes par usage principal",
+    x = "Usage principal",
+    y = "Années manquantes (%)"
+  ) +
+  theme_minimal()
+
+tableau_complet <- batiments6 %>%
+  group_by(USAGE1) %>%
+  summarise(
+    `Nombre avec date` = sum(!is.na(ANNEE)),
+    `Nombre total` = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(`Nombre total`))
+
+tableau_complet %>%
+  kable("html", caption = "Nombre de bâtiments avec une année de construction disponible par usage") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+
+
+#Préparation pour les diagrammes de densité
+
+batiments6 <- batiments6 %>%
+  filter(!is.na(DATE_APP))  #On retire les lignes vides
+
+power_trans <- function(power = 1/3, offset = 0) {
+  trans_new(
+    name = paste0("power-", power),
+    transform = function(x) (x + offset)^power,
+    inverse = function(x) x^(1 / power) - offset,
+    domain = c(0, Inf)
+  )
+}
+
+
+#Diagramme de densité global et pondéré
+
+# Liste des densités pondérées pour chaque usage
+densities <- batiments6 %>%
+  group_split(USAGE1) %>%
+  map_dfr(function(df) {
+    usage <- unique(df$USAGE1)
+    n_usage <- nrow(df)
+    
+    # Calcul de densité manuelle
+    dens <- density(df$ANNEE, adjust = 1, na.rm = TRUE)
+    
+    tibble(
+      x = dens$x,
+      y = dens$y * (n_usage / nrow(batiments6)),  # pondération par proportion réelle
+      USAGE1 = usage
+    )
+  })
+
+# Graphique final empilé
+ggplot(densities, aes(x = x, y = y, fill = USAGE1)) +
+  geom_area(position = "stack", alpha = 0.7) +
+  scale_fill_manual(values = palette_uses) +
+  scale_y_continuous(name = "Densité réelle (pondérée)",trans = power_trans(1/4)) +
+  labs(
+    title = "Distribution globale des années de construction (pondérée par usage)",
+    x = "Année de construction",
+    fill = "Usage principal"
+  ) +
+  theme_minimal()
+
+
+#Diagramme de densité pour chaque usage
+
+# Calcul de la plus petite année de construction globale (non-NA)
+xmin <- min(batiments6$ANNEE, na.rm = TRUE)
+xmax <- max(batiments6$ANNEE, na.rm = TRUE)
+
+# Créer un graphique de densité pour chaque usage
+plots <- batiments6 %>%
+  split(.$USAGE1) %>%
+  keep(~ nrow(.) > 0) %>%
+  map(function(df) {
+    ggplot(df, aes(x = ANNEE, fill = USAGE1)) +
+      geom_density(alpha = 0.5, adjust = 1) +
+      scale_fill_manual(values = palette_uses) +
+      scale_y_continuous(trans = power_trans(power = 1/4)) +
+      scale_x_continuous(limits = c(xmin, xmax)) +
+      labs(
+        title = unique(df$USAGE1),
+        x = "Année de construction",
+        y = "Densité"
+      ) +
+      theme_minimal() +
+      theme(legend.position = "none")
+  })
+
+# Extraire une légende depuis un plot
+legend_plot <- ggplot(batiments_usages, aes(x = ANNEE, fill = USAGE1)) +
+  geom_density(alpha = 0.5) +
+  theme_minimal() +
+  theme(legend.position = "right")
+
+# Combiner les graphiques en 4x2, avec la dernière cellule pour la légende
+final_plot <- wrap_plots(plots, ncol = 2, nrow = 4) +
+  plot_layout(ncol = 2, nrow = 4, guides = "collect")
+
+final_plot
+```
+
+### Interprétation des résultats:
+
+Tout d'abord, on remarque dans le premier bargraphe que aucun bâtiment religieux n'a de date de construction et qu'une grande majorité des bâtiments indifférencié, agricole, sportif et industriel n'en ont pas non plus.
+Suite à cela j'ai établi un tableau donnant le nombre de bâtiment ayant une date de constructions par rapport aux nombre total par usage afin de voir si les visualisations suivantes seront significatives.
+
+On remarque dans le tableau que le nombre est faible pour les bâtiments agricole et indifférencié, il faut donc prendre du retrait sur ces usages et leur graphique.
+
+-   Après quelques recherches sur un échantillon de ses bâtiments indifférenciés, nous avons remarquer que cela correspond a des bâtiments, souvent de grande taille et ayant subit beaucoup d’extensions ou de travaux comme l'hôpital ou des bâtiments public comme la préfecture, d'autres sont tout simplement en ruine.
+    Il est donc compréhensible que les informations dans la base de données soit incomplètes.
+
+-   Concernant les bâtiments agricoles, on se retrouve sur presque la même situation, ces bâtiments sont vieux et ayant obtenu des extensions.
+    Il est donc difficile de les dater.
+
+Concernant les diagrammes de densité, il est important de précisé que l'échelle de l'axe des ordonnées est en `sqrt^4` , cette transformation est faite afin de pouvoir observer tous les usages de bâtiments et que les années récentes ne rende pas la lecture difficile (les constructions étant beaucoup plus fréquentes):
+
+-   Le premier est un diagramme de densité pondéré
+
+-   Le second, un semble de diagramme de densité pour chaque usage.
+
+## 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
+
+### Exposition du problème:
+
+texte
+
+### Visualisation:
+
+texte
+
+### Interprétation des résultats:
+
+texte
+
+## 8. QUI VEUT - A quels usages sont attribués les bâtiments de nature spéciale?
+
+texte
+
+## 9. XXX
+
+texte
+
+## 10. XXX
+
+texte
+
+## 11. XXX
+
+texte
+
+## 12. XXX
+
+texte
+
+## X. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
 
 L'objectif ici est de comprendre si l'évolution des matériaux, principalement des murs a un impact sur la hauteur des bâtiments.
 Pour cela, nous allons réaliser deux violinplot, l'un lié au matériau des murs et l'autre des toits afin de confirmer une corrélation.
@@ -600,62 +1052,25 @@ En conclusion, la question est partiellement répondue et les résultats diffèr
 On remarque une corrélation significative entre les matériaux de toiture et la hauteur des bâtiments, alors que celle entre les matériaux des murs et la hauteur est beaucoup plus difficile à établir sans pour autant pouvoir l'écarter du champ des possibilités.
 Cela soulève donc une nouvelle question : pourquoi le matériau de la toiture semble-t-il mieux refléter la hauteur d'un bâtiment que celui des murs ?
 
-### 4. Peut-on voir des matériaux de construction des murs de prédilection selon les époques ?
+## 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
 
-L'objectif ici est de comprendre si l'utilisation des matériaux changent salon les époques.
-Pour cela nous allons réaliser un violinplot lié matériau des murs.
+texte
 
-Les variables utilisées sont :
+texte
 
--   MAT_MURS: variable nominal: code des matériaux des murs, croisé avec [materiaux_murs.csv](data/materiaux_murs.csv)
+## 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
 
--   DATE_APP: variable discrète d'apparition des bâtiments
+texte
 
-Nous nous attendons à ce que les matériaux les plus solides de chaque époque soit utilisés successivement.
+texte
 
-### Visualisation
+## 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
 
-```{r, fig.width=8, fig.height=12}
-# Récupération des variables utilisées
-batiments1 = batiments %>%
-  select(DATE_APP,MAT_MURS)
+texte
 
-# Nettoyage des données
-batiments1 = batiments1 %>%
-  filter(!is.na(MAT_MURS) | MAT_MURS != "" |!is.na(DATE_APP) | DATE_APP != "" )
+## 8. Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmis les résidences?
 
-# Création du graphique 
-ggplot(batiments, aes(x = DATE_APP, y=MAT_MURS)) +
-  geom_violin() +
-  labs(title = "Nombre de batiments par matériaux et par date",
-       x = "Dates",
-       y = "Matériaux des murs") +
-  theme_minimal()
-
-```
-
-### Interprétation des résultats
-
-Tout d'abord, il faut préciser que nous manquant de beaucoup d'information, particulièrement sur les années avant 1800.
-Il est donc impossible de généraliser les informations du graphe.
-De plus, un certain nombre de bâtiments n'ont pas de matériaux connus.
-Nous passons donc de 107 946 observations à 59097 observations.
-Cependant, nous pouvons voir des tendances se dégager.
-Certains matériaux sont présent depuis avant 1600, comme l’aggloméré et le bois.
-D'autres ont connu des pics de popularité récents, comme le béton, la brique et l’aggloméré.
-On peut aussi remarqué l'utilisation massive de la pierre autours des années 1900 mais s'est raréfié depuis.
-Même si certains matériaux s'imposent à certaines époques, on peut voir qu'il y a une diversité de ceux-ci et beaucoup de mélange de matériaux.
-
-Pour aller plus loin, on aurait pu faire le même graphique mais en ayant une distribution des matériaux par période en pourcentage, ce qui éviterait "l'écrasement" des données plus anciennes et moins nombre, mais ferait perdre du détail sur la chronologie.
-
-
-
-### Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmis les résidences?
-
-Variables utilisées: NB_LOGTS (nombre de logements par batiment), USAGE1 et USAGE2
-Moyenne nationale selon FNAIM: 55% de maison, 45% d'appartement
-Moyenne dans l'Aube selon FNAIM: entre 20% et 40% d'appartement
-Qu'en est-il de Troyes?
+Variables utilisées: NB_LOGTS (nombre de logements par batiment), USAGE1 et USAGE2 Moyenne nationale selon FNAIM: 55% de maison, 45% d'appartement Moyenne dans l'Aube selon FNAIM: entre 20% et 40% d'appartement Qu'en est-il de Troyes?
 
 ### Visualisation
 
@@ -692,26 +1107,29 @@ ggplot(batiment_pourcentage, aes(x = NB_LOGTS, y = pct)) +
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  ```
+```
 
-  ### Interprétation
+\### Interprétation
 
-  On observe que Seulement 1% des batiments sont des logements uniques. Cette information est surprenante, d'autant que le pourcentage de bâtiment à logement unique à Paris est de 0,88%.
-  Il parraît improbable qu'il y ait si peu de maison à Troyes. Nous remarquons que la quasi totalité des bâtiments "indifférencié" ont un nombre inconnu de logement.
-  Il est probable que le reste des maisons (bâtiments à 1 logement) soit dans cette catégorie. 
-  En regroupant tous les batiments ayant plus d'un logement, nous avons presque la moitié des bâtiments résidentiels, ce qui est au-dessus de la moyenne nationale. 
-  Ce n'est pas très surprenant, Troyes est une ville et la moyenne nationale comprend également les résidences rurales.
-  En revanche, il est surprenant de voir que presque la moitié des bâtiments résidentiels (45%) ont seulement 2 logements.
-  Cela n'est probablement pas dû aux colocations. En effet, un logement doit être composé au minimum d'une chambre, une cuisine et une salle de bain (la chambre et la cuisine peuvent être dans la même pièce).
-  Les colocations sont donc considerées comme un unique logement quelque soit le nombre de personne pouvant vivre dedans.
-  Nous pouvons supposer qu'un des logements est un commerce et que l'autre est une résidence. 
-  Pour cela, nous allons voir quel pourcentage de batiments residentiels à 2 logements sont aussi commerciaux.
+On observe que seulement 1% des batiments sont des logements uniques.
+Cette information est surprenante, d'autant que le pourcentage de bâtiment à logement unique à Paris est de 0,88%.
+Il parraît improbable qu'il y ait si peu de maison à Troyes.
+Nous remarquons que la quasi totalité des bâtiments "indifférencié" ont un nombre inconnu de logement.
+Il est probable que le reste des maisons (bâtiments à 1 logement) soit dans cette catégorie.
+En regroupant tous les batiments ayant plus d'un logement, nous avons presque la moitié des bâtiments résidentiels, ce qui est au-dessus de la moyenne nationale.
+Ce n'est pas très surprenant, Troyes est une ville et la moyenne nationale comprend également les résidences rurales.
+En revanche, il est surprenant de voir que presque la moitié des bâtiments résidentiels (45%) ont seulement 2 logements.
+Cela n'est probablement pas dû aux colocations.
+En effet, un logement doit être composé au minimum d'une chambre, une cuisine et une salle de bain (la chambre et la cuisine peuvent être dans la même pièce).
+Les colocations sont donc considerées comme un unique logement quelque soit le nombre de personne pouvant vivre dedans.
+Nous pouvons supposer qu'un des logements est un commerce et que l'autre est une résidence.
+Pour cela, nous allons voir quel pourcentage de batiments residentiels à 2 logements sont aussi commerciaux.
 
-  ### Quel est la part de batiments résidentiels à 2 logements sont aussi commerciaux?
+## 9. Quel est la part de batiments résidentiels à 2 logements sont aussi commerciaux?
 
-  ###Visualisation
+###Visualisation
 
-  Pour USAGE1:
+Pour USAGE1:
 
 ```{r, fig.width=8, fig.height=12}
   batiments_filtre1 <- batiments %>%
@@ -741,40 +1159,185 @@ ggplot(batiment_pourcentage, aes(x = USAGE1, y = pct)) +
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  ```
+```
 
-  Pour USAGE2:
+Pour USAGE2:
 
-  ```{r}
-  batiments_filtre1 <- batiments %>%
-  select(NB_LOGTS,USAGE1,USAGE2)
+```{r}
+batiments_filtre1 <- batiments %>%
+select(NB_LOGTS,USAGE1,USAGE2)
 
 batiments_filtre2 <- batiments_filtre1 %>%
-  filter(!is.na(USAGE1) | !is.na(USAGE2) | USAGE1 != "" | USAGE2 != "")
+filter(!is.na(USAGE1) | !is.na(USAGE2) | USAGE1 != "" | USAGE2 != "")
 
 batiments_filtre3 <-batiments_filtre2 %>%
-  filter((tolower(USAGE1) %in% c("résidentiel") |
-           tolower(USAGE2) %in% c("résidentiel")) & 
-           (NB_LOGTS= 2))
+filter((tolower(USAGE1) %in% c("résidentiel") |
+         tolower(USAGE2) %in% c("résidentiel")) & 
+         (NB_LOGTS= 2))
 
 batiment_pourcentage <- batiments_filtre3 %>%
-  count(USAGE2) %>%
-  mutate(pct = n / sum(n) * 100,
-         label = paste0(round(pct, 1), "%"))
+count(USAGE2) %>%
+mutate(pct = n / sum(n) * 100,
+       label = paste0(round(pct, 1), "%"))
 
 
 ggplot(batiment_pourcentage, aes(x = USAGE2, y = pct)) +
-  geom_col(fill = "steelblue") +
-  geom_text(aes(label = label), vjust = -0.5, size = 3, color = "black") +
+geom_col(fill = "steelblue") +
+geom_text(aes(label = label), vjust = -0.5, size = 3, color = "black") +
+labs(
+  title = "Distribution de l'usage des bâtiments ayant 2 logements", 
+  x = "Usage",
+  y = "Pourcentage de bâtiments"
+) +
+theme_minimal() +
+theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+\### Interpretation En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
+Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
+
+## 10. XXX
+
+texte
+
+## 11. XXX
+
+texte
+
+## 12. XXX
+
+texte
+
+##  Répartition des usages en fonction de la nature des bâtiments
+
+L'objectif est d'identifier si certaines natures de bâtiments sont spécifiques à un usage particulier.
+Pour celà, nous allons faire un barplot.
+Comme hypothèses de départ, nous avons:
+- certaines natures de bâtimentts ont des usages spécifiques
+
+
+
+```{r graphique... }
+# On compte le nombre de bâtiments pour chaque combinaison NATURE / USAGE1
+df_nature_usage <- batiments %>%
+  group_by(NATURE, USAGE1) %>%
+  summarise(Nombre = n(), .groups = "drop")
+  
+
+# Diagramme en barres empilées
+ggplot(df_nature_usage, aes(x = NATURE, y = Nombre, fill = USAGE1)) +
+  geom_bar(stat = "identity") +
+  scale_y_log10() +
   labs(
-    title = "Distribution de l'usage des bâtiments ayant 2 logements", 
-    x = "Usage",
-    y = "Pourcentage de bâtiments"
+    title = "Repartition des usages selon la nature des batiments",
+    x = "Nature du batiment",
+    y = "Nombre de batiments",
+    fill = "Usage"
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-  ```
 
-  ### Interpretation
-  En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
-  Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
+```
+
+Analyse et interprétation:
+
+On remarque premièrement que les bâtiments de nature indifférencié ont une grande diversité d'usages.Ce qui peut s'expliquer par le fait qu'il s'agit d'une catégorie fourre-tout utilisée pour des bâtiments difficiles à classer par nature.
+
+Pour les bâtiments de nature "Industriel, agricole ou commercial" ont une forte diversité d'usages également . Les usages prédominants sont agricole, commerciale, annexe et industriel.
+
+
+Pour les bâtiments de nature chapelle et église, l'usage  est exclusivement réligieux.
+Les bâtiments ayant pour nature serre et silo, l'usage est exclusivement agricole.
+
+En somme,nous avons des natures avec des usages fortement spécialisés et des natures à usages multiples.
+
+##Quels sont les usages fréquents pour les bâtiments à structure légère ?
+
+L'objectif de cette question est d'analyser la répartition des usages des bâtiments en fonction de leur structure,  en particulier de comparer les usages des bâtiments à structure légère par rapport aux autres.
+Comme hypothèses de départ, on a:
+- les bâtiments résidentiels sont majoritairement à structure non légère pour des raisons de durabilité.
+- les bâtiments à structure légère ont des usages spécifiques.
+
+Pour répondre à cette question, nous allons réaliser un diagramme à barres 100% empilées. Il va nous permettre de comparer les proportions d'usages entre les deux types de structure.
+
+```{r graphique....}
+
+
+library(scales)
+
+# Préparation des données
+df_usages <- batiments %>%
+  filter(!is.na(USAGE1)) %>%
+  mutate(LEGER = ifelse(LEGER, "Léger", "Non léger")) %>%
+  group_by(USAGE1, LEGER) %>%
+  summarise(Nombre = n(), .groups = "drop") %>%
+  group_by(USAGE1) %>%
+  mutate(Pourcentage = Nombre / sum(Nombre) * 100)
+
+# Diagramme à barres 100% empilées
+ggplot(df_usages, aes(x = reorder(USAGE1, -Pourcentage), y = Pourcentage, fill = LEGER)) +
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  geom_text(aes(label = ifelse(Pourcentage > 5, paste0(round(Pourcentage), "%"), "")),
+            position = position_fill(vjust = 0.5), size = 3, color = "white") +
+  scale_y_continuous(labels = percent_format(scale = 1)) +
+  scale_fill_manual(
+    values = c("Léger" = "#66c2a5", "Non léger" = "#fc8d62"),
+    name = "Structure du batiment",
+    labels = c("Structure legere", "Structure non legere")
+  ) +
+  labs(
+    title = "Repartition des batiments selon leur structure et usage",
+    x = "Usage principal",
+    y = "Part des batiments (%)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+```
+
+Analyse et interprétation:
+
+Le graphique présente la répartition en pourcentage des structures légères et non légères pour chaque usage principal de bâtiment.
+
+On observe que la grande majorité des bâtiments sont à structure non légère.Celà peut s'expliquer par le fait que les structures non légères offrent plus de résistance aux intempéries, nécessitent moins d'entretien à long terme et offrent un comfort accru. De plus, les règles de sécurité et d'urbanisme imposent des normes strictes de construction donc la plupart des bâtiments ont une structure non légère et les bâtiments à structure légère sont temporaires.
+
+On observe une répartition égale des bâtiments à usage indifférencié (50% à structure légère et 50% à structure non légère). 
+
+On observe également que 23% des bâtiments agricoles sont à structure légère. Certains bâtiments servent à l'entreposage temporaire des récoltes, des outils ou des machines, ils n'ont donc pas besoin d'être permanents. D'où l'usage de bâtiments à structure légère.
+
+En somme,la visualisation confirme les hypothèses de départ.
+
+
+
+# **Conclusion**
+
+texte texte
+
+texte texte
+
+Alexis H:
+
+Alexis M:
+
+Camille:
+
+Camille:
+
+# Annexe
+
+Alexis H:
+
+-   Réalisation des questions 5,6 et 7 dans le plan d'analyse et dans l'exploration.
+
+-   Réalisation des travaux sur Tableau
+
+Alexis M:
+
+Camille:
+
+Danielle:
+- Réalisation des questions 1,
+- Réalisation des repartitions simples
+
