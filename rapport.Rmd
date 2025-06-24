@@ -117,22 +117,11 @@ Les problèmes potentiels :
 Il s'agit ici de déterminer s'il existe une relation entre les variables `date_app`, `mat_murs` et `mat_toits`.
 L'objectif est de vérifier si les matériaux de construction des bâtiments varient en fonction des époques.
 
-Pour cela, nous envisageons deux types de visualisations :
+Pour cela, nous envisageons de faire deux heatmaps afin que les résultats soient les plus lisibles possibles.
 
--   Un line chart pour suivre l'évolution du nombre de bâtiments par matériau au fil du temps :
-
-    -   L'axe des abscisses représenterait les années
-    -   L'axe des ordonnées représenterait le nombre de bâtiments
-    -   Chaque ligne représenterait un matériau
-
--   Un violon plot pour étudier la distribution des dates selon chaque matériau :
-
-    -   L'axe des abscisses représenterait les années
-    -   L'axe des ordonnées représenterait les matériaux de construction
-
-    Les problèmes potentiels sont :
-
-    -   un grand nombre de catégories de matériaux (risque de graphe illisible)
+Problèmes potentiels:
+- le manque d'information pour les vieux bâtiments.
+- la grande quantité de bâtiments construits récemment risque d'écraser le reste des données.
 
 ### 4. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
 
@@ -212,13 +201,20 @@ Nous pensons que les bâtiments les plus hauts sont sûrement ceux du centre vil
 Nous envisageons une carte avec les bâtiments et un gradient de couleur représentant leur hauteur.
 Il pourrait y avoir des problèmes de lecture des couleurs avec le fond de carte donc il faut faire attention aux couleurs choisies.
 
-### 10. XXX
+### 10. Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmi les résidences?
 
-texte
+Nous allons faire une décomposition des résidences selon le nombre de logements dans celui-ci.
+Variables utilisées: NB_LOGTS (nombre de logements par bâtiment), USAGE1 et USAGE2
+Nous avons trouvé ces données au niveau national et au niveau régional. Qu'en est-il de Troyes?
 
-### 11. XXX
+La visualisation envisagée est un simple barchart.
 
-texte
+### 11. Quel est la part de batiments résidentiels à 2 logements sont aussi commerciaux?
+
+Nous avons trouvé sur la question précédente qu'il existait un pourcentage important de bâtiments à 2 logements.
+Nous supposons qu'il est possible qu'un double usage de ces bâtiments (par exemple résidentiel et commercial) soit la cause de cette proportion surprenante de résidence à 2 logements.
+
+Nous envisageons de faire une décomposition des usages secondaires grâce à un barchart.
 
 ### 12. Quels sont les usages fréquents pour les bâtiments à structure légère ?
 
@@ -1240,9 +1236,9 @@ On peut aussi voir des bâtiments industriels qui sont assez haut en dehors de l
 ## 10. Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmi les résidences?
 
 Variables utilisées: `nb_logts` (nombre de logements par bâtiment), `usage1` et `usage2`.
-Moyenne nationale selon FNAIM: 55% de maisons, 45% d'appartements.
-Moyenne dans l'Aube selon FNAIM: entre 20% et 40% d'appartements.
-Qu'en est-il de Troyes?
+La moyenne nationale selon la FNAIM est : 55% de maisons, 45% d'appartements.
+La moyenne dans l'Aube selon la FNAIM est : entre 20% et 40% d'appartements.
+Qu'en est-il de Troyes ?
 
 ### Visualisation
 
@@ -1458,6 +1454,9 @@ Personnellement, comme cité dans la question 5., je trouve qu'il aurait été i
 #### Alexis M:
 
 #### Camille:
+Durant ce projet, j'ai découvert comment explorer une base de données pour en retirer des informations, que ce soit par curiosité, par instinct ou même par hasard.
+La difficulté technique n'étant pas très élevé, j'ai pu explorer différentes visualisations et me rendre compte que les plus simples sont souvent les plus adéquates.
+Beaucoup des données que j'ai utilisés ne sont pas définies, ce qui est un peu frustrant car il est difficile de donner une interprétation satisfaisante des visualisations qui en découlent.
 
 #### Danielle:
 
@@ -1466,7 +1465,7 @@ Personnellement, comme cité dans la question 5., je trouve qu'il aurait été i
 Ensemble nous avons travaillé sur la partie Introduction du rapport et la structure de celui-ci.
 La recherche des données et le rapport de peer-review ont aussi été faits en commun.
 
-Ensuite, nous avons travaillé individuellement sur certaines parties du projets, notamment pour le plan d'analyse et les question à explorer.
+Ensuite, nous avons travaillé individuellement sur certaines parties du projets, notamment pour le plan d'analyse et les questions à explorer.
 Voici notre travail individuel:
 
 -   Alexis H:
@@ -1485,7 +1484,7 @@ Voici notre travail individuel:
 
 -   Camille:
 
-    -   Réalisation des questions 3, 10 et 11
+    -   Réalisation des questions 3.a, 3.b, 10 et 11
 
 -   Danielle:
 
