@@ -202,9 +202,15 @@ Nous allons utiliser dans un premier temps la variable correspondant au nombre d
 
 texte
 
-### 9. XXX
+### 9. Est-ce que les bâtiments du centre-ville sont plus hauts que les bâtiments plus éloignés ?
 
-texte
+Nous allons visualiser la hauteur des bâtiments de la métropole de Troyes.
+Nous utiliserons la variable `hauteur` ainsi que les coordonnées géographiques que sont la `latitude` et la `longitude`.
+
+Nous pensons que les bâtiments les plus hauts sont sûrement ceux du centre ville car la densité de population est plus élevée en centre-ville et qu'il faut construire de façon plus verticale pour avoir de la place.
+
+Nous envisageons une carte avec les bâtiments et un gradient de couleur représentant leur hauteur.
+Il pourrait y avoir des problèmes de lecture des couleurs avec le fond de carte donc il faut faire attention aux couleurs choisies.
 
 ### 10. XXX
 
@@ -302,7 +308,7 @@ batiments = batiments %>%
              ETAT, LONGITUDE, LATITUDE))
 ```
 
-## Questions répartition simples
+## Questions de répartition simples
 
 ### Distribution des matériaux
 
@@ -421,8 +427,6 @@ ggplot(batiments_filtre_usages, aes(x = USAGE1))+
         y = "Nombre de bâtiments")+
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
-
 ```
 
 ## 1. Lien entre la hauteur des bâtiments et leur usage.
@@ -460,12 +464,7 @@ ggplot(repartition_usage, aes(x = hauteur_tranche, y = nombre_batiments, fill = 
        x = "Tranches de Hauteur (m)",
        y = "Nombre de bâtiments") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
-
-
-
-
-
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 ### Interprétation des résultats
@@ -477,7 +476,7 @@ Ensuite, on remarque que la plupart des bâtiments sont à usage résidentiel.
 Contrairement à l'hypothèse de départ, la plupart des bâtiments à usage commercial ont une hauteur inférieure à 10 m.
 Cela s'explique par le fait que les commerces sont intégrés en rez-de-chaussée des bâtiments résidentiels.
 
-## 2. Expansion de la ville de Troyes au fil du temps
+## 2. Comment la ville de Troyes s'est étendue géographiquement au fil des années ?
 
 Nous voulons voir si les bâtiments si les bâtiments ont été construits de plus en plus loin du centre de Troyes au fil des années ou si cela a peu d'influence.\
 Les variables utilisées sont : `date_app`, `longitude` et `latitude`.
@@ -576,10 +575,13 @@ final_plot
 ### Interprétation des résultats
 
 Il est difficile de connaître la date de construction des bâtiments qui ont été construits avant 1600, d'où le manque d'information.
-J'ai dû masquer tous les bâtiments dont on a pas la date de construction car cela nuisait à la lisibilité du graphique.
+J'ai dû masquer tous les bâtiments dont nous n'avons pas la date de construction car cela nuisait à la lisibilité du graphique.
 
 On remarque la construction de beaucoup de bâtiments entre 1700 et 1800, puis une assez grosse expansion entre 1800 et 1900.
 On remarque aussi que l'agglomération de Troyes avait sa forme assez tôt et que même si elle s'est densifiée, elle ne s'est pas vraiment étendue.
+
+Nous pouvons aussi remarquer que dans le centre-ville les bâtiment semblent avoir été construits dans les années 1700 à 1800 pour la grande majorité.
+Effectivement nous avons de nombreuses maisons à colombages qui doivent dater de cette période là.
 
 ## 3. Y a-t-il un lien entre les matériaux de construction et les dates de construction ?
 
@@ -722,18 +724,6 @@ Au niveau national, les tuiles représentent 74% des toitures françaises.
 Les autres matériaux fortement utilisés sont le zinc aluminium et l'ardoise.
 Si nous n'avons pas trouvé de chiffres précis pour ces matériaux, ils font partis des matériaux les plus utilisés pour les toitures en France.
 Il n'est donc pas surprenant de les retrouver dans le graphe.
-
-## 4. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
-
-texte
-
-texte
-
-## 4. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
-
-texte
-
-texte
 
 ## 5. Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
 
@@ -1039,9 +1029,36 @@ texte
 
 texte
 
-## 9. XXX
+## 9. Est-ce que les bâtiments du centre-ville sont plus hauts que les bâtiments plus éloignés ?
 
-texte
+Nous voulons voir où se situent les bâtiments les plus hauts dans la ville ou si leur localisation importe peu.\
+Les variables utilisées sont : `hauteur`, `longitude` et `latitude`.
+
+Nous pensons que :
+
+-   Les bâtiments dans le centre-ville sont globalement plus hauts
+
+-   Il y a quelques bâtiments hauts en dehors du centre-ville
+
+### Visualisation
+
+Ce graphique a été réalisé sur Shiny car nous nous sommes rendus compte, après la réalisation de la visualisation de la question 2, qu'une carte non interactive n'est pas très pratique pour visualiser.
+Il est donc possible de déplacer et de zoomer sur la carte.
+De plus, quand on passe la souris sur un point, la hauteur en mètres s'affiche ainsi que les coordonnées GPS.
+
+![](images/geo_hauteur1.png)
+
+![](images/geo_hauteur2.png){width="1620"}
+
+### Interprétation
+
+Nous pouvons voir que comme nous le pensions la hauteur des bâtiments dans le centre-ville est plus haute en moyenne, entre 10 et 15 mètres.
+Cela s'explique par la présence de bâtiments à 3 ou 4 étages.
+Nous remarquons aussi des points plus hauts qui semblent être les clochers des églises mais surtout ceux de la basilique et de la cathédrale.
+
+En dehors du centre ville, les hauteurs sont plus hétérogènes avec des immeubles à plus de 30 mètres et beaucoup de maison ou autres bâtiments à 2 étages maximum.
+Nous pouvons bien distinguer les zones résidentielles avec uniquement des maisons où il n'y que des points violets avec les zones où il y a des immeubles.
+On peut aussi voir des bâtiments industriels qui sont assez haut en dehors de la ville, comme l'usine Michelin qui monte à près de 30m de haut.
 
 ## 10. XXX
 
@@ -1302,6 +1319,10 @@ Voici notre travail individuel:
     -   Réalisation des travaux sur Tableau
 
 -   Alexis M:
+
+    -   Réalisation des question 2 et 9
+
+    -   Réalisation de l'application Shiny
 
 -   Camille:
 
