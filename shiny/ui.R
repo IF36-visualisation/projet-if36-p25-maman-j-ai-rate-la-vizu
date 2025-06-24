@@ -37,7 +37,16 @@ fluidPage(dashboardPage(
     dashboardBody(tabItems(
         tabItem(
             tabName = "stats",
-            fluidRow(valueBoxOutput("batiments"), valueBoxOutput("variables")),
+            fluidRow(
+                valueBoxOutput("batiments"),
+                valueBoxOutput("variables"),
+                infoBox(
+                    "Information sur les stats",
+                    "Les moyennes ne prennent pas en compte les bâtiments où l'information n'est pas renseignée !",
+                    icon = icon("info"),
+                    color = "blue"
+                )
+            ),
             fluidRow(
                 infoBoxOutput("hauteur"),
                 infoBoxOutput("nb_logements"),

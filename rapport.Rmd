@@ -312,18 +312,35 @@ batiments = batiments %>%
 
 ## Questions de répartition simples
 
+Avant de commencer avec des répartitions, nous avons affiché des statistiques sur l'application Shiny.
+Par exemple nous avons 4 bâtiments considérés comme en ruine dans le jeu de données, ce qui est peu.
+Nous pouvons supposer qu'en ville il est rare qu'un bâtiment soit abandonné suffisamment longtemps pour qu'il tombe en ruine.
+Nous avons aussi la hauteur moyenne des bâtiments qui est assez peu haute à 4,89m de haut.
+Cela n'est pas très étonnant car il y a peu de bâtiments très hauts à Troyes.
+
+![](images/stats.png)
+
+Les distributions réalisées ci-après ont aussi été réalisées dans l'application Shiny avec une liste déroulante permettant de choisir la variable sur laquelle la distribution est réalisée.
+Il y a même plus de variables proposées.
+Il y a également un bouton pour changer entre une échelle linéaire et une échelle logarithmique.
+Aussi, le nombre de valeurs non connues ou notées comme indifférenciées est affiché.
+
+![](images/distrib.png)
+
+Un autre avantage est la possibilité de passer la souris sur une barre afin de voir le nombre de bâtiments exact.
+Pouvoir zoomer ou restreindre le graphique sur seulement la partie qui nous intéresse est aussi plutôt pertinent pour avoir des chiffres plus précis.
+
 ### Distribution des matériaux
 
 Hypothèses: Ces visualisations nous permettront de voir la distribution des bâtiments en fonction des matériaux utilisés pour les murs et les toits.
 On pourrait identifier les matériaux les plus utilisés et trouver les raisons pour les quelles ces matériaux sont aussi utilisés.
 
-Graphe:
-
-Pour cela, nous allons faire des barplots.
+Pour cela, nous allons réaliser des barplots.
+Nous pouvons noter que nous avons les matériaux des bâtiments pour environ la moitié des bâtiments du jeu de données.
 
 #### Matériaux des murs:
 
-On utilisera les variables matériaux murs.
+On utilisera la variable `mat_murs`.
 
 ```{r matériaux murs}
 batiments_filtre_murs <- batiments %>%
@@ -341,7 +358,7 @@ On constate que les matériaux les plus utilisés pour les murs sont les briques
 
 #### Matériaux des toits:
 
-On utilisera les variables matériaux toits.
+On utilisera la variable `mat_toits`.
 
 ```{r matériaux toits}
 batiments_filtre_toits <- batiments %>%

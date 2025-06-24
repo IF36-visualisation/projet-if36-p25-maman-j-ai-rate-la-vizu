@@ -177,7 +177,8 @@ function(input, output, session) {
                 labels = paste0(
                     seq(0, max_hauteur - 1, by = 1),
                     "-",
-                    seq(1, max_hauteur, by = 1)
+                    seq(1, max_hauteur, by = 1),
+                    "m"
                 )
             ))
         }
