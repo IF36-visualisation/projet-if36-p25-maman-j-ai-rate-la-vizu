@@ -9,6 +9,10 @@ editor_options:
     wrap: sentence
 ---
 
+```{css, echo=FALSE}
+p { text-align: justify; }
+```
+
 # Étude des bâtiments de Troyes
 
 # Introduction
@@ -164,7 +168,7 @@ Nous utiliserons les variables de coordonnées géographiques (`longitude` et `l
 L’objectif est de déterminer si l’année de construction d’un bâtiment a une influence sur son usage principal (`usage1`).
 L’hypothèse sous-jacente est que certains types d’usage sont plus fréquents pour des bâtiments récents (par exemple les bâtiments industriels, commerciaux ou sportifs), tandis que d'autres usages (comme les habitions ou les bâtiments religieux) sont plus répandus dans des bâtiments anciens.
 
-Nous utiliserons la variable `date_app` pour la croisée avec `usage1`, et éventuellement `usage2`, afin de visualiser les évolutions des usages au fil du temps.
+Nous utiliserons la variable `date_app` pour la croiser avec `usage1`, et éventuellement `usage2`, afin de visualiser les évolutions des usages au fil du temps.
 
 **Pour cela, nous envisageons :**
 
@@ -666,14 +670,14 @@ Il est donc difficile de généraliser les informations du graphe.
 De plus, un certain nombre de bâtiments n'ont pas de matériaux connus.
 Nous passons donc de 107 946 observations à 59097 observations.
 Cependant, nous pouvons voir des tendances se dégager.
-Certains matériaux sont présent depuis avant 1600, comme l’aggloméré et le bois.
+Certains matériaux sont présents depuis avant 1600, comme l’aggloméré et le bois.
 D'autres ont connu des pics de popularité récents, comme le béton, la brique et l’aggloméré.
-On peut aussi remarqué l'utilisation massive de la pierre autours des années 1900 mais s'est raréfié depuis.
+On peut aussi remarquer l'utilisation massive de la pierre autours des années 1900 mais s'est raréfié depuis.
 Même si certains matériaux s'imposent à certaines époques, on peut voir qu'il y a une diversité de ceux-ci et beaucoup de mélange de matériaux.
 
 ### Toits
 
-L'objectif ici est de comprendre si l'utilisation des matériaux changent selon les époques.
+L'objectif ici est de comprendre si l'utilisation des matériaux change selon les époques.
 Pour cela nous allons réaliser une heatmap liée aux matériaux des toits.
 
 Les variables utilisées sont :
@@ -742,7 +746,7 @@ Il n'est donc pas surprenant de les retrouver dans le graphe.
 
 ### Exposition du problème:
 
-L'objectif ici est de comprendre si l'évolution des matériaux, principalement des murs a un impact sur la hauteur des bâtiments.
+L'objectif ici est de comprendre si l'évolution des matériaux, principalement des murs, a un impact sur la hauteur des bâtiments.
 Pour cela, nous allons réaliser deux violinplot, l'un lié au matériau des murs et l'autre des toits afin de confirmer une corrélation.
 
 Les variables utilisées sont :
@@ -753,7 +757,7 @@ Les variables utilisées sont :
 
 -   HAUTEUR : variable continue représentant la hauteur absolue du bâtiment
 
-Nous nous attendons à ce que les matériaux plus modernes et denses comme le béton ( au niveau des murs et aussi de la toiture ) composent les bâtiments les plus hauts de l'agglomération troyenne.
+Nous nous attendons à ce que les matériaux plus modernes et denses comme le béton (au niveau des murs et aussi de la toiture) composent les bâtiments les plus hauts de l'agglomération troyenne.
 De, plus nous pensons que le matériau des murs aura plus d'influence que celui de la toiture.
 
 ### Visualisation
@@ -879,17 +883,17 @@ Voici ce que l'on peut observer sur la carte lorsque l'on sélectionne les diff�
 -   Les activités sportives se trouvent en périphérie et on observe notamment une petite concentration au Sud de la ville, au niveau du complexe Henri Terré.
 
 -   Pour les bâtiments religieux, c'est étrange, on en retrouve uniquement à proximité du centre-ville, alors que la plupart des villages ont généralement une église.
-    Nous supposons donc que ceux-ci sont mal renseigné dans la base de données.
+    Nous supposons donc que ceux-ci sont mal renseignés dans la base de données.
 
 -   Les bâtiments indifférencié sont très présents et partout sur la carte.
     Ceux-ci correspondent peut-être à des bâtiments mal renseignés.
 
 -   Les bâtiments industriels sont pour la plupart concentrés entre eux, en périphérie de la métropole, avec uniquement des bâtiments commerciaux et de services dans leur proximité immédiate.
     Cela rappelle les zones industriels comme celle de la Chapelle-St-Luc.
-    On remarque cependant que certains bâtiments de grandes tailles manque à la base de données comme la grande usine de Michelin Pneumatique.
-    Il des quelques bâtiments industrielles isolés comme les anciennes usines textiles EMO situées derrière la gare, qui sont situées derrière la gare et se sont fait encapsulées par l'urbanisme importants durant la années plus récentes.
+    On remarque cependant que certains bâtiments de grandes tailles manquent à la base de données comme la grande usine de Michelin Pneumatique.
+    Il existe quelques bâtiments industrielles isolés comme les anciennes usines textiles EMO situées derrière la gare, qui sont situées derrière la gare et se sont fait encapsulées par l'urbanisme importants durant les années plus récentes.
 
--   Concernant les bâtiments commerciaux et de services, on peut en retrouver un peu partout mais on en retrouve quelques grandes concentration, comme:
+-   Concernant les bâtiments commerciaux et de services, on peut en retrouver un peu partout mais on en retrouve quelques grandes concentrations, comme:
 
     -   Le centre-ville, où l'on repère bien la base du bouchon troyen.
 
@@ -921,9 +925,9 @@ Cette question soulève une hypothèse simple mais pertinente : les usages des b
 
 **On peut ainsi supposer que :**
 
--   Certains usages récents comme les bâtiments commerciaux ou industriels spécialisés sont associés à des constructions récentes
+-   Certains usages récents comme les bâtiments commerciaux ou industriels spécialisés sont associés à des constructions récentes.
 
--   Les bâtiments religieux sont tous anciens, à cause de la nature historique et du fait que l'on n'évite de les détruire pour en construire de nouveaux.
+-   Les bâtiments religieux sont tous anciens, à cause de la nature historique et du fait que l'on évite de les détruire pour en construire de nouveaux.
 
 -   Les bâtiments d'habitations sont répartis sur toute la période historique.
 
@@ -1083,13 +1087,13 @@ On remarque dans le tableau que le nombre est faible pour les bâtiments agricol
 -   Concernant les bâtiments agricoles, on se retrouve sur presque la même situation, ces bâtiments sont vieux et ayant obtenu des extensions.
     Il est donc difficile de les dater.
 
-Concernant les diagrammes de densité, il est important de précisé que l'échelle de l'axe des ordonnées est en `sqrt^4` (il était impossible d'utiliser l'échelle logarithmique, la densité étant parfois proche de 0, cela ruine la visualisation).
+Concernant les diagrammes de densité, il est important de préciser que l'échelle de l'axe des ordonnées est en `sqrt^4` (il était impossible d'utiliser l'échelle logarithmique, la densité étant parfois proche de 0, cela ruine la visualisation).
 Cette transformation est faite afin de pouvoir observer tous les usages de bâtiments et que les années récentes ne rende pas la lecture difficile (les constructions étant beaucoup plus fréquentes):
 
--   Le premier est un diagramme de densité pondéré, celui ci permet de montrer à la fois l'évolution des de la quantité de construction de tout usage au fur à mesure des années, où l'on peut notamment observer la croissance constante du nombre de construction par an, avec des bonds durant certains évènements historiques (fin du XVIIIème: révolution française et début de la révolution industrielle et années 50: fin de la seconde guerre mondiale et baby boom).
+-   Le premier est un diagramme de densité pondéré, celui ci permet de montrer à la fois l'évolution de la quantité de constructions de tout usage au fur à mesure des années, où l'on peut notamment observer la croissance constante du nombre de constructions par an, avec des bonds durant certains évènements historiques (fin du XVIIIème: révolution française et début de la révolution industrielle et années 50: fin de la seconde guerre mondiale et baby boom).
     On observe aussi une immense croissance de la construction résidentielle (malgré l'échelle `sqrt^4` !) dans les années 50 confirmant le baby boom.
 
--   Le second, un semble de diagramme de densité pour chaque usage.
+-   Le second, un ensemble de diagrammes de densité pour chaque usage.
     On peut donc observer plus clairement l'évolution des dates de constructions des bâtiments de chaque usage:
 
     -   On voit notamment que les infrastructure n'apparaissent pas avant les années 50 et on retrouve la grande croissance des bâtiments résidentiels, industriels et commerciaux à la même date.
@@ -1098,7 +1102,7 @@ Cette transformation est faite afin de pouvoir observer tous les usages de bâti
     -   On remarque aussi que la construction de bâtiments utilisés pour le commerce et l'habitation est présente depuis le début.
         Nous supposons que cela correspond à la vieille ville et ses bâtiments historique.
 
-    -   On remarque que le début d'une croissance importante, correspondant aux révolutions industrielles.
+    -   On remarque le début d'une croissance importante correspondant aux révolutions industrielles.
         La croissance autour de 1650 correspond, quant à elle, probablement à des halles ou des bâtiments agricoles reconvertis dans les années récentes.
 
     -   Les annexes correspondant souvent à des garages, des cabanes de jardins ou petites structures similaires, il est logique que leur construction suivent la tendance de la construction de bâtiments résidentiels.
@@ -1139,7 +1143,7 @@ Dans le même classeur que pour la question 5., elle correspond au tableau de bo
 
 ### Interprétation des résultats:
 
-Tout d'abord, sur le bargraphe, on remarque que les usages peut propice aux partages de leur locaux comme les bâtiments agricoles, religieux et sportifs ont 0 ou 1 logements.
+Tout d'abord, sur le bargraphe, on remarque que les usages peu propices au partage de leurs locaux comme les bâtiments agricoles, religieux et sportifs ont 0 ou 1 logements.
 De plus, certains bâtiments industriels, commerciaux ou annexes dépassent les 3 logements!
 C'est assez suspect pour des bâtiments de cet usage, je suppose donc que parfois un "logement" est en vérité un découpage du bâtiment entre plusieurs propriétaires (plusieurs entreprises dans une grande halle. Cela relèverait une certaine inconsistance dans la méthode de relevé du nombre de logements.
 
@@ -1165,6 +1169,8 @@ L'objectif est d'identifier si certaines natures de bâtiments sont spécifiques
 Pour celà, nous allons faire un barplot.
 Comme hypothèses de départ, nous avons: - certaines natures de bâtiments ont des usages spécifiques
 
+### Visualisation
+
 ```{r graphique... }
 # On compte le nombre de bâtiments pour chaque combinaison NATURE / USAGE1
 df_nature_usage <- batiments %>%
@@ -1189,15 +1195,16 @@ ggplot(df_nature_usage, aes(x = NATURE, y = Nombre, fill = USAGE1)) +
 
 ### Analyse et interprétation:
 
-On remarque premièrement que les bâtiments de nature indifférencié ont une grande diversité d'usages.Ce qui peut s'expliquer par le fait qu'il s'agit d'une catégorie fourre-tout utilisée pour des bâtiments difficiles à classer par nature.
+On remarque premièrement que les bâtiments de nature indifférencié ont une grande diversité d'usages.
+Ce qui peut s'expliquer par le fait qu'il s'agit d'une catégorie fourre-tout utilisée pour des bâtiments difficiles à classer par nature.
 
-Pour les bâtiments de nature "Industriel, agricole ou commercial" ont une forte diversité d'usages également .
+Pour les bâtiments de nature "Industriel, agricole ou commercial", ils ont une forte diversité d'usages également.
 Les usages prédominants sont agricole, commerciale, annexe et industriel.
 
-Pour les bâtiments de nature chapelle et église, l'usage est exclusivement réligieux.
+Pour les bâtiments de nature chapelle et église, l'usage est exclusivement religieux.
 Les bâtiments ayant pour nature serre et silo, l'usage est exclusivement agricole.
 
-En somme,nous avons des natures avec des usages fortement spécialisés et des natures à usages multiples.
+En somme, nous avons des natures avec des usages fortement spécialisés et des natures à usages multiples.
 
 ## 9. Est-ce que les bâtiments du centre-ville sont plus hauts que les bâtiments plus éloignés ?
 
@@ -1232,7 +1239,10 @@ On peut aussi voir des bâtiments industriels qui sont assez haut en dehors de l
 
 ## 10. Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmi les résidences?
 
-Variables utilisées: NB_LOGTS (nombre de logements par bâtiment), USAGE1 et USAGE2 Moyenne nationale selon FNAIM: 55% de maison, 45% d'appartement Moyenne dans l'Aube selon FNAIM: entre 20% et 40% d'appartement Qu'en est-il de Troyes?
+Variables utilisées: `nb_logts` (nombre de logements par bâtiment), `usage1` et `usage2`.
+Moyenne nationale selon FNAIM: 55% de maisons, 45% d'appartements.
+Moyenne dans l'Aube selon FNAIM: entre 20% et 40% d'appartements.
+Qu'en est-il de Troyes?
 
 ### Visualisation
 
@@ -1273,17 +1283,17 @@ ggplot(batiment_pourcentage, aes(x = NB_LOGTS, y = pct)) +
 
 ### Interprétation
 
-On observe que seulement 1% des batiments sont des logements uniques.
+On observe que seulement 1% des bâtiments sont des logements uniques.
 Cette information est surprenante, d'autant que le pourcentage de bâtiment à logement unique à Paris est de 0,88%.
 Il parraît improbable qu'il y ait si peu de maison à Troyes.
 Nous remarquons que la quasi totalité des bâtiments "indifférencié" ont un nombre inconnu de logement.
 Il est probable que le reste des maisons (bâtiments à 1 logement) soit dans cette catégorie.
-En regroupant tous les batiments ayant plus d'un logement, nous avons presque la moitié des bâtiments résidentiels, ce qui est au-dessus de la moyenne nationale.
+En regroupant tous les bâtiments ayant plus d'un logement, nous avons presque la moitié des bâtiments résidentiels, ce qui est au-dessus de la moyenne nationale.
 Ce n'est pas très surprenant, Troyes est une ville et la moyenne nationale comprend également les résidences rurales.
 En revanche, il est surprenant de voir que presque la moitié des bâtiments résidentiels (45%) ont seulement 2 logements.
 Cela n'est probablement pas dû aux colocations.
 En effet, un logement doit être composé au minimum d'une chambre, une cuisine et une salle de bain (la chambre et la cuisine peuvent être dans la même pièce).
-Les colocations sont donc considerées comme un unique logement quelque soit le nombre de personne pouvant vivre dedans.
+Les colocations sont donc considérées comme un unique logement quelque soit le nombre de personne pouvant vivre dedans.
 Nous pouvons supposer qu'un des logements est un commerce et que l'autre est une résidence.
 Pour cela, nous allons voir quel pourcentage de bâtiments résidentiels à 2 logements sont aussi commerciaux.
 
@@ -1291,7 +1301,7 @@ Pour cela, nous allons voir quel pourcentage de bâtiments résidentiels à 2 lo
 
 ### Visualisation
 
-Pour USAGE1:
+Pour `usage1`:
 
 ```{r, fig.width=8, fig.height=12}
   batiments_filtre1 <- batiments %>%
@@ -1323,7 +1333,7 @@ ggplot(batiment_pourcentage, aes(x = USAGE1, y = pct)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Pour USAGE2:
+Pour \`usage2:
 
 ```{r}
 batiments_filtre1 <- batiments %>%
@@ -1357,14 +1367,17 @@ theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ### Interprétation
 
-En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
+En cumulant le pourcentage de bâtiments ayant résidentiels en `usage1` et commercial en `usage2` et inversement (commercial en `usage1` et résidentiel en `usage2`), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
 Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
 
-## 12.Quels sont les usages fréquents pour les bâtiments à structure légère ?
+## 12. Quels sont les usages fréquents pour les bâtiments à structure légère ?
 
 L'objectif de cette question est d'analyser la répartition des usages des bâtiments en fonction de leur structure, en particulier de comparer les usages des bâtiments à structure légère par rapport aux autres.
-Comme hypothèses de départ, on a: - les bâtiments résidentiels sont majoritairement à structure non légère pour des raisons de durabilité.
-- les bâtiments à structure légère ont des usages spécifiques.
+Comme hypothèses de départ, on a :
+
+-   les bâtiments résidentiels sont majoritairement à structure non légère pour des raisons de durabilité.
+
+-   les bâtiments à structure légère ont des usages spécifiques.
 
 Pour répondre à cette question, nous allons réaliser un diagramme à barres 100% empilées.
 Il va nous permettre de comparer les proportions d'usages entre les deux types de structure.
@@ -1408,11 +1421,12 @@ ggplot(df_usages, aes(x = reorder(USAGE1, -Pourcentage), y = Pourcentage, fill =
 
 ```
 
-## Analyse et interprétation:
+### Analyse et interprétation:
 
 Le graphique présente la répartition en pourcentage des structures légères et non légères pour chaque usage principal de bâtiment.
 
-On observe que la grande majorité des bâtiments sont à structure non légère.Celà peut s'expliquer par le fait que les structures non légères offrent plus de résistance aux intempéries, nécessitent moins d'entretien à long terme et offrent un comfort accru.
+On observe que la grande majorité des bâtiments sont à structure non légère.
+Cela peut s'expliquer par le fait que les structures non légères offrent plus de résistance aux intempéries, nécessitent moins d'entretien à long terme et offrent un confort accru.
 De plus, les règles de sécurité et d'urbanisme imposent des normes strictes de construction donc la plupart des bâtiments ont une structure non légère et les bâtiments à structure légère sont temporaires.
 
 On observe une répartition égale des bâtiments à usage indifférencié (50% à structure légère et 50% à structure non légère).
@@ -1421,7 +1435,7 @@ On observe également que 23% des bâtiments agricoles sont à structure légèr
 Certains bâtiments servent à l'entreposage temporaire des récoltes, des outils ou des machines, ils n'ont donc pas besoin d'être permanents.
 D'où l'usage de bâtiments à structure légère.
 
-En somme,la visualisation confirme les hypothèses de départ.
+En somme, la visualisation confirme les hypothèses de départ.
 
 # **Conclusion**
 
