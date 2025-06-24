@@ -762,13 +762,17 @@ Nous mobiliserons les variables suivantes :
 
 ### Visualisation:
 
-Tableau
+Etant donné que nous travaillons sur des données géographiques pour cette question, j'ai choisi de faire ma visualisation sur Tableau.
+En effet, l'intégration des données géographiques est facilitée en plus de permettre des interactions avec les visualisations pour approfondir l'interprétation des résultats.
 
-Screen
+![Tableau de bord réalisé sur Tableau](images/5_Relation_usage_geographie.png)
+
+La représentation sur situe sur dans le fichier "Classeur_tableau.twb"
+
+Il est possible d'interagir avec la carte et d'isoler certains usages en sélectionnant un ou plusieurs usages dans la légende.
+De plus, on peut voir le détails des bâtiments en les survolants ou en cliquant dessus.
 
 ### Interprétation des résultats:
-
-texte
 
 ## 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
 
