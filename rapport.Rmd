@@ -9,9 +9,9 @@ editor_options:
     wrap: sentence
 ---
 
-# Introduction
+# Étude des bâtiments de Troyes
 
-## Étude des bâtiments de Troyes
+# Introduction
 
 ## Données
 
@@ -76,7 +76,7 @@ Pour la localisation, nous utiliserons 2 variables : la longitude et la latitude
 | LONGITUDE | continue | coordonnée GPS |
 | LATITUDE  | continue | coordonnée GPS |
 
-#### Pourquoi avoir choisi ces variables
+### Pourquoi avoir choisi ces variables
 
 Nous avons enlevé les variables qui nous semblaient inutiles ainsi que celles comportant peu de valeurs.
 Nous avons aussi enlevé les variables que nous n'avons pas trouvées pertinentes.
@@ -197,9 +197,8 @@ Nous allons utiliser dans un premier temps la variable correspondant au nombre d
 -   Il faut vérifier si les usages secondaires sont bien pertinents ou s’ils sont parfois des doublons ou redondants de l’usage principal.
 -   Des biais peuvent exister si certains types d’usage ne sont saisis que partiellement dans les données.
 
-### 8. QUI VEUT - A quels usages sont attribués les bâtiments de nature spéciale?
+### 8.  A quels usages sont attribués les bâtiments de nature spéciale?
 
-texte
 
 ### 9. Est-ce que les bâtiments du centre-ville sont plus hauts que les bâtiments plus éloignés ?
 
@@ -219,7 +218,7 @@ texte
 
 texte
 
-### 12. XXX
+### 12. Quels sont les usages fréquents pour les bâtiments à structure légère ?
 
 texte
 
@@ -309,18 +308,35 @@ batiments = batiments %>%
 
 ## Questions de répartition simples
 
+Avant de commencer avec des répartitions, nous avons affiché des statistiques sur l'application Shiny.
+Par exemple nous avons 4 bâtiments considérés comme en ruine dans le jeu de données, ce qui est peu.
+Nous pouvons supposer qu'en ville il est rare qu'un bâtiment soit abandonné suffisamment longtemps pour qu'il tombe en ruine.
+Nous avons aussi la hauteur moyenne des bâtiments qui est assez peu haute à 4,89m de haut.
+Cela n'est pas très étonnant car il y a peu de bâtiments très hauts à Troyes.
+
+![](images/stats.png)
+
+Les distributions réalisées ci-après ont aussi été réalisées dans l'application Shiny avec une liste déroulante permettant de choisir la variable sur laquelle la distribution est réalisée.
+Il y a même plus de variables proposées.
+Il y a également un bouton pour changer entre une échelle linéaire et une échelle logarithmique.
+Aussi, le nombre de valeurs non connues ou notées comme indifférenciées est affiché.
+
+![](images/distrib.png)
+
+Un autre avantage est la possibilité de passer la souris sur une barre afin de voir le nombre de bâtiments exact.
+Pouvoir zoomer ou restreindre le graphique sur seulement la partie qui nous intéresse est aussi plutôt pertinent pour avoir des chiffres plus précis.
+
 ### Distribution des matériaux
 
 Hypothèses: Ces visualisations nous permettront de voir la distribution des bâtiments en fonction des matériaux utilisés pour les murs et les toits.
 On pourrait identifier les matériaux les plus utilisés et trouver les raisons pour les quelles ces matériaux sont aussi utilisés.
 
-Graphe:
-
-Pour cela, nous allons faire des barplots.
+Pour cela, nous allons réaliser des barplots.
+Nous pouvons noter que nous avons les matériaux des bâtiments pour environ la moitié des bâtiments du jeu de données.
 
 #### Matériaux des murs:
 
-On utilisera les variables matériaux murs.
+On utilisera la variable `mat_murs`.
 
 ```{r matériaux murs}
 batiments_filtre_murs <- batiments %>%
@@ -338,7 +354,7 @@ On constate que les matériaux les plus utilisés pour les murs sont les briques
 
 #### Matériaux des toits:
 
-On utilisera les variables matériaux toits.
+On utilisera la variable `mat_toits`.
 
 ```{r matériaux toits}
 batiments_filtre_toits <- batiments %>%
@@ -597,7 +613,7 @@ Les variables utilisées sont :
 
 Nous nous attendons à ce que les matériaux les plus solides de chaque époque soit utilisés successivement.
 
-### Visualisation
+#### Visualisation
 
 ```{r, fig.width=8, fig.height=12}
 batiments_selec <- batiments %>%
@@ -645,7 +661,7 @@ ggplot(batiments_counts, aes(x = PERIODE, y = MAT_MURS, fill = n)) +
        fill = "Nombre")
 ```
 
-### Interprétation des résultats
+#### Interprétation des résultats
 
 Tout d'abord, il faut préciser que nous manquant de beaucoup d'information, particulièrement sur les années avant 1800.
 Il est donc difficile de généraliser les informations du graphe.
@@ -668,7 +684,7 @@ Les variables utilisées sont :
 
 -   DATE_APP: variable discrète d'apparition des bâtiments
 
-### Visualisation
+#### Visualisation
 
 ```{r, fig.width=8, fig.height=12}
 batiments_selec <- batiments %>%
@@ -716,7 +732,7 @@ ggplot(batiments_counts, aes(x = PERIODE, y = MAT_TOITS, fill = n)) +
        fill = "Nombre")
 ```
 
-### Interprétation des résultats
+#### Interprétation des résultats
 
 Sans surprise, les tuiles sont le matériau le plus utilisé pour les toits.
 Au niveau national, les tuiles représentent 74% des toitures françaises.
@@ -746,12 +762,15 @@ De, plus nous pensons que le matériau des murs aura plus d'influence que celui 
 
 rm(list = setdiff(ls(), c("batiments")))
 
-batiments_clean <- batiments %>%
+batiments3_murs <- batiments %>%
   filter(!is.na(MAT_MURS), !is.na(HAUTEUR)) %>%
-  mutate(MAT_MURS = as.factor(MAT_MURS))
-  
+  mutate(MAT_MURS = as.factor(MAT_MURS)) %>%
+  group_by(MAT_MURS) %>%
+  filter(n() > 1) %>%
+  ungroup()
+
 # Violin plot basé sur MAT_MURS
-plot_murs <- ggplot(batiments_clean, 
+plot_murs <- ggplot(batiments3_murs, 
                     aes(x = MAT_MURS, y = HAUTEUR, fill = MAT_MURS)) +
   geom_violin(trim = FALSE, color = "black") +
   scale_fill_viridis_d(option = "C") +
@@ -765,11 +784,14 @@ plot_murs <- ggplot(batiments_clean,
   )
 
 # Violin plot basé sur MAT_TOITS pour varier
-batiments_toits_clean <- batiments %>%
+batiments3_toits <- batiments %>%
   filter(!is.na(MAT_TOITS), !is.na(HAUTEUR)) %>%
-  mutate(MAT_TOITS = as.factor(MAT_TOITS))
+  mutate(MAT_TOITS = as.factor(MAT_TOITS)) %>%
+  group_by(MAT_TOITS) %>%
+  filter(n() > 1) %>%
+  ungroup()
 
-plot_toits <- ggplot(batiments_toits_clean, 
+plot_toits <- ggplot(batiments3_toits, 
                      aes(x = MAT_TOITS, y = HAUTEUR, fill = MAT_TOITS)) +
   geom_violin(trim = FALSE, color = "black") +
   scale_fill_viridis_d(option = "D") +
@@ -1116,9 +1138,49 @@ Dans le même classeur que pour la question 5., elle correspond au tableau de bo
 
 texte
 
-## 8. QUI VEUT - A quels usages sont attribués les bâtiments de nature spéciale?
+## 8. A quels usages sont attribués les bâtiments de nature spéciale?
 
-texte
+L'objectif est d'identifier si certaines natures de bâtiments sont spécifiques à un usage particulier.
+Pour celà, nous allons faire un barplot.
+Comme hypothèses de départ, nous avons:
+- certaines natures de bâtiments ont des usages spécifiques
+
+
+
+```{r graphique... }
+# On compte le nombre de bâtiments pour chaque combinaison NATURE / USAGE1
+df_nature_usage <- batiments %>%
+  group_by(NATURE, USAGE1) %>%
+  summarise(Nombre = n(), .groups = "drop")
+  
+
+# Diagramme en barres empilées
+ggplot(df_nature_usage, aes(x = NATURE, y = Nombre, fill = USAGE1)) +
+  geom_bar(stat = "identity") +
+  scale_y_log10() +
+  labs(
+    title = "Repartition des usages selon la nature des batiments",
+    x = "Nature du batiment",
+    y = "Nombre de batiments",
+    fill = "Usage"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+Analyse et interprétation:
+
+On remarque premièrement que les bâtiments de nature indifférencié ont une grande diversité d'usages.Ce qui peut s'expliquer par le fait qu'il s'agit d'une catégorie fourre-tout utilisée pour des bâtiments difficiles à classer par nature.
+
+Pour les bâtiments de nature "Industriel, agricole ou commercial" ont une forte diversité d'usages également . Les usages prédominants sont agricole, commerciale, annexe et industriel.
+
+
+Pour les bâtiments de nature chapelle et église, l'usage  est exclusivement réligieux.
+Les bâtiments ayant pour nature serre et silo, l'usage est exclusivement agricole.
+
+En somme,nous avons des natures avec des usages fortement spécialisés et des natures à usages multiples.
+
 
 ## 9. Est-ce que les bâtiments du centre-ville sont plus hauts que les bâtiments plus éloignés ?
 
@@ -1292,7 +1354,7 @@ ggplot(batiment_pourcentage, aes(x = NB_LOGTS, y = pct)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-\### Interprétation
+### Interprétation
 
 On observe que seulement 1% des batiments sont des logements uniques.
 Cette information est surprenante, d'autant que le pourcentage de bâtiment à logement unique à Paris est de 0,88%.
@@ -1310,7 +1372,7 @@ Pour cela, nous allons voir quel pourcentage de bâtiments résidentiels à 2 lo
 
 ## 11. Quel est la part de batiments résidentiels à 2 logements sont aussi commerciaux?
 
-###Visualisation
+### Visualisation
 
 Pour USAGE1:
 
@@ -1376,10 +1438,73 @@ theme_minimal() +
 theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-\### Interpretation
+### Interprétation
 
 En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
 Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
+
+
+## 12.Quels sont les usages fréquents pour les bâtiments à structure légère ?
+
+L'objectif de cette question est d'analyser la répartition des usages des bâtiments en fonction de leur structure,  en particulier de comparer les usages des bâtiments à structure légère par rapport aux autres.
+Comme hypothèses de départ, on a:
+- les bâtiments résidentiels sont majoritairement à structure non légère pour des raisons de durabilité.
+- les bâtiments à structure légère ont des usages spécifiques.
+
+Pour répondre à cette question, nous allons réaliser un diagramme à barres 100% empilées. Il va nous permettre de comparer les proportions d'usages entre les deux types de structure.
+
+### Visualisation
+
+```{r graphique....}
+
+
+library(scales)
+
+# Préparation des données
+df_usages <- batiments %>%
+  filter(!is.na(USAGE1)) %>%
+  mutate(LEGER = ifelse(LEGER, "Léger", "Non léger")) %>%
+  group_by(USAGE1, LEGER) %>%
+  summarise(Nombre = n(), .groups = "drop") %>%
+  group_by(USAGE1) %>%
+  mutate(Pourcentage = Nombre / sum(Nombre) * 100)
+
+# Diagramme à barres 100% empilées
+ggplot(df_usages, aes(x = reorder(USAGE1, -Pourcentage), y = Pourcentage, fill = LEGER)) +
+  geom_bar(stat = "identity", position = "fill", color = "white") +
+  geom_text(aes(label = ifelse(Pourcentage > 5, paste0(round(Pourcentage), "%"), "")),
+            position = position_fill(vjust = 0.5), size = 3, color = "white") +
+  scale_y_continuous(labels = percent_format(scale = 1)) +
+  scale_fill_manual(
+    values = c("Léger" = "#66c2a5", "Non léger" = "#fc8d62"),
+    name = "Structure du batiment",
+    labels = c("Structure legere", "Structure non legere")
+  ) +
+  labs(
+    title = "Repartition des batiments selon leur structure et usage",
+    x = "Usage principal",
+    y = "Part des batiments (%)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+```
+
+## Analyse et interprétation:
+
+Le graphique présente la répartition en pourcentage des structures légères et non légères pour chaque usage principal de bâtiment.
+
+On observe que la grande majorité des bâtiments sont à structure non légère.Celà peut s'expliquer par le fait que les structures non légères offrent plus de résistance aux intempéries, nécessitent moins d'entretien à long terme et offrent un comfort accru. De plus, les règles de sécurité et d'urbanisme imposent des normes strictes de construction donc la plupart des bâtiments ont une structure non légère et les bâtiments à structure légère sont temporaires.
+
+On observe une répartition égale des bâtiments à usage indifférencié (50% à structure légère et 50% à structure non légère). 
+
+On observe également que 23% des bâtiments agricoles sont à structure légère. Certains bâtiments servent à l'entreposage temporaire des récoltes, des outils ou des machines, ils n'ont donc pas besoin d'être permanents. D'où l'usage de bâtiments à structure légère.
+
+En somme,la visualisation confirme les hypothèses de départ.
+
+
 
 # **Conclusion**
 
@@ -1421,4 +1546,5 @@ Voici notre travail individuel:
 
 -   Danielle:
 
-    -   Réalisation des questions 1
+    -   Réalisation des questions 1,8 et 12.
+    -  Réalisation des répartitions simples
