@@ -142,7 +142,7 @@ Pour cela, nous envisageons d'utiliser :
     -   L'axe des abscisses représentant le type de matériau
     -   L'axe des ordonnées représentant la hauteur des bâtiments
 
-### 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
+### 5. Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
 
 L'objectif ici est de déterminer si certains types d'usage des bâtiments sont spécifiquement localisés dans certaines zones de la ville de Troyes.
 Pouvons-nous identifier des zones résidentielles, des zones industrielles et des zones commerciales ?
@@ -151,8 +151,7 @@ Nous utiliserons les variables de coordonnées géographiques (`longitude` et `l
 **Pour cela, nous envisageons :**
 
 -   Une carte avec les bâtiments colorés selon leur usage principal (`usage1`), afin de visualiser leur répartition spatiale dans la ville.
-    -   Un graphique en barres représentant le nombre de bâtiments pour chaque usage.
-    -   Une carte en clusters ou une carte de densité (heatmap) pour identifier les concentrations d’usages spécifiques.
+-   Un graphique en barres représentant le nombre de bâtiments pour chaque usage.
 
 **Les problèmes potentiels :**
 
@@ -160,7 +159,7 @@ Nous utiliserons les variables de coordonnées géographiques (`longitude` et `l
 -   La précision des coordonnées géographiques peut poser problème (erreurs ou imprécisions dans la base).
 -   Des effets de densité peuvent masquer certaines tendances (ex. : une zone très dense en bâtiments résidentiels peut rendre difficile la détection de petits usages secondaires).
 
-### 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
+### 6. L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
 
 L’objectif est de déterminer si l’année de construction d’un bâtiment a une influence sur son usage principal (`usage1`).
 L’hypothèse sous-jacente est que certains types d’usage sont plus fréquents pour des bâtiments récents (par exemple les bâtiments industriels, commerciaux ou sportifs), tandis que d'autres usages (comme les habitions ou les bâtiments religieux) sont plus répandus dans des bâtiments anciens.
@@ -169,9 +168,8 @@ Nous utiliserons la variable `date_app` pour la croisée avec `usage1`, et éven
 
 **Pour cela, nous envisageons :**
 
--   ***Un nuage de points (scatter plot) ou un boxplot représentant l’année de construction en fonction des usages, pour comparer la variabilité temporelle entre types de bâtiments.***
 -   Afin de montrer la distribution de l’année de construction pour chaque type d’usage principal, nous allons faire un diagramme de densité des usages sur les années.
-    -   ***Un graphique en barres ou en aires empilées représentant la répartition des usage1 par tranche d’années de construction (par décennies ou par période historique)***
+-   Un graphique en barres ou en aires empilées représentant la répartition des usages par tranche d’années de construction (par décennies ou par période historique)
 
 **Les problèmes potentiels :**
 
@@ -737,7 +735,7 @@ texte
 
 texte
 
-## 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
+## 5. Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
 
 ### Exposition du problème:
 
@@ -815,7 +813,7 @@ On peut aussi remarqué certains éléments graphiques prennent une forme incorr
 Cela est dû à la façon dont les données géographiques sont relevées.
 En effet, le personnel les relevants ne prend que quelques points sur le bâtiment, ne permettant pas de former la structure exacte du bâtiment.
 
-## 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
+## 6. L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
 
 ### Exposition du problème:
 
@@ -1012,7 +1010,22 @@ Cette transformation est faite afin de pouvoir observer tous les usages de bâti
 
 ### Exposition du problème:
 
-texte
+L’objectif de cette exploration est de déterminer s’il existe une corrélation entre l’usage principal (`usage1`) et l’usage secondaire (`usage2`) d’un bâtiment.
+Cette question vise à mieux comprendre les combinaisons fonctionnelles les plus fréquentes, et à identifier d’éventuels profils types de bâtiments à usage mixte, comme par exemple des habitations avec un usage secondaire de type commerce, entrepôt ou bureau.
+
+On peut ainsi supposer que :
+
+-   Les habitations peuvent fréquemment être associées à un usage secondaire commercial (logement au-dessus d’un commerce), notamment dans le centre-ville.
+
+-   D’autres combinaisons peuvent paraître inhabituelles ou incohérentes, et nécessiteront une vérification (bâtiment déclaré commercial mais contenant un nombre élevé de logements par exemple).
+
+Nous mobiliserons les variables suivantes :
+
+-   La variable `usage1`, qui décrit la fonction principale du bâtiment.
+
+-   La variable `usage2`, qui décrit une éventuelle fonction secondaire du bâtiment.
+
+-   La variable `nb_lgmts`, qui permet d’introduire un filtre ou une vérification croisée, notamment pour identifier les bâtiments à usage mixte comprenant des logements.
 
 ### Visualisation:
 
@@ -1130,25 +1143,9 @@ En conclusion, la question est partiellement répondue et les résultats diffèr
 On remarque une corrélation significative entre les matériaux de toiture et la hauteur des bâtiments, alors que celle entre les matériaux des murs et la hauteur est beaucoup plus difficile à établir sans pour autant pouvoir l'écarter du champ des possibilités.
 Cela soulève donc une nouvelle question : pourquoi le matériau de la toiture semble-t-il mieux refléter la hauteur d'un bâtiment que celui des murs ?
 
-## 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
+## 8. Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmi les résidences?
 
-texte
-
-texte
-
-## 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
-
-texte
-
-texte
-
-## 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
-
-texte
-
-## 8. Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmis les résidences?
-
-Variables utilisées: NB_LOGTS (nombre de logements par batiment), USAGE1 et USAGE2 Moyenne nationale selon FNAIM: 55% de maison, 45% d'appartement Moyenne dans l'Aube selon FNAIM: entre 20% et 40% d'appartement Qu'en est-il de Troyes?
+Variables utilisées: NB_LOGTS (nombre de logements par bâtiment), USAGE1 et USAGE2 Moyenne nationale selon FNAIM: 55% de maison, 45% d'appartement Moyenne dans l'Aube selon FNAIM: entre 20% et 40% d'appartement Qu'en est-il de Troyes?
 
 ### Visualisation
 
@@ -1201,9 +1198,9 @@ Cela n'est probablement pas dû aux colocations.
 En effet, un logement doit être composé au minimum d'une chambre, une cuisine et une salle de bain (la chambre et la cuisine peuvent être dans la même pièce).
 Les colocations sont donc considerées comme un unique logement quelque soit le nombre de personne pouvant vivre dedans.
 Nous pouvons supposer qu'un des logements est un commerce et que l'autre est une résidence.
-Pour cela, nous allons voir quel pourcentage de batiments residentiels à 2 logements sont aussi commerciaux.
+Pour cela, nous allons voir quel pourcentage de bâtiments résidentiels à 2 logements sont aussi commerciaux.
 
-## 9. Quel est la part de batiments résidentiels à 2 logements sont aussi commerciaux?
+## 9. Quel est la part de bâtiments résidentiels à 2 logements sont aussi commerciaux?
 
 ###Visualisation
 
@@ -1271,20 +1268,10 @@ theme_minimal() +
 theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-\### Interpretation En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
+\### Interpretation
+
+En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
 Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
-
-## 10. XXX
-
-texte
-
-## 11. XXX
-
-texte
-
-## 12. XXX
-
-texte
 
 # **Conclusion**
 
