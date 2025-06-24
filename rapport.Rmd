@@ -192,6 +192,9 @@ Nous allons utiliser dans un premier temps la variable correspondant au nombre d
 -   Des biais peuvent exister si certains types d’usage ne sont saisis que partiellement dans les données.
 
 ### 8. A quels usages sont attribués les bâtiments de nature spéciale?
+L'objectif est d'identifier si certaines natures de bâtiments sont spécifiques à un usage particulier.
+Pour celà, nous allons faire un barplot.
+Comme hypothèses de départ, nous avons: certaines natures de bâtiments ont des usages spécifiques.
 
 ### 9. Est-ce que les bâtiments du centre-ville sont plus hauts que les bâtiments plus éloignés ?
 
@@ -221,7 +224,15 @@ Nous envisageons de faire une décomposition des usages secondaires grâce à un
 
 ### 12. Quels sont les usages fréquents pour les bâtiments à structure légère ?
 
-texte
+L'objectif de cette question est d'analyser la répartition des usages des bâtiments en fonction de leur structure, en particulier de comparer les usages des bâtiments à structure légère par rapport aux autres.
+Comme hypothèses de départ, on a :
+
+-   les bâtiments résidentiels sont majoritairement à structure non légère pour des raisons de durabilité.
+
+-   les bâtiments à structure légère ont des usages spécifiques.
+
+Pour répondre à cette question, nous allons réaliser un diagramme à barres 100% empilées.
+Il va nous permettre de comparer les proportions d'usages entre les deux types de structure.
 
 # Exploration
 
@@ -1166,7 +1177,7 @@ En conclusion, on pourrait continuer l'exploration de cette question avec une ca
 
 L'objectif est d'identifier si certaines natures de bâtiments sont spécifiques à un usage particulier.
 Pour celà, nous allons faire un barplot.
-Comme hypothèses de départ, nous avons: - certaines natures de bâtiments ont des usages spécifiques
+Comme hypothèses de départ, nous avons: certaines natures de bâtiments ont des usages spécifiques.
 
 ### Visualisation
 
