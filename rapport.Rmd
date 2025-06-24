@@ -180,7 +180,7 @@ Nous utiliserons la variable `date_app` pour la croisée avec `usage1`, et éven
 -   Certains usages peuvent avoir été modifiés après construction, rendant la relation avec l’année de construction moins directe (ex. : un bâtiment ancien réaffecté à un usage commercial).
 -   Des biais peuvent exister dans la base si certains types d'usages sont sur-représentés dans certaines périodes.
 
-### 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
+## 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
 
 L’objectif est de déterminer s’il existe une corrélation ou un lien statistique entre l’usage principal (`usage1`) et l’usage secondaire (`usage2`) d’un bâtiment.
 Cela permettrait de mieux comprendre les combinaisons d’usages fréquentes (par exemple : habitation principale avec un usage secondaire de type commerce ou entrepôt), et d’éventuellement identifier des profils types de bâtiments à usage mixte.
@@ -729,9 +729,91 @@ Il n'est donc pas surprenant de les retrouver dans le graphe.
 
 ## 4. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
 
-texte
+L'objectif ici est de comprendre si l'évolution des matériaux, principalement des murs a un impact sur la hauteur des bâtiments.
+Pour cela, nous allons réaliser deux violinplot, l'un lié au matériau des murs et l'autre des toits afin de confirmer une corrélation.
 
-texte
+Les variables utilisées sont :
+
+-   MAT_MURS : variable nominale : code des matériaux des murs, croisé avec [materiaux_murs.csv](data/materiaux_murs.csv)
+
+-   MAT_TOITS : variable nominale : code des matériaux de la toiture, croisé avec [materiaux_toits.csv](data/materiaux_toits.csv)
+
+-   HAUTEUR : variable continue représentant la hauteur absolue du bâtiment
+
+Nous nous attendons à ce que les matériaux plus modernes et denses comme le béton ( au niveau des murs et aussi de la toiture ) composent les bâtiments les plus hauts de l'agglomération troyenne.
+De, plus nous pensons que le matériau des murs aura plus d'influence que celui de la toiture.
+
+### Visualisation
+
+```{r graphique 3, fig.width=10, fig.height=12}
+
+rm(list = setdiff(ls(), c("batiments")))
+
+batiments_clean <- batiments %>%
+  filter(!is.na(MAT_MURS), !is.na(HAUTEUR)) %>%
+  mutate(MAT_MURS = as.factor(MAT_MURS))
+  
+# Violin plot basé sur MAT_MURS
+plot_murs <- ggplot(batiments_clean, 
+                    aes(x = MAT_MURS, y = HAUTEUR, fill = MAT_MURS)) +
+  geom_violin(trim = FALSE, color = "black") +
+  scale_fill_viridis_d(option = "C") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none") +
+  labs(
+    title = "Hauteur selon le matériau des murs",
+    x = "Matériau des murs",
+    y = "Hauteur (m)"
+  )
+
+# Violin plot basé sur MAT_TOITS pour varier
+batiments_toits_clean <- batiments %>%
+  filter(!is.na(MAT_TOITS), !is.na(HAUTEUR)) %>%
+  mutate(MAT_TOITS = as.factor(MAT_TOITS))
+
+plot_toits <- ggplot(batiments_toits_clean, 
+                     aes(x = MAT_TOITS, y = HAUTEUR, fill = MAT_TOITS)) +
+  geom_violin(trim = FALSE, color = "black") +
+  scale_fill_viridis_d(option = "D") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none") +
+  labs(
+    title = "Hauteur selon le matériau des toits",
+    x = "Matériau des toits",
+    y = "Hauteur (m)"
+  )
+
+# Regroupement des deux plots
+plots <- list(plot_murs, plot_spacer(), plot_toits)
+
+# Assemblage final
+final_plot = wrap_plots(plots, ncol = 1, nrow = 3) +
+  plot_layout(guides = "collect", heights = c(1, 0.2, 1)) +
+  plot_annotation(
+    title = "Analyse des hauteurs de bâtiments selon matériaux",
+    subtitle = "Ville de Troyes",
+    caption = "Données : BDD PARCELAIRE - Troyes Champagne Métropole"
+  )
+
+final_plot
+
+```
+
+### Interprétation des résultats
+
+Tout d'abord, quand l'on regarde le graphique de la hauteur par rapport aux matériaux des murs, il est difficile d'observer une corrélation.
+En effet, on remarque de très faibles différences dans la distribution des hauteurs pour chaque combinaison de matériau.
+Cela pourrait amener à penser que le matériau des murs n'a pas une influence déterminante sur la hauteur des bâtiments, du moins d'après cette visualisation.
+Une approche complémentaire, comme représenter la hauteur moyenne ou médiane pour chaque matériau, pourrait nous apporter des réponses plus claires et mettre en évidence des tendances qui peuvent être plus légères.
+
+Cependant, quand l'on observe le graphique lié à la hauteur des bâtiments selon le matériau de la toiture, on peut clairement observer que les matériaux ZINC ALUMINIUM, BETON et ARDOISES recouvrent les bâtiments les plus hauts, alors que les TUILES ne dépassent que très rarement la dizaine de mètres de hauteur.
+Cela indique une possible corrélation entre le type de matériau utilisé pour la toiture et la hauteur des bâtiments.
+
+En conclusion, la question est partiellement répondue et les résultats diffèrent sensiblement de nos attentes initiales.
+On remarque une corrélation significative entre les matériaux de toiture et la hauteur des bâtiments, alors que celle entre les matériaux des murs et la hauteur est beaucoup plus difficile à établir sans pour autant pouvoir l'écarter du champ des possibilités.
+Cela soulève donc une nouvelle question : pourquoi le matériau de la toiture semble-t-il mieux refléter la hauteur d'un bâtiment que celui des murs ?
 
 ## 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
 
@@ -1004,19 +1086,6 @@ Cette transformation est faite afin de pouvoir observer tous les usages de bâti
 
     -   Comme précisé avant, l'échantillon des bâtiments étant limité et sûrement peu représentatif, nous ne préférons pas interpréter de résultats sur ces graphiques.
 
-## 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
-
-### Exposition du problème:
-
-texte
-
-### Visualisation:
-
-texte
-
-### Interprétation des résultats:
-
-texte
 
 ## 8. QUI VEUT - A quels usages sont attribués les bâtiments de nature spéciale?
 
@@ -1052,124 +1121,9 @@ Nous remarquons aussi des points plus hauts qui semblent être les clochers des 
 En dehors du centre ville, les hauteurs sont plus hétérogènes avec des immeubles à plus de 30 mètres et beaucoup de maison ou autres bâtiments à 2 étages maximum.
 Nous pouvons bien distinguer les zones résidentielles avec uniquement des maisons où il n'y que des points violets avec les zones où il y a des immeubles.
 On peut aussi voir des bâtiments industriels qui sont assez haut en dehors de la ville, comme l'usine Michelin qui monte à près de 30m de haut.
+ 
 
-## 10. XXX
-
-texte
-
-## 11. XXX
-
-texte
-
-## 12. XXX
-
-texte
-
-## X. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
-
-L'objectif ici est de comprendre si l'évolution des matériaux, principalement des murs a un impact sur la hauteur des bâtiments.
-Pour cela, nous allons réaliser deux violinplot, l'un lié au matériau des murs et l'autre des toits afin de confirmer une corrélation.
-
-Les variables utilisées sont :
-
--   MAT_MURS : variable nominale : code des matériaux des murs, croisé avec [materiaux_murs.csv](data/materiaux_murs.csv)
-
--   MAT_TOITS : variable nominale : code des matériaux de la toiture, croisé avec [materiaux_toits.csv](data/materiaux_toits.csv)
-
--   HAUTEUR : variable continue représentant la hauteur absolue du bâtiment
-
-Nous nous attendons à ce que les matériaux plus modernes et denses comme le béton ( au niveau des murs et aussi de la toiture ) composent les bâtiments les plus hauts de l'agglomération troyenne.
-De, plus nous pensons que le matériau des murs aura plus d'influence que celui de la toiture.
-
-### Visualisation
-
-```{r graphique 3, fig.width=10, fig.height=12}
-
-rm(list = setdiff(ls(), c("batiments")))
-
-batiments_clean <- batiments %>%
-  filter(!is.na(MAT_MURS), !is.na(HAUTEUR)) %>%
-  mutate(MAT_MURS = as.factor(MAT_MURS))
-  
-# Violin plot basé sur MAT_MURS
-plot_murs <- ggplot(batiments_clean, 
-                    aes(x = MAT_MURS, y = HAUTEUR, fill = MAT_MURS)) +
-  geom_violin(trim = FALSE, color = "black") +
-  scale_fill_viridis_d(option = "C") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "none") +
-  labs(
-    title = "Hauteur selon le matériau des murs",
-    x = "Matériau des murs",
-    y = "Hauteur (m)"
-  )
-
-# Violin plot basé sur MAT_TOITS pour varier
-batiments_toits_clean <- batiments %>%
-  filter(!is.na(MAT_TOITS), !is.na(HAUTEUR)) %>%
-  mutate(MAT_TOITS = as.factor(MAT_TOITS))
-
-plot_toits <- ggplot(batiments_toits_clean, 
-                     aes(x = MAT_TOITS, y = HAUTEUR, fill = MAT_TOITS)) +
-  geom_violin(trim = FALSE, color = "black") +
-  scale_fill_viridis_d(option = "D") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "none") +
-  labs(
-    title = "Hauteur selon le matériau des toits",
-    x = "Matériau des toits",
-    y = "Hauteur (m)"
-  )
-
-# Regroupement des deux plots
-plots <- list(plot_murs, plot_spacer(), plot_toits)
-
-# Assemblage final
-final_plot = wrap_plots(plots, ncol = 1, nrow = 3) +
-  plot_layout(guides = "collect", heights = c(1, 0.2, 1)) +
-  plot_annotation(
-    title = "Analyse des hauteurs de bâtiments selon matériaux",
-    subtitle = "Ville de Troyes",
-    caption = "Données : BDD PARCELAIRE - Troyes Champagne Métropole"
-  )
-
-final_plot
-
-```
-
-### Interprétation des résultats
-
-Tout d'abord, quand l'on regarde le graphique de la hauteur par rapport aux matériaux des murs, il est difficile d'observer une corrélation.
-En effet, on remarque de très faibles différences dans la distribution des hauteurs pour chaque combinaison de matériau.
-Cela pourrait amener à penser que le matériau des murs n'a pas une influence déterminante sur la hauteur des bâtiments, du moins d'après cette visualisation.
-Une approche complémentaire, comme représenter la hauteur moyenne ou médiane pour chaque matériau, pourrait nous apporter des réponses plus claires et mettre en évidence des tendances qui peuvent être plus légères.
-
-Cependant, quand l'on observe le graphique lié à la hauteur des bâtiments selon le matériau de la toiture, on peut clairement observer que les matériaux ZINC ALUMINIUM, BETON et ARDOISES recouvrent les bâtiments les plus hauts, alors que les TUILES ne dépassent que très rarement la dizaine de mètres de hauteur.
-Cela indique une possible corrélation entre le type de matériau utilisé pour la toiture et la hauteur des bâtiments.
-
-En conclusion, la question est partiellement répondue et les résultats diffèrent sensiblement de nos attentes initiales.
-On remarque une corrélation significative entre les matériaux de toiture et la hauteur des bâtiments, alors que celle entre les matériaux des murs et la hauteur est beaucoup plus difficile à établir sans pour autant pouvoir l'écarter du champ des possibilités.
-Cela soulève donc une nouvelle question : pourquoi le matériau de la toiture semble-t-il mieux refléter la hauteur d'un bâtiment que celui des murs ?
-
-## 5. ALEXIS - Existe-t-il une relation entre la localisation géographique et l'usage des bâtiments ?
-
-texte
-
-texte
-
-## 6. ALEXIS - L'année de construction a-t-elle un impact sur l'usage d'un bâtiment?
-
-texte
-
-texte
-
-## 7. ALEXIS - Peut-on afficher une corrélation entre l'usage principale et l'usage secondaire d'un bâtiment
-
-texte
-
-## 8. Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmis les résidences?
+## 10. Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmis les résidences?
 
 Variables utilisées: NB_LOGTS (nombre de logements par batiment), USAGE1 et USAGE2 Moyenne nationale selon FNAIM: 55% de maison, 45% d'appartement Moyenne dans l'Aube selon FNAIM: entre 20% et 40% d'appartement Qu'en est-il de Troyes?
 
@@ -1226,7 +1180,7 @@ Les colocations sont donc considerées comme un unique logement quelque soit le 
 Nous pouvons supposer qu'un des logements est un commerce et que l'autre est une résidence.
 Pour cela, nous allons voir quel pourcentage de batiments residentiels à 2 logements sont aussi commerciaux.
 
-## 9. Quel est la part de batiments résidentiels à 2 logements sont aussi commerciaux?
+## 11. Quel est la part de batiments résidentiels à 2 logements sont aussi commerciaux?
 
 ###Visualisation
 
@@ -1294,20 +1248,11 @@ theme_minimal() +
 theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-\### Interpretation En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
+\### Interpretation 
+
+En cumulant le pourcentage de bâtiments ayant residentiels en USAGE1 et commercial en USAGE2 et inversement (commercial en USAGE1 et residentiel en USAGE2), on tombe sur 3,2% des bâtiments ayant 2 logements sont résidentiels et commerciaux.
 Cela infirme l'hypothèse que le fort nombre de bâtiments résidentiels à 2 logements est dû aux commerces.
 
-## 10. XXX
-
-texte
-
-## 11. XXX
-
-texte
-
-## 12. XXX
-
-texte
 
 # **Conclusion**
 
@@ -1321,7 +1266,7 @@ Alexis M:
 
 Camille:
 
-Camille:
+Danielle:
 
 # Annexe
 
@@ -1344,5 +1289,7 @@ Voici notre travail individuel:
     -   Réalisation de l'application Shiny
 
 -   Camille:
+    -   Réalisation des questions 3, 10 et 11
 
 -   Danielle:
+    - Réalisation des questions 1
