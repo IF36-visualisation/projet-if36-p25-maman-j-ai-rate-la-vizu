@@ -1459,7 +1459,8 @@ La difficulté technique n'étant pas très élevé, j'ai pu explorer différent
 Beaucoup des données que j'ai utilisés ne sont pas définies, ce qui est un peu frustrant car il est difficile de donner une interprétation satisfaisante des visualisations qui en découlent.
 
 #### Danielle:
-
+Durant ce projet, j'ai appris à manipuler les données d'un dataset. Comment nettoyer des données et en faire sortir des informations.
+Par rapport aux difficultés rencontrées, j'ai eu un peu de mal au début à m'habituer à R mais par la suite,je me suis un peu améliorée. Ensuite, pour les visualisations, il y a avait des données pas assez explicites( ex: nature ou usage indifférencié) et c'était un frein aux interprétations.
 # Annexe
 
 Ensemble nous avons travaillé sur la partie Introduction du rapport et la structure de celui-ci.
