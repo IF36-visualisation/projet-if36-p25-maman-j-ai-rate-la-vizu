@@ -1223,15 +1223,20 @@ Camille:
 
 # Annexe
 
-Alexis H:
+Ensemble nous avons travaillé sur la partie Introduction du rapport et la structure de celui-ci.
+La recherche des données et le rapport de peer-review ont aussi été faits en commun.
 
--   Réalisation des questions 5,6 et 7 dans le plan d'analyse et dans l'exploration.
+Ensuite, nous avons travaillé individuellement sur certaines parties du projets, notamment pour le plan d'analyse et les question à explorer.
+Voici notre travail individuel:
 
--   Réalisation des travaux sur Tableau
+-   Alexis H:
 
-Alexis M:
+    -   Réalisation des questions 5,6 et 7 dans le plan d'analyse et dans l'exploration.
 
-Camille:
+    -   Réalisation des travaux sur Tableau
 
-Danielle:
+-   Alexis M:
 
+-   Camille:
+
+-   Danielle:
