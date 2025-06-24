@@ -1427,15 +1427,25 @@ En somme,la visualisation confirme les hypothèses de départ.
 
 texte texte
 
-texte texte
+Difficultés:
 
-Alexis H:
+-   Liaison entre les BDD
 
-Alexis M:
+-   Timestamp pour tableau
 
-Camille:
+-   Intégration des données géographiques sur R
 
-Danielle:
+#### Alexis HEUSCHLING:
+
+Durant ce projet, je pense avoir beaucoup appris dans la capacité à rendre des données "parlantes" rapidement et facilement, notamment avec Tableau, et ainsi de pouvoir déterminer ou supposer des informations normalement illisibles dans un nuage de données.
+
+Personnellement, comme cité dans la question 5., je trouve qu'il aurait été intéressant de voir quel usage est prédominant par quartier et, *in fine*, de pouvoir catégoriser les différents quartiers (centre commercial, zone industrielle, zone de logements sociaux...) cependant, cela nécessite beaucoup de transformations ainsi qu'une source pour attribuer les rues aux quartiers, que nous n'avons pas.
+
+#### Alexis M:
+
+#### Camille:
+
+#### Danielle:
 
 # Annexe
 
