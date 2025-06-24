@@ -120,8 +120,10 @@ L'objectif est de vérifier si les matériaux de construction des bâtiments var
 Pour cela, nous envisageons de faire deux heatmaps afin que les résultats soient les plus lisibles possibles.
 
 Problèmes potentiels:
-- le manque d'information pour les vieux bâtiments.
-- la grande quantité de bâtiments construits récemment risque d'écraser le reste des données.
+
+-   le manque d'information pour les vieux bâtiments.
+
+-   la grande quantité de bâtiments construits récemment risque d'écraser le reste des données.
 
 ### 4. Y a-t-il une corrélation entre les matériaux de construction et la hauteur du bâtiment ?
 
@@ -204,8 +206,9 @@ Il pourrait y avoir des problèmes de lecture des couleurs avec le fond de carte
 ### 10. Quel est la part de maison (1 seul logement dans le bâtiment) et d'appartement parmi les résidences?
 
 Nous allons faire une décomposition des résidences selon le nombre de logements dans celui-ci.
-Variables utilisées: NB_LOGTS (nombre de logements par bâtiment), USAGE1 et USAGE2
-Nous avons trouvé ces données au niveau national et au niveau régional. Qu'en est-il de Troyes?
+Variables utilisées: NB_LOGTS (nombre de logements par bâtiment), USAGE1 et USAGE2.
+Nous avons trouvé ces données au niveau national et au niveau régional.
+Qu'en est-il de Troyes?
 
 La visualisation envisagée est un simple barchart.
 
@@ -1297,7 +1300,7 @@ Pour cela, nous allons voir quel pourcentage de bâtiments résidentiels à 2 lo
 
 ### Visualisation
 
-Pour `usage1`:
+Pour `usage1` :
 
 ```{r, fig.width=8, fig.height=12}
   batiments_filtre1 <- batiments %>%
@@ -1329,7 +1332,7 @@ ggplot(batiment_pourcentage, aes(x = USAGE1, y = pct)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Pour \`usage2:
+Pour `usage2` :
 
 ```{r}
 batiments_filtre1 <- batiments %>%
@@ -1433,34 +1436,60 @@ D'où l'usage de bâtiments à structure légère.
 
 En somme, la visualisation confirme les hypothèses de départ.
 
-# **Conclusion**
+# Conclusion
 
-texte texte
+Pour conclure, nous avons pu en apprendre plus sur l'agglomération troyenne, que ce soit sur la taille des bâtiments, leur usage, leur nature, leur disposition dans la ville, etc.
+Nous avons trouvé cela très intéressant car ce sont des informations sur la vile où nous vivons.
+Nous nous sommes également renseignés sur différents domaines suite à des interrogations en voyant certaines données, que ce soit pour les confirmer, trouver une explication ou se rendre compte que la tendance n'est pas correcte car il nous manque des données.
 
-Difficultés:
+Justement, des données il nous en manquait beaucoup sur certaines variables, notamment la nature des bâtiments qui était assez peu renseignée (moins de 10% des bâtiments), ce qui était assez limitant pour effectuer des analyses concluantes.
+Pour la plupart des autres variables, nous avions 50% ou plus du jeu de données renseigné ce qui est plus représentatif du territoire.
 
--   Liaison entre les BDD
+Aussi, il n'était pas facile de lier les données que nous avons récupérées de différentes sources.
+Nous n'avons pas réussi à lier la base de données des bâtiments avec celle des adresses.
+Cette dernière n'a au final été utilisée que dans Tableau.
 
--   Timestamp pour tableau
+Nous avons néanmoins réussi à obtenir des coordonnées GPS à partir des données initiales.
+Pour cela, nous avons utilisé le fichier `.gpkg` qui est une base de données géospatiale au format SQLite.
+Effectivement, il n'y avait pas d'information sur l'emplacement dans le fichier `.csv`.
+Nous avons eu du mal à récupérer la position des bâtiments car c'était un format de fichier que nous ne connaissions pas.
 
--   Intégration des données géographiques sur R
+Nous avons également rencontrés des difficultés pour les visualisations spatiales de par leur nature plus complexe à mettre en oeuvre, surtout en R.
+Aussi, nous avons eu des problèmes avec l'import des dates dans Tableau.
+En effet, lors de leur conversion il n'est pas possible d'avoir des dates plus anciennes que 1900.
 
-#### Alexis HEUSCHLING:
+Il pourrait y avoir plusieurs continuations à ce travail exploratoire du jeu de données des bâtiments de la métropole troyenne.
+Tout simplement, une continuation de l'exploration, plus de croisements avec d'autres bases de données qui pourraient compléter les données manquantes ou ajouter des variables.
+Nous pourrions également imaginer, à la suite du croisement des données avec les adresses, de pouvoir entrer une adresse et avoir des informations sur le bâtiment correspondant.
+
+#### Alexis HEUSCHLING :
 
 Durant ce projet, je pense avoir beaucoup appris dans la capacité à rendre des données "parlantes" rapidement et facilement, notamment avec Tableau, et ainsi de pouvoir déterminer ou supposer des informations normalement illisibles dans un nuage de données.
 
 Personnellement, comme cité dans la question 5., je trouve qu'il aurait été intéressant de voir quel usage est prédominant par quartier et, *in fine*, de pouvoir catégoriser les différents quartiers (centre commercial, zone industrielle, zone de logements sociaux...) cependant, cela nécessite beaucoup de transformations ainsi qu'une source pour attribuer les rues aux quartiers, que nous n'avons pas.
 
-#### Alexis M:
+#### Alexis MARÉCHAL :
 
-#### Camille:
+À travers ce projet, j'ai pu apprendre à utiliser des outils afin d'explorer un jeu de données.
+J'ai notamment compris l'importance de visualiser des données afin de pouvoir s'approprier le jeu de données.
+J'ai aussi appris sur le plan technique à réaliser des visualisations avec R, que ce soit avec ggplot ou avec plotly avec Shiny.
+Il est beaucoup plus intéressant à mon sens d'avoir un graphique interactif qu'un graphique statique.
+
+Ayant principalement travaillé sur des représentations spatiales, j'ai rencontrés plusieurs limitations avec R, notamment la difficulté d'ajouter un fond de carte à un graphique.
+Mais surtout j'ai réalisé un export des coordonnées GPS des bâtiments à l'aide du fichier `.gpkg`, hors j'ai uniquement exporté un point et non la forme du bâtiment.
+Cela aurait été beaucoup plus compliqué mais cela aurait pu être pertinent pour réaliser certaines représentations.
+
+#### Camille :
+
 Durant ce projet, j'ai découvert comment explorer une base de données pour en retirer des informations, que ce soit par curiosité, par instinct ou même par hasard.
 La difficulté technique n'étant pas très élevé, j'ai pu explorer différentes visualisations et me rendre compte que les plus simples sont souvent les plus adéquates.
-Beaucoup des données que j'ai utilisés ne sont pas définies, ce qui est un peu frustrant car il est difficile de donner une interprétation satisfaisante des visualisations qui en découlent.
+Une grande partie des données que j'ai utilisé ne sont pas définies, ce qui est un peu frustrant car il est difficile de donner une interprétation satisfaisante des visualisations qui en découlent.
 
-#### Danielle:
+#### Danielle :
+
 Durant ce projet, j'ai appris à manipuler les données d'un dataset. Comment nettoyer des données et en faire sortir des informations.
-Par rapport aux difficultés rencontrées, j'ai eu un peu de mal au début à m'habituer à R mais par la suite,je me suis un peu améliorée. Ensuite, pour les visualisations, il y a avait des données pas assez explicites( ex: nature ou usage indifférencié) et c'était un frein aux interprétations.
+Par rapport aux difficultés rencontrées, j'ai eu un peu de mal au début à m'habituer à R mais par la suite,je me suis un peu améliorée. Ensuite, pour les visualisations, il y a avait des données pas assez explicites (ex: nature ou usage indifférencié) et c'était un frein aux interprétations.
+
 # Annexe
 
 Ensemble nous avons travaillé sur la partie Introduction du rapport et la structure de celui-ci.
@@ -1469,25 +1498,25 @@ La recherche des données et le rapport de peer-review ont aussi été faits en 
 Ensuite, nous avons travaillé individuellement sur certaines parties du projets, notamment pour le plan d'analyse et les questions à explorer.
 Voici notre travail individuel:
 
--   Alexis H:
+-   Alexis H. :
 
     -   Réalisation des questions 4, 5, 6 et 7 dans le plan d'analyse et dans l'exploration.
 
-    -   Réalisation des travaux sur Tableau
+    -   Réalisation des travaux sur Tableau.
 
--   Alexis M:
+-   Alexis M. :
 
-    -   Réalisation des question 2 et 9
+    -   Réalisation des question 2 et 9.
 
-    -   Aide technique sur la question 4
+    -   Aide technique sur la question 4.
 
-    -   Réalisation de l'application Shiny
+    -   Réalisation de l'application Shiny.
 
--   Camille:
+-   Camille :
 
-    -   Réalisation des questions 3.a, 3.b, 10 et 11
+    -   Réalisation des questions 3.a, 3.b, 10 et 11.
 
--   Danielle:
+-   Danielle :
 
-    -   Réalisation des questions 1,8 et 12.
-    -   Réalisation des répartitions simples
+    -   Réalisation des questions 1, 8 et 12.
+    -   Réalisation des répartitions simples.
